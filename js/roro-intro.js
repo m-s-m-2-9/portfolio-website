@@ -199,6 +199,7 @@
         transparent 0%, rgba(255,255,255,0.55) 15%,
         rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.55) 85%, transparent 100%);
       transform-origin: center;
+      margin-left: 1.2vw;
     }
     #rs-name {
       font-family: 'Cinzel', Georgia, serif;
@@ -265,7 +266,8 @@
     .rs-film--r { right: clamp(8px,3vw,40px); }
     .rs-belt { display: flex; flex-direction: column; gap: 6px; padding: 6px 0; }
     .rs-film--l .rs-belt { animation: rsUp 28s linear infinite; }
-    .rs-film--r .rs-belt { animation: rsDown 28s linear infinite; }
+    .rs-film--r .rs-belt {
+    animation: rsDown 28s linear infinite; }
     @keyframes rsUp   { from{transform:translateY(0)}to{transform:translateY(-50%)} }
     @keyframes rsDown { from{transform:translateY(-50%)}to{transform:translateY(0)} }
     .rs-frame {
