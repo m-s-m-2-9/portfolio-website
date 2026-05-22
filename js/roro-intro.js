@@ -199,7 +199,8 @@
         transparent 0%, rgba(255,255,255,0.55) 15%,
         rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.55) 85%, transparent 100%);
       transform-origin: center;
-      margin-left: -2.2vw;
+      left: 50%;
+transform: translateX(-50%);
     }
     #rs-name {
       font-family: 'Cinzel', Georgia, serif;
