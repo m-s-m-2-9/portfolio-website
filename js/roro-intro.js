@@ -718,7 +718,7 @@ transform: translateX(-50%);
     tl.to(divEl,{scaleX:1,opacity:1,duration:0.7,ease:'power3.out'},1.55);
     tl.to(name,{opacity:1,y:0,duration:0.85,ease:'power2.out'},1.85);
     tl.to(msm,{opacity:0,scale:0.96,filter:'blur(18px)',duration:0.72,ease:'power2.in'},3.2);
-    var panUp=nameTop-nameFinalTop;
+    var panUp = (nameTop - nameFinalTop) * 0.75;
     tl.to(name,{y:-panUp,duration:0.88,ease:'power2.inOut'},3.2);
     tl.to(mmxxvi,{opacity:1,y:0,duration:0.65,ease:'power2.out'},3.28);
     tl.to(port,{opacity:1,filter:'blur(0px)',y:0,duration:0.85,ease:'power2.out'},3.48);
