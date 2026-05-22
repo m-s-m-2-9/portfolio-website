@@ -687,7 +687,7 @@ transform: translateX(-50%);
     var msmTop=s1Top, divTop=s1Top+msmH+G1, nameTop=divTop+divH+G1;
     var nameFinalTop=msmTop+Math.round((msmH-nameH)/2);
     var portFinalTop=nameTop;
-    var mmFinalTop = (nameFinalTop + ((nameTop - nameFinalTop) * 0.25)) - G2 - mmH;
+    var mmFinalTop = nameFinalTop - G2 - mmH + 8;
     var coordsFinalTop=portFinalTop+portH+G2;
     var divW=Math.min(Math.round(W*0.55),900);
 
