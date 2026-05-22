@@ -78,12 +78,22 @@
       else if (k === 'scale') { el._rs = v; sync(el); }
     }
     function sync(el) {
-      var t = '';
-      if (el._rx != null) t += 'translateX(' + el._rx + 'px) ';
-      if (el._ry != null) t += 'translateY(' + el._ry + 'px) ';
-      if (el._rs != null) t += 'scale(' + el._rs + ')';
-      el.style.transform = t.trim();
-    }
+  var t = 'translateX(-50%) ';
+
+  if (el._rx != null)
+    t += 'translateX(' + el._rx + 'px) ';
+
+  if (el._ry != null)
+    t += 'translateY(' + el._ry + 'px) ';
+
+  if (el._rs != null)
+    t += 'scale(' + el._rs + ') ';
+
+  if (el._rsx != null)
+    t += 'scaleX(' + el._rsx + ')';
+
+  el.style.transform = t.trim();
+}
     function getv(el, k) {
       if (k === 'opacity') return parseFloat(el.style.opacity) || 0;
       if (k === 'y') return el._ry || 0;
@@ -117,14 +127,15 @@
     var api = {
       set: function (el, p) {
         if (Array.isArray(el)) { el.forEach(function(e) { api.set(e, p); }); return; }
-        ['opacity','y','x','scale'].forEach(function (k) { if (p[k] != null) apply(el, k, p[k]); });
+        ['opacity','y','x','scale','scaleX'].forEach(function (k) { if (p[k] != null) apply(el, k, p[k]); });
         if (p.filter && el.style) el.style.filter = p.filter;
-        if (p.scaleX != null && el.style) el.style.transform = 'scaleX('+p.scaleX+')';
+        if (p.scaleX != null && el.style)
+  el.style.transform = 'translateX(-50%) scaleX('+p.scaleX+')';
       },
       to: function (el, props) {
         if (Array.isArray(el)) { el.forEach(function(e) { api.to(e, props); }); return; }
         var to = {}, opts = {};
-        ['opacity','y','x','scale'].forEach(function (k) { if (props[k] != null) to[k] = props[k]; });
+        ['opacity','y','x','scale','scaleX'].forEach(function (k) { if (props[k] != null) to[k] = props[k]; });
         ['duration','delay','ease','onComplete'].forEach(function (k) { if (props[k] != null) opts[k] = props[k]; });
         if (props.onStart) setTimeout(props.onStart, (opts.delay||0)*1000);
         add(el, to, opts);
