@@ -61,6 +61,7 @@
     activePage  : null,
     savedScrollY: 0,
     scrollbarW  : 0,
+    isUpdating  : false, // Guard to prevent recursion in observer
     /* DOM refs — populated during init */
     panel       : null,
     overlay     : null,
@@ -358,138 +359,111 @@
 
       /* Individual nav item */
       '.sb-nav-item {',
+      '  position: relative;',
       '  display: flex;',
       '  align-items: center;',
       '  justify-content: space-between;',
       '  padding: clamp(11px, 1.6vh, 19px) clamp(24px, 2.8vw, 40px);',
       '  cursor: pointer;',
-      '  text-decoration: none;',
-      '  color: var(--text, #f0ebe0);',
-      '  transform: translateX(0px);',
+      '  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);',
       '  user-select: none;',
-      '  will-change: transform, color;',
-      '  transition:',
-      '    transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),',
-      '    color     0.24s ease,',
-      '    opacity   0.24s ease;',
+      '  outline: none;',
       '}',
 
       '.sb-nav-item:hover {',
       '  transform: translateX(' + CFG.HOVER_SHIFT + 'px);',
-      '  color: var(--accent, #c8a96e);',
       '}',
 
-      /* Left side: number + label */
       '.sb-nav-item-left {',
       '  display: flex;',
       '  align-items: baseline;',
-      '  gap: 14px;',
+      '  gap: 12px;',
       '}',
 
       '.sb-nav-num {',
       '  font-family: var(--ff-mono, "JetBrains Mono", monospace);',
-      '  font-size: 0.56rem;',
-      '  letter-spacing: 0.08em;',
-      '  color: var(--text3, rgba(240, 235, 224, 0.32));',
-      '  min-width: 20px;',
-      '  transition: color 0.24s ease;',
-      '}',
-
-      '.sb-nav-item:hover .sb-nav-num {',
-      '  color: var(--accent, #c8a96e);',
-      '  opacity: 0.65;',
+      '  font-size: 0.55rem;',
+      '  color: rgba(var(--sb-accent-r, 200), var(--sb-accent-g, 169), var(--sb-accent-b, 110), 0.45);',
+      '  transition: color 0.3s ease;',
       '}',
 
       '.sb-nav-label {',
-      '  font-family: var(--ff-display, "Playfair Display", serif);',
-      '  font-size: clamp(1.05rem, 1.7vw, 1.45rem);',
+      '  font-family: var(--ff-sans, "Inter", sans-serif);',
+      '  font-size: clamp(0.9rem, 1.1vw, 1.1rem);',
       '  font-weight: 400;',
-      '  font-style: italic;',
-      '  letter-spacing: 0.02em;',
-      '  line-height: 1;',
+      '  letter-spacing: -0.01em;',
+      '  color: var(--text2, rgba(240, 235, 224, 0.7));',
+      '  transition: color 0.3s ease;',
       '}',
 
-      /* Right-side active indicator — vertical line */
+      '.sb-nav-item:hover .sb-nav-label {',
+      '  color: var(--text, #f0ebe0);',
+      '}',
+
+      /* Active indicator line */
       '.sb-nav-indicator {',
       '  width: 1.5px;',
-      '  height: clamp(13px, 1.9vh, 20px);',
-      '  background: var(--accent, #c8a96e);',
-      '  border-radius: 1px;',
+      '  height: 14px;',
+      '  background: rgba(var(--sb-accent-r, 200), var(--sb-accent-g, 169), var(--sb-accent-b, 110), 1);',
       '  opacity: 0;',
       '  transform: scaleY(0);',
       '  transform-origin: center;',
-      '  flex-shrink: 0;',
-      '  transition:',
-      '    opacity   0.30s ease,',
-      '    transform 0.30s cubic-bezier(0.16, 1, 0.3, 1);',
+      '  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;',
       '}',
 
-      /* Active state — indicator appears */
-      '.sb-nav-item.sb-nav-item--active .sb-nav-indicator {',
+      '.sb-nav-item--active .sb-nav-indicator {',
       '  opacity: 1;',
       '  transform: scaleY(1);',
       '}',
 
-      '.sb-nav-item.sb-nav-item--active .sb-nav-label {',
-      '  color: var(--accent, #c8a96e);',
+      '.sb-nav-item--active .sb-nav-label {',
+      '  color: var(--text, #f0ebe0);',
+      '  font-weight: 500;',
       '}',
 
-      '.sb-nav-item.sb-nav-item--active .sb-nav-num {',
-      '  color: var(--accent, #c8a96e);',
-      '  opacity: 0.65;',
+      '.sb-nav-item--active .sb-nav-num {',
+      '  color: rgba(var(--sb-accent-r, 200), var(--sb-accent-g, 169), var(--sb-accent-b, 110), 1);',
       '}',
 
-      /* ── Sidebar visual divider ─────────────────────────────────── */
+      /* ── Visual rule ── */
       '.sb-rule {',
       '  height: 1px;',
       '  margin: 0 clamp(24px, 2.8vw, 40px);',
       '  background: rgba(255, 255, 255, 0.04);',
-      '  flex-shrink: 0;',
       '}',
 
-      /* ── Sidebar footer — ACCESS LEVEL ──────────────────────────── */
+      /* ── Footer ── */
       '.sb-footer {',
-      '  padding: clamp(18px, 2.8vh, 30px) clamp(24px, 2.8vw, 40px);',
-      '  border-top: 1px solid rgba(255, 255, 255, 0.04);',
+      '  padding: clamp(24px, 3.5vh, 42px) clamp(24px, 2.8vw, 40px) clamp(32px, 5.5vh, 52px);',
       '  flex-shrink: 0;',
       '}',
 
       '.sb-access-row {',
       '  display: flex;',
-      '  flex-direction: column;',
-      '  gap: 5px;',
+      '  align-items: center;',
+      '  gap: 10px;',
       '}',
 
       '.sb-access-key {',
       '  font-family: var(--ff-mono, "JetBrains Mono", monospace);',
-      '  font-size: 0.46rem;',
-      '  letter-spacing: 0.30em;',
+      '  font-size: 0.52rem;',
       '  text-transform: uppercase;',
-      '  color: var(--text3, rgba(240, 235, 224, 0.28));',
-      '  opacity: 0.55;',
+      '  letter-spacing: 0.12em;',
+      '  color: var(--text3, rgba(240, 235, 224, 0.32));',
       '}',
 
       '.sb-access-val {',
       '  font-family: var(--ff-mono, "JetBrains Mono", monospace);',
-      '  font-size: 0.50rem;',
-      '  letter-spacing: 0.22em;',
+      '  font-size: 0.52rem;',
       '  text-transform: uppercase;',
-      '  color: var(--text3, rgba(240, 235, 224, 0.32));',
-      '  opacity: 0.65;',
-      '}',
-
-      /* ── Hide sidebar entirely on mobile ────────────────────────── */
-      '@media (max-width: ' + (CFG.BREAKPOINT - 1) + 'px) {',
-      '  .sb-panel,',
-      '  .sb-overlay,',
-      '  .sb-hamburger,',
-      '  .sb-nav-sep {',
-      '    display: none !important;',
-      '  }',
+      '  letter-spacing: 0.12em;',
+      '  color: rgba(var(--sb-accent-r, 200), var(--sb-accent-g, 169), var(--sb-accent-b, 110), 0.85);',
+      '  background: rgba(var(--sb-accent-r, 200), var(--sb-accent-g, 169), var(--sb-accent-b, 110), 0.08);',
+      '  padding: 2px 6px;',
+      '  border-radius: 2px;',
       '}'
 
     ].join('\n');
-
     doc.head.appendChild(s);
   }
 
@@ -886,6 +860,7 @@
      Marks the sidebar item that corresponds to the current page.
   ══════════════════════════════════════════════════════════════════ */
   function setActivePage(pageId) {
+    if (!pageId || S.activePage === pageId) return;
     S.activePage = pageId;
 
     S.navItems.forEach(function (item) {
@@ -900,7 +875,7 @@
   }
 
   /**
-   * Detect the current active page from whatever system already
+   * Scans the document for existing active page markers that the site
    * manages page state in the codebase.
    */
   function detectActivePage() {
@@ -937,9 +912,24 @@
    */
   function watchPageChanges() {
     /* MutationObserver — class and attribute changes */
-    var observer = new MutationObserver(function () {
-      detectActivePage();
+    var observer = new MutationObserver(function (mutations) {
+      if (S.isUpdating) return; // Ignore mutations caused by our own updates
+      
+      var shouldDetect = false;
+      for (var i = 0; i < mutations.length; i++) {
+        var m = mutations[i];
+        // Only trigger if the target is NOT our sidebar elements to prevent infinite loops
+        if (m.target === doc.body || (m.target.parentElement && m.target.parentElement !== S.panel)) {
+          shouldDetect = true;
+          break;
+        }
+      }
+      
+      if (shouldDetect) {
+        detectActivePage();
+      }
     });
+
     observer.observe(doc.body, {
       attributes    : true,
       subtree       : true,
@@ -975,25 +965,34 @@
      contextually. Architecture is extensible for future context needs.
   ══════════════════════════════════════════════════════════════════ */
   function exposePageState(pageId) {
+    if (!pageId) return;
+    
+    S.isUpdating = true; // Set guard
+    
     /* Expose via body data attribute */
-    doc.body.dataset.currentPage = pageId || '';
+    doc.body.dataset.currentPage = pageId;
 
     /* Update public API object */
     if (global.SidebarController) {
-      global.SidebarController.currentPage  = pageId || null;
+      global.SidebarController.currentPage  = pageId;
       global.SidebarController.sidebarOpen  = S.open;
-      global.SidebarController.activePage   = pageId || null;
+      global.SidebarController.activePage   = pageId;
     }
 
     /* Dispatch event for any listener — RoRo, analytics, debug, etc. */
     doc.dispatchEvent(new CustomEvent('sb:pageActive', {
       bubbles: true,
       detail: {
-        page        : pageId  || null,
+        page        : pageId,
         sidebarOpen : S.open,
         timestamp   : Date.now()
       }
     }));
+    
+    // Release guard in next microtask to ensure all mutations are processed
+    setTimeout(function() {
+      S.isUpdating = false;
+    }, 0);
   }
 
   /* ══════════════════════════════════════════════════════════════════
