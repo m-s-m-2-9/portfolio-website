@@ -857,6 +857,7 @@
      Marks the sidebar item that corresponds to the current page.
   ══════════════════════════════════════════════════════════════════ */
   function setActivePage(pageId) {
+    if (!pageId || S.activePage === pageId) return;
     S.activePage = pageId;
 
     S.navItems.forEach(function (item) {
@@ -907,16 +908,22 @@
    * hash changes, and custom events dispatched by the page system.
    */
   function watchPageChanges() {
-    /* MutationObserver — class and attribute changes */
-    var observer = new MutationObserver(function () {
-      detectActivePage();
+    /* 
+       CRITICAL FIX: Removed aggressive subtree observer that caused hangs.
+       We now only watch the body element itself for direct attribute changes.
+    */
+    var observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function(m) {
+        if (m.attributeName === 'class' || m.attributeName === 'data-page') {
+           detectActivePage();
+        }
+      });
     });
     
-    // FIX 1: Remove 'data-current-page' from filter to prevent self-trigger loop
     observer.observe(doc.body, {
       attributes    : true,
-      subtree       : true,
-      attributeFilter: ['class', 'data-active', 'data-page']
+      subtree       : false, // DO NOT USE SUBTREE - CAUSES HANGS
+      attributeFilter: ['class', 'data-page']
     });
 
     /* Custom events from the existing navigation system */
@@ -948,21 +955,24 @@
      contextually. Architecture is extensible for future context needs.
   ══════════════════════════════════════════════════════════════════ */
   function exposePageState(pageId) {
+    if (!pageId) return;
+    
     /* Expose via body data attribute */
-    doc.body.dataset.currentPage = pageId || '';
+    // Using setAttribute to avoid triggering dataset observers unnecessarily
+    doc.body.setAttribute('data-current-page', pageId);
 
     /* Update public API object */
     if (global.SidebarController) {
-      global.SidebarController.currentPage  = pageId || null;
+      global.SidebarController.currentPage  = pageId;
       global.SidebarController.sidebarOpen  = S.open;
-      global.SidebarController.activePage   = pageId || null;
+      global.SidebarController.activePage   = pageId;
     }
 
     /* Dispatch event for any listener — RoRo, analytics, debug, etc. */
     doc.dispatchEvent(new CustomEvent('sb:pageActive', {
       bubbles: true,
       detail: {
-        page        : pageId  || null,
+        page        : pageId,
         sidebarOpen : S.open,
         timestamp   : Date.now()
       }
@@ -1096,7 +1106,6 @@
      INIT
   ══════════════════════════════════════════════════════════════════ */
   function init() {
-    // FIX 3: Safer initialization check
     if (global.SidebarController) return;
 
     syncAccentRgb();
