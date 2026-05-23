@@ -61,7 +61,6 @@
     activePage  : null,
     savedScrollY: 0,
     scrollbarW  : 0,
-    isUpdating  : false, // Guard to prevent recursion in observer
     /* DOM refs — populated during init */
     panel       : null,
     overlay     : null,
@@ -359,7 +358,6 @@
 
       /* Individual nav item */
       '.sb-nav-item {',
-      '  position: relative;',
       '  display: flex;',
       '  align-items: center;',
       '  justify-content: space-between;',
@@ -676,8 +674,7 @@
       'header nav',
       '.header__nav',
       '.header-nav',
-      'nav.main-nav',
-      'nav'
+      'nav.main-nav'
     ];
     for (var i = 0; i < selectors.length; i++) {
       var el = doc.querySelector(selectors[i]);
@@ -860,7 +857,6 @@
      Marks the sidebar item that corresponds to the current page.
   ══════════════════════════════════════════════════════════════════ */
   function setActivePage(pageId) {
-    if (!pageId || S.activePage === pageId) return;
     S.activePage = pageId;
 
     S.navItems.forEach(function (item) {
@@ -912,28 +908,15 @@
    */
   function watchPageChanges() {
     /* MutationObserver — class and attribute changes */
-    var observer = new MutationObserver(function (mutations) {
-      if (S.isUpdating) return; // Ignore mutations caused by our own updates
-      
-      var shouldDetect = false;
-      for (var i = 0; i < mutations.length; i++) {
-        var m = mutations[i];
-        // Only trigger if the target is NOT our sidebar elements to prevent infinite loops
-        if (m.target === doc.body || (m.target.parentElement && m.target.parentElement !== S.panel)) {
-          shouldDetect = true;
-          break;
-        }
-      }
-      
-      if (shouldDetect) {
-        detectActivePage();
-      }
+    var observer = new MutationObserver(function () {
+      detectActivePage();
     });
-
+    
+    // FIX 1: Remove 'data-current-page' from filter to prevent self-trigger loop
     observer.observe(doc.body, {
       attributes    : true,
       subtree       : true,
-      attributeFilter: ['class', 'data-active', 'data-page', 'data-current-page']
+      attributeFilter: ['class', 'data-active', 'data-page']
     });
 
     /* Custom events from the existing navigation system */
@@ -965,34 +948,25 @@
      contextually. Architecture is extensible for future context needs.
   ══════════════════════════════════════════════════════════════════ */
   function exposePageState(pageId) {
-    if (!pageId) return;
-    
-    S.isUpdating = true; // Set guard
-    
     /* Expose via body data attribute */
-    doc.body.dataset.currentPage = pageId;
+    doc.body.dataset.currentPage = pageId || '';
 
     /* Update public API object */
     if (global.SidebarController) {
-      global.SidebarController.currentPage  = pageId;
+      global.SidebarController.currentPage  = pageId || null;
       global.SidebarController.sidebarOpen  = S.open;
-      global.SidebarController.activePage   = pageId;
+      global.SidebarController.activePage   = pageId || null;
     }
 
     /* Dispatch event for any listener — RoRo, analytics, debug, etc. */
     doc.dispatchEvent(new CustomEvent('sb:pageActive', {
       bubbles: true,
       detail: {
-        page        : pageId,
+        page        : pageId  || null,
         sidebarOpen : S.open,
         timestamp   : Date.now()
       }
     }));
-    
-    // Release guard in next microtask to ensure all mutations are processed
-    setTimeout(function() {
-      S.isUpdating = false;
-    }, 0);
   }
 
   /* ══════════════════════════════════════════════════════════════════
@@ -1122,8 +1096,8 @@
      INIT
   ══════════════════════════════════════════════════════════════════ */
   function init() {
-    /* Bail if this has already run */
-    if (doc.getElementById('sb-styles')) return;
+    // FIX 3: Safer initialization check
+    if (global.SidebarController) return;
 
     syncAccentRgb();
     injectStyles();
