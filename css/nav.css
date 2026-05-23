@@ -104,7 +104,7 @@
 .theme-dot[data-t="slate"]  { background: #8899ff; }
 .theme-dot[data-t="forest"] { background: #b5d47a; }
 
-/* ─── HAMBURGER BUTTON ─── */
+/* ─── HAMBURGER BUTTON (mobile only) ─── */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -126,14 +126,12 @@
 .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
 
 /* ─── MOBILE NAV OVERLAY ─── */
-/* FIX: redesigned to be premium, smaller fonts, scrollable */
 #mobile-nav {
   position: fixed;
   inset: 0;
   z-index: 8800;
   background: var(--bg);
 
-  /* layout */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -143,12 +141,10 @@
   padding-left: 0;
   padding-right: 0;
 
-  /* scrollable when content exceeds screen */
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
 
-  /* hidden by default */
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -180,7 +176,6 @@
 
 /* ─── MOBILE NAV LINKS ─── */
 #mobile-nav a {
-  /* typography — smaller, refined, not the huge 2rem */
   font-family: var(--ff-display);
   font-size: 1.35rem;
   font-weight: 300;
@@ -188,13 +183,11 @@
   color: var(--text3);
   text-decoration: none;
 
-  /* layout */
   display: block;
   width: 100%;
   padding: 0.6rem 2.5rem 0.6rem 9%;
   position: relative;
 
-  /* smooth transitions */
   transition: color 0.25s ease, padding-left 0.25s ease;
 }
 
@@ -204,7 +197,6 @@
   padding-left: 11%;
 }
 
-/* Tiny counter prefix before each link — subtle luxury touch */
 #mobile-nav { counter-reset: mobile-nav-counter; }
 #mobile-nav a { counter-increment: mobile-nav-counter; }
 #mobile-nav a::before {
@@ -220,7 +212,6 @@
 }
 
 /* ─── SNAKE D-PAD (game control — mobile only) ─── */
-/* Placed here because it is rendered inside the game modal which is separate */
 .snake-dpad {
   display: flex;
   flex-direction: column;
@@ -256,4 +247,125 @@
   .nav-links  { display: none; }
   .hamburger  { display: flex; }
   #nav        { padding: 0 1.5rem; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   DESKTOP SIDEBAR HAMBURGER — additions only
+   Fixes overlap with theme dots. Mobile untouched.
+═══════════════════════════════════════════════════════════ */
+
+/*
+  The .sb-hamburger is injected by sidebar-controller.js at the
+  end of .nav-right (or whatever nav container it finds).
+  These rules ensure it sits cleanly to the right of the theme
+  dots with correct spacing and no overlap.
+*/
+
+/* Give .nav-right a slightly larger gap on desktop so the
+   injected hamburger never crowds the last theme dot.        */
+@media (min-width: 1024px) {
+  .nav-right {
+    gap: 1rem;
+    /* Prevent any child from collapsing its width */
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+  }
+
+  /* Ensure theme-switcher never bleeds into the hamburger */
+  .theme-switcher {
+    flex-shrink: 0;
+  }
+
+  /* The thin vertical separator injected between page controls
+     and the hamburger button                                  */
+  .sb-nav-sep {
+    display: block;
+    width: 1px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.13);
+    flex-shrink: 0;
+    align-self: center;
+    /* Extra breathing room on both sides of the divider       */
+    margin: 0 6px;
+  }
+
+  /* Desktop sidebar hamburger button — lives inside #nav      */
+  #nav .sb-hamburger,
+  .nav-right .sb-hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 5px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    margin: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    flex-shrink: 0;
+    /* Slight left margin to breathe away from the separator   */
+    margin-left: 2px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Three elegant descending-length lines                     */
+  #nav .sb-hamburger .sb-line,
+  .nav-right .sb-hamburger .sb-line {
+    display: block;
+    height: 1.5px;
+    background: var(--text, #f0ebe0);
+    border-radius: 1px;
+    transform-origin: center center;
+    will-change: transform, opacity, width;
+    transition:
+      width     0.36s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.40s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity   0.30s ease;
+  }
+
+  #nav .sb-hamburger .sb-line-1,
+  .nav-right .sb-hamburger .sb-line-1 { width: 24px; }
+
+  #nav .sb-hamburger .sb-line-2,
+  .nav-right .sb-hamburger .sb-line-2 { width: 18px; }
+
+  #nav .sb-hamburger .sb-line-3,
+  .nav-right .sb-hamburger .sb-line-3 { width: 12px; }
+
+  /* Morph to X when sidebar is open */
+  #nav .sb-hamburger.sb-is-open .sb-line-1,
+  .nav-right .sb-hamburger.sb-is-open .sb-line-1 {
+    width: 22px;
+    transform: translateY(6.5px) rotate(45deg);
+  }
+
+  #nav .sb-hamburger.sb-is-open .sb-line-2,
+  .nav-right .sb-hamburger.sb-is-open .sb-line-2 {
+    opacity: 0;
+    width: 0;
+  }
+
+  #nav .sb-hamburger.sb-is-open .sb-line-3,
+  .nav-right .sb-hamburger.sb-is-open .sb-line-3 {
+    width: 22px;
+    transform: translateY(-6.5px) rotate(-45deg);
+  }
+
+  /* Subtle hover state — no glow, no scale, just opacity lift */
+  #nav .sb-hamburger:hover .sb-line,
+  .nav-right .sb-hamburger:hover .sb-line {
+    opacity: 0.7;
+  }
+}
+
+/* Hard hide desktop hamburger on mobile so it never interferes */
+@media (max-width: 1023px) {
+  .sb-hamburger,
+  .sb-nav-sep {
+    display: none !important;
+  }
 }
