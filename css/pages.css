@@ -415,8 +415,6 @@
  
 /* ─────────────────────────────────────────────────────────
    BIRTHDAY TIMER PAGE
-   Vertical alignment shifted upward via padding-top reduction
-   and justify-content changed to flex-start with offset.
 ───────────────────────────────────────────────────────── */
 .birthday-hero {
   min-height: 100vh;
@@ -425,7 +423,6 @@
   align-items: center;
   justify-content: flex-start;
   text-align: center;
-  /* Reduced top padding moves the clock section visually upward */
   padding: 12vh 3rem 6rem;
   position: relative;
 }
@@ -441,7 +438,6 @@
 .bday-date-info p        { font-size: 0.85rem; color: var(--text2); margin-bottom: 0.5rem; }
  
 /* ── Birthday wish banner ─────────────────────────────── */
-/* Injected below .bday-ms on August 29th by main.js      */
 .birthday-wish-text {
   margin-top: 2rem;
   font-family: var(--ff-mono);
@@ -454,7 +450,6 @@
   user-select: none;
   position: relative;
   display: inline-block;
-  /* Subtle underline decoration matching nav glow elements */
   padding-bottom: 3px;
   border-bottom: 1px solid transparent;
   transition:
@@ -484,9 +479,6 @@
 }
  
 /* ── Birthday mode — body-level ambient animation ─────── */
-/* Activated via body.birthday-mode class in main.js       */
-/* High-end: slow-pulse radial gradient, no emojis         */
- 
 body.birthday-mode #page-birthday {
   background:
     radial-gradient(
@@ -504,7 +496,6 @@ body.birthday-mode #page-birthday {
   animation: birthdayAmbience 14s ease-in-out infinite;
 }
  
-/* Fine-line geometric shimmer layer via pseudo-element */
 body.birthday-mode #page-birthday::before {
   content: '';
   position: fixed;
@@ -527,7 +518,6 @@ body.birthday-mode #page-birthday::before {
   animation: birthdayGridPulse 10s ease-in-out infinite alternate;
 }
  
-/* All content inside birthday-hero stays above the animated layers */
 body.birthday-mode .birthday-hero > * {
   position: relative;
   z-index: 1;
@@ -623,12 +613,36 @@ body.birthday-mode .birthday-hero > * {
   padding: 6rem 0 3rem;
 }
  
-/* Project category status badge — "Completed" / "Ongoing" / "Planned" */
-.status-completed { background: rgba(74,222,128,0.1);  color: #4ade80; }
-.status-ongoing   { background: var(--accent-glow);    color: var(--accent); }
-.status-planned   { background: rgba(96,165,250,0.1);  color: #60a5fa; }
- 
-/* Project item detail expand area (optional future use) */
+/* ── Project status badges ──────────────────────────────
+   Three tabs: Completed / Currently Working On / Abandoned
+   Each maps to a distinct badge colour.
+─────────────────────────────────────────────────────── */
+
+/* Completed — soft green, same palette as .status-seen  */
+.status-completed {
+  background: rgba(74, 222, 128, 0.1);
+  color: #4ade80;
+}
+
+/* Currently Working On — accent/gold, mirrors .status-want */
+.status-ongoing {
+  background: var(--accent-glow);
+  color: var(--accent);
+}
+
+/* Abandoned — muted red, signals dormant / discontinued   */
+.status-abandoned {
+  background: rgba(248, 113, 113, 0.1);
+  color: #f87171;
+}
+
+/* Legacy alias kept for backwards compatibility           */
+.status-planned {
+  background: rgba(96, 165, 250, 0.1);
+  color: #60a5fa;
+}
+
+/* Project item detail expand area (optional future use)   */
 .project-item-detail {
   font-size: 0.8rem;
   color: var(--text3);
@@ -760,24 +774,19 @@ body.birthday-mode .birthday-hero > * {
  
   /* ════════════════════════════════════════════════════════
      FIX 2: LISTS PAGE — horizontal tab scroll
-     Makes "Movies" reachable by sliding.
-     Thin accent-coloured line scrollbar for aesthetics.
   ════════════════════════════════════════════════════════ */
   .lists-tabs {
     overflow-x: auto;
     overflow-y: visible;
-    flex-wrap: nowrap;          /* prevent tabs wrapping to next line */
+    flex-wrap: nowrap;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;      /* Firefox: thin scrollbar */
-    /* Firefox: thumb = accent, track = transparent */
+    scrollbar-width: thin;
     scrollbar-color: var(--accent) transparent;
-    /* Extra bottom padding so scrollbar doesn't overlap the border */
     padding-bottom: 2px;
     gap: 0;
   }
-  /* Webkit (Chrome/Safari/Samsung): thin line scrollbar */
   .lists-tabs::-webkit-scrollbar {
-    height: 2px;                /* ultra-thin line */
+    height: 2px;
   }
   .lists-tabs::-webkit-scrollbar-track {
     background: transparent;
@@ -786,7 +795,6 @@ body.birthday-mode .birthday-hero > * {
     background: var(--accent);
     border-radius: 1px;
   }
-  /* Prevent tabs from shrinking — they must stay full-width text */
   .list-tab {
     flex-shrink: 0;
     padding: 0.75rem 1.2rem;
@@ -796,12 +804,9 @@ body.birthday-mode .birthday-hero > * {
  
   /* ════════════════════════════════════════════════════════
      FIX 3: BIRTHDAY CLOCK — single row for all 4 time units
-     Line 1: [Days : Hours : Minutes : Seconds]
-     Line 2: [Milliseconds]  ← already outside .bday-timer
-     Works down to iPhone SE (375px) without wrapping.
   ════════════════════════════════════════════════════════ */
   .bday-timer {
-    flex-wrap: nowrap;          /* CRITICAL — no wrapping to second line */
+    flex-wrap: nowrap;
     gap: clamp(0.2rem, 1.8vw, 0.8rem);
     align-items: flex-end;
     justify-content: center;
@@ -809,7 +814,7 @@ body.birthday-mode .birthday-hero > * {
   }
   .bday-value {
     font-size: clamp(1.55rem, 7vw, 2.8rem);
-    min-width: unset;           /* remove fixed min-width so it can shrink */
+    min-width: unset;
     width: auto;
   }
   .bday-label {
@@ -838,11 +843,9 @@ body.birthday-mode .birthday-hero > * {
  
   /* ════════════════════════════════════════════════════════
      FIX 4: JOURNEY PAGE — year and title on separate lines
-     Year stays large (background style). Title goes below.
-     Desktop layout (flex row, baseline-aligned) unchanged.
   ════════════════════════════════════════════════════════ */
   .year-detail-header {
-    flex-direction: column;     /* stack year above title */
+    flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;
     margin-bottom: 1.2rem;
@@ -856,11 +859,9 @@ body.birthday-mode .birthday-hero > * {
   .year-detail-title {
     font-size: clamp(1.3rem, 5.5vw, 1.8rem);
     line-height: 1.2;
-    /* Title sits visually below the big year number */
     margin-top: -0.25rem;
   }
   .year-detail {
     padding: 0 1.5rem;
   }
 }
- 
