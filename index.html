@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400&display=block" rel="stylesheet" />
 
-  <style>body{visibility:hidden}</style>
-
+<style>body{visibility:hidden}</style>
+  
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/animations.css" />
   <link rel="stylesheet" href="css/components.css" />
@@ -21,38 +21,24 @@
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════
-     LOADING SCREEN (commented out — roro-intro.js handles)
-═══════════════════════════════════════════════════════ -->
-<!--
-<div id="loading-screen">
+<!-- LOADING SCREEN -->
+<!--  <div id="loading-screen">
   <div class="loading-name">M · S · M</div>
   <div class="loading-bar-wrap">
     <div class="loading-bar" id="loading-bar"></div>
   </div>
   <div class="loading-pct" id="loading-pct">0%</div>
-</div>
--->
-
-<!-- roro-intro.js splash cover — removed by intro script after animation -->
+</div> --> 
 <div id="roro-cover" style="position:fixed;inset:0;z-index:9999999;background:var(--bg,#080808)"></div>
-
-<!-- ═══════════════════════════════════════════════════════
-     CUSTOM CURSOR
-═══════════════════════════════════════════════════════ -->
+  
+<!-- CUSTOM CURSOR -->
 <div id="cursor-dot"></div>
 <div id="cursor-ring"></div>
 
-<!-- ═══════════════════════════════════════════════════════
-     FULL-PAGE TRANSITION OVERLAY
-     Used by navigateTo() for cinematic page switches
-═══════════════════════════════════════════════════════ -->
+<!-- FULL-PAGE TRANSITION OVERLAY -->
 <div id="transition-overlay"></div>
 
-<!-- ═══════════════════════════════════════════════════════
-     PASSWORD GATE
-     Full-screen modal for password-protected sections
-═══════════════════════════════════════════════════════ -->
+<!-- PASSWORD GATE -->
 <div id="password-gate" class="password-gate">
   <div class="gate-icon"></div>
   <div class="gate-title">Restricted</div>
@@ -69,123 +55,72 @@
   <button class="btn" style="margin-top:2rem; border-color:var(--border); color:var(--text2);" onclick="closeGate()">← Go back</button>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     NAVIGATION BAR
-     ─────────────────────────────────────────────────────
-     SIDEBAR CHANGE ①:
-     Added  data-desktop-nav  to .nav-right so that
-     sidebar-controller.js → findDesktopNav() correctly
-     locates this container and appends the desktop
-     hamburger button after the theme dots.
-     Nothing else in this nav block is changed.
-═══════════════════════════════════════════════════════ -->
+<!-- NAVIGATION BAR -->
 <nav id="nav">
-
-  <!-- Brand logo — always navigates home -->
   <a href="#" class="nav-logo" onclick="navigateTo('home'); return false;">MSM</a>
 
-  <!-- Desktop page links (hidden on mobile via nav.css) -->
   <ul class="nav-links" id="nav-links">
-    <li><a href="#" onclick="navigateTo('home');     return false;">Home</a></li>
-    <li><a href="#" onclick="navigateTo('about');    return false;">Identity</a></li>
-    <li><a href="#" onclick="navigateTo('photos');   return false;">Photos</a></li>
-    <li><a href="#" onclick="navigateTo('resume');   return false;">CV</a></li>
+    <li><a href="#" onclick="navigateTo('home'); return false;">Home</a></li>
+    <li><a href="#" onclick="navigateTo('about'); return false;">Identity</a></li>
+    <li><a href="#" onclick="navigateTo('photos'); return false;">Photos</a></li>
+    <li><a href="#" onclick="navigateTo('resume'); return false;">CV</a></li>
     <li><a href="#" onclick="navigateTo('profiles'); return false;">Profiles</a></li>
-    <li><a href="#" onclick="navigateTo('journey');  return false;">Journey</a></li>
+    <li><a href="#" onclick="navigateTo('journey'); return false;">Journey</a></li>
     <li><a href="#" onclick="navigateTo('birthday'); return false;">Clock</a></li>
     <li><a href="#" onclick="navigateTo('thoughts'); return false;">Thoughts</a></li>
-    <li><a href="#" onclick="navigateTo('contact');  return false;">Contact</a></li>
-    <li><a href="#" onclick="navigateTo('lists');    return false;">Lists</a></li>
-    <li><a href="#" onclick="navigateTo('skills');   return false;">Traits</a></li>
-    <li><a href="#" onclick="navigateTo('games');    return false;">Games</a></li>
-    <li><a href="#" onclick="navigateTo('social');   return false;">Social</a></li>
+    <li><a href="#" onclick="navigateTo('contact'); return false;">Contact</a></li>
+    <li><a href="#" onclick="navigateTo('lists'); return false;">Lists</a></li>
+    <li><a href="#" onclick="navigateTo('skills'); return false;">Traits</a></li>
+    <li><a href="#" onclick="navigateTo('games'); return false;">Games</a></li>
+    <li><a href="#" onclick="navigateTo('social'); return false;">Social</a></li>
   </ul>
 
-  <!--
-    ┌─────────────────────────────────────────────────────┐
-    │  data-desktop-nav  ← SIDEBAR CHANGE ①               │
-    │  sidebar-controller.js reads this attribute to      │
-    │  locate the correct container for hamburger inject. │
-    │  All existing children (music, theme, hamburger)    │
-    │  are 100% unchanged.                                │
-    └─────────────────────────────────────────────────────┘
-  -->
-  <div class="nav-right" data-desktop-nav>
+  <div class="nav-right">
+ <!-- Music toggle — inline in nav near theme dots. Play/pause ONLY. -->
+<button class="music-toggle muted" id="music-toggle" title="Play / Pause music">
+  <div class="sound-bars">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</button>
 
-    <!-- Background music toggle — play/pause only -->
-    <button class="music-toggle muted" id="music-toggle" title="Play / Pause music">
-      <div class="sound-bars">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </button>
-
-    <!-- Theme colour switcher — 4 dots -->
-    <div class="theme-switcher">
-      <div class="theme-dot active" data-t="dark"   title="Noir"   onclick="setTheme('dark');   document.documentElement.style.setProperty('--ruin-color','rgba(200,220,255,0.5)')"></div>
-      <div class="theme-dot"        data-t="light"  title="Ivory"  onclick="setTheme('light');  document.documentElement.style.setProperty('--ruin-color','rgba(80,80,80,0.4)')"></div>
-      <div class="theme-dot"        data-t="slate"  title="Slate"  onclick="setTheme('slate');  document.documentElement.style.setProperty('--ruin-color','rgba(150,170,190,0.5)')"></div>
-      <div class="theme-dot"        data-t="forest" title="Forest" onclick="setTheme('forest'); document.documentElement.style.setProperty('--ruin-color','rgba(120,180,120,0.5)')"></div>
-    </div>
-
-    <!--
-      MOBILE hamburger — unchanged.
-      Only visible on mobile (display:none on desktop via nav.css).
-      sidebar-controller.js NEVER touches this element.
-    -->
-    <div class="hamburger" id="hamburger" onclick="toggleMobileNav()">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-
-    <!--
-      DESKTOP hamburger (#sb-hamburger) is injected HERE
-      at runtime by sidebar-controller.js → buildHamburger().
-      It does NOT exist in the HTML — the script creates and
-      appends it after the theme dots automatically.
-      It is hidden on mobile via CSS in nav.css / sb-styles.
-    -->
-
-  </div><!-- /.nav-right -->
-
-</nav><!-- /#nav -->
-
-<!-- ═══════════════════════════════════════════════════════
-     MOBILE NAV OVERLAY
-     Untouched — sidebar-controller.js never touches this
-═══════════════════════════════════════════════════════ -->
-<div id="mobile-nav">
-  <a href="#" onclick="navigateTo('home');     toggleMobileNav(); return false;">Home</a>
-  <a href="#" onclick="navigateTo('about');    toggleMobileNav(); return false;">Identity</a>
-  <a href="#" onclick="navigateTo('photos');   toggleMobileNav(); return false;">Photos</a>
-  <a href="#" onclick="navigateTo('resume');   toggleMobileNav(); return false;">CV</a>
-  <a href="#" onclick="navigateTo('profiles'); toggleMobileNav(); return false;">Profiles</a>
-  <a href="#" onclick="navigateTo('journey');  toggleMobileNav(); return false;">Journey</a>
-  <a href="#" onclick="navigateTo('birthday'); toggleMobileNav(); return false;">Clock</a>
-  <a href="#" onclick="navigateTo('thoughts'); toggleMobileNav(); return false;">Thoughts</a>
-  <a href="#" onclick="navigateTo('contact');  toggleMobileNav(); return false;">Contact</a>
-  <a href="#" onclick="navigateTo('lists');    toggleMobileNav(); return false;">Lists</a>
-  <a href="#" onclick="navigateTo('skills');   toggleMobileNav(); return false;">Traits</a>
-  <a href="#" onclick="navigateTo('games');    toggleMobileNav(); return false;">Games</a>
-  <a href="#" onclick="navigateTo('social');   toggleMobileNav(); return false;">Social</a>
+<div class="theme-switcher">
+  <div class="theme-dot active" data-t="dark"   title="Noir"   onclick="setTheme('dark'); document.documentElement.style.setProperty('--ruin-color','rgba(200,220,255,0.5)')"></div>
+  <div class="theme-dot"        data-t="light"  title="Ivory"  onclick="setTheme('light'); document.documentElement.style.setProperty('--ruin-color','rgba(80,80,80,0.4)')"></div>
+  <div class="theme-dot"        data-t="slate"  title="Slate"  onclick="setTheme('slate'); document.documentElement.style.setProperty('--ruin-color','rgba(150,170,190,0.5)')"></div>
+  <div class="theme-dot"        data-t="forest" title="Forest" onclick="setTheme('forest'); document.documentElement.style.setProperty('--ruin-color','rgba(120,180,120,0.5)')"></div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     ALL PAGES
-     ─────────────────────────────────────────────────────
-     SIDEBAR CHANGE ②:
-     Added  data-page="pageId"  to every <section> element.
-     sidebar-controller.js → detectActivePage() reads these
-     to know which page is active and light the correct
-     right-side indicator line in the sidebar.
-     The active class, page-inner, and all content inside
-     every section is 100% unchanged.
-═══════════════════════════════════════════════════════ -->
+<div class="hamburger" id="hamburger" onclick="toggleMobileNav()">
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+</div>
+</nav>
+
+<!-- Mobile Nav Menu -->
+<div id="mobile-nav">
+  <a href="#" onclick="navigateTo('home');    toggleMobileNav(); return false;">Home</a>
+  <a href="#" onclick="navigateTo('about');   toggleMobileNav(); return false;">Identity</a>
+  <a href="#" onclick="navigateTo('photos');  toggleMobileNav(); return false;">Photos</a>
+  <a href="#" onclick="navigateTo('resume');  toggleMobileNav(); return false;">CV</a>
+  <a href="#" onclick="navigateTo('profiles');toggleMobileNav(); return false;">Profiles</a>
+  <a href="#" onclick="navigateTo('journey'); toggleMobileNav(); return false;">Journey</a>
+  <a href="#" onclick="navigateTo('birthday');toggleMobileNav(); return false;">Clock</a>
+  <a href="#" onclick="navigateTo('thoughts');toggleMobileNav(); return false;">Thoughts</a>
+  <a href="#" onclick="navigateTo('contact'); toggleMobileNav(); return false;">Contact</a>
+  <a href="#" onclick="navigateTo('lists');   toggleMobileNav(); return false;">Lists</a>
+  <a href="#" onclick="navigateTo('skills');  toggleMobileNav(); return false;">Traits</a>
+  <a href="#" onclick="navigateTo('games');   toggleMobileNav(); return false;">Games</a>
+  <a href="#" onclick="navigateTo('social');  toggleMobileNav(); return false;">Social</a>
+</div>
+
+<!-- ALL PAGES -->
 
 <!-- PAGE: HOME -->
-<section id="page-home" class="page active" data-page="home">
+<section id="page-home" class="page active">
   <div class="page-inner" style="padding:0;">
     <div class="hero">
       <div class="hero-grid"></div>
@@ -236,6 +171,7 @@
         <span class="link-label">Thoughts</span>
         <span class="link-arrow">→</span>
       </a>
+      <!-- FIX 3: removed locked-badge and tryLockedPage, now opens photos directly -->
       <a class="hero-link-item" href="#" onclick="navigateTo('photos'); return false;">
         <span class="link-label">Photos</span>
         <span class="link-arrow">→</span>
@@ -246,6 +182,7 @@
       </a>
     </div>
 
+    <!-- FIX 4: footer restructured for mobile/desktop split -->
     <footer class="footer">
       <div class="footer-left">
         <span class="footer-desktop-only">© 2026 Manomay Shailendra Misra</span>
@@ -259,8 +196,8 @@
   </div>
 </section>
 
-<!-- PAGE: ABOUT / IDENTITY -->
-<section id="page-about" class="page" data-page="about">
+<!-- PAGE: ABOUT -->
+<section id="page-about" class="page">
   <div class="page-inner">
     <div class="container section">
       <div class="section-label reveal">01 — Identity</div>
@@ -301,14 +238,13 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 </section>
 
 <!-- PAGE: PHOTOS -->
-<section id="page-photos" class="page" data-page="photos">
+<section id="page-photos" class="page">
   <div class="page-inner">
     <div class="container">
       <div class="photos-header">
@@ -385,7 +321,7 @@
   </div>
 </section>
 
-<!-- Photo Viewer — shared overlay, not a page -->
+<!-- Photo Viewer -->
 <div class="photo-viewer" id="photo-viewer">
   <button class="viewer-close" onclick="closeViewer()">✕</button>
   <button class="viewer-nav-btn viewer-prev" onclick="viewerNav(-1)">‹</button>
@@ -393,12 +329,12 @@
   <button class="viewer-nav-btn viewer-next" onclick="viewerNav(1)">›</button>
   <div class="viewer-info">
     <div class="viewer-info-title" id="viewer-title"></div>
-    <div class="viewer-info-desc"  id="viewer-desc"></div>
+    <div class="viewer-info-desc" id="viewer-desc"></div>
   </div>
 </div>
 
 <!-- PAGE: CV / RESUME -->
-<section id="page-resume" class="page" data-page="resume">
+<section id="page-resume" class="page">
   <div class="page-inner">
     <div class="resume-wrap">
       <div class="resume-header-block reveal">
@@ -416,7 +352,9 @@
 
       <div class="resume-section reveal reveal-d1">
         <div class="resume-section-title">Summary</div>
-        <p style="font-size:0.9rem;color:var(--text2);line-height:1.8;">replace</p>
+        <p style="font-size:0.9rem;color:var(--text2);line-height:1.8;">
+          replace
+        </p>
       </div>
 
       <div class="resume-section reveal reveal-d2">
@@ -427,7 +365,7 @@
             <div class="resume-entry-org">Iskon Centre</div>
             <div class="resume-entry-desc">Led and mentored a diverse group of 40+ students (ages 5–15) through an immersive summer program blending cultural education with hands-on creative arts. I designed and facilitated workshops in origami, paper engineering, and cardboard sculpting, focusing on developing fine motor skills and artistic expression in younger children while challenging older students with complex projects.
 
-Beyond the classroom, I served as the Media Lead, capturing the camp's energy through professional photography and videography. I managed the end-to-end production of vlogs and promotional content, utilizing cameras and audio equipment to document our journey. My role also included logistical oversight, where I coordinated and escorted large groups on educational excursions to the ISKCON temple, ensuring safety, engagement, and a seamless transition between fun-filled activities and cultural learning.</div>
+Beyond the classroom, I served as the Media Lead, capturing the camp’s energy through professional photography and videography. I managed the end-to-end production of vlogs and promotional content, utilizing cameras and audio equipment to document our journey. My role also included logistical oversight, where I coordinated and escorted large groups on educational excursions to the ISKCON temple, ensuring safety, engagement, and a seamless transition between fun-filled activities and cultural learning.</div>
           </div>
           <div class="resume-entry-date">2024</div>
         </div>
@@ -471,8 +409,8 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
   </div>
 </section>
 
-<!-- PAGE: PROFILES / SOCIAL -->
-<section id="page-profiles" class="page" data-page="profiles">
+<!-- PAGE: PROFILES -->
+<section id="page-profiles" class="page">
   <div class="page-inner">
     <div class="container section">
       <div class="section-label reveal">04 — Digital Presence</div>
@@ -499,8 +437,8 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
   </div>
 </section>
 
-<!-- PAGE: JOURNEY / TIMELINE -->
-<section id="page-journey" class="page" data-page="journey">
+<!-- PAGE: YEAR JOURNEY -->
+<section id="page-journey" class="page">
   <div class="page-inner">
     <div class="timeline-header">
       <div class="container">
@@ -518,7 +456,7 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
 
     <div class="year-detail" id="year-detail">
       <div class="year-detail-header">
-        <div class="year-detail-year"  id="detail-year">—</div>
+        <div class="year-detail-year" id="detail-year">—</div>
         <div class="year-detail-title" id="detail-title">Select a year above</div>
       </div>
       <div class="year-detail-body" id="detail-body"></div>
@@ -547,8 +485,8 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
   </div>
 </section>
 
-<!-- PAGE: BIRTHDAY / CLOCK -->
-<section id="page-birthday" class="page" data-page="birthday">
+<!-- PAGE: BIRTHDAY TIMER -->
+<section id="page-birthday" class="page">
   <div class="page-inner">
     <div class="birthday-hero">
       <div class="section-label" style="margin-bottom:2rem;">06 — Clock</div>
@@ -587,6 +525,7 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
             onkeydown="if(event.key==='Enter')unlockSection('bday-pw','bday-secret-info')" />
           <button onclick="unlockSection('bday-pw','bday-secret-info')">Unlock</button>
         </div>
+
         <div class="bday-date-info unlocked" id="bday-secret-info" style="display:none;max-width:400px;margin:2rem auto 0;text-align:left;">
           <p><strong style="color:var(--text);">Date of Birth:</strong> 29 August 2008</p>
           <p><strong style="color:var(--text);">Time:</strong> Approximately 1:00 – 1:30 PM IST</p>
@@ -599,7 +538,7 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
 </section>
 
 <!-- PAGE: THOUGHTS & BELIEFS -->
-<section id="page-thoughts" class="page" data-page="thoughts">
+<section id="page-thoughts" class="page">
   <div class="page-inner">
     <div class="container section">
       <div class="section-label reveal">07 — Thoughts</div>
@@ -648,15 +587,15 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
 
       <div class="belief-post-view" id="belief-post-view">
         <button class="btn" onclick="closeBelief()" style="margin-bottom:2rem;">← Back</button>
-        <div class="section-label"      id="belief-view-label"></div>
-        <div class="belief-posts-list"  id="belief-posts-list"></div>
+        <div class="section-label" id="belief-view-label"></div>
+        <div class="belief-posts-list" id="belief-posts-list"></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- PAGE: CONTACT -->
-<section id="page-contact" class="page" data-page="contact">
+<section id="page-contact" class="page">
   <div class="page-inner">
     <div class="contact-wrap">
       <div class="section-label reveal">08 — Contact</div>
@@ -692,8 +631,8 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
   </div>
 </section>
 
-<!-- PAGE: LISTS / CURATIONS -->
-<section id="page-lists" class="page" data-page="lists">
+<!-- PAGE: LISTS -->
+<section id="page-lists" class="page">
   <div class="page-inner">
     <div class="container section">
       <div class="section-label reveal">09 — Curations</div>
@@ -713,9 +652,9 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
       <div class="secret-content" id="lists-content" style="display:block;">
         <div class="lists-tabs">
           <div class="list-tab active" onclick="switchListTab('series', this)">Web Series</div>
-          <div class="list-tab"        onclick="switchListTab('books',  this)">Books</div>
-          <div class="list-tab"        onclick="switchListTab('places', this)">Places</div>
-          <div class="list-tab"        onclick="switchListTab('movies', this)">Movies</div>
+          <div class="list-tab" onclick="switchListTab('books', this)">Books</div>
+          <div class="list-tab" onclick="switchListTab('places', this)">Places</div>
+          <div class="list-tab" onclick="switchListTab('movies', this)">Movies</div>
         </div>
 
         <div class="list-panel active" id="list-series">
@@ -807,7 +746,7 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
 </section>
 
 <!-- PAGE: TRAITS / SKILLS -->
-<section id="page-skills" class="page" data-page="skills">
+<section id="page-skills" class="page">
   <div class="page-inner">
     <div class="container section">
       <div class="section-label reveal">10 — Traits</div>
@@ -881,8 +820,8 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
   </div>
 </section>
 
-<!-- PAGE: GAMES -->
-<section id="page-games" class="page" data-page="games">
+<!-- PAGE: GAMES — ALL 5 PUBLIC, private section below -->
+<section id="page-games" class="page">
   <div class="page-inner">
     <div class="container section">
       <div class="section-label reveal">12 — Games</div>
@@ -921,7 +860,7 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
         </div>
       </div>
 
-      <!-- Private games — family only -->
+      <!-- Private games — family only, external links -->
       <div class="divider reveal" style="margin-top:3rem;"></div>
 
       <div class="section-label reveal" style="margin-top:0;">
@@ -962,14 +901,14 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
   </div>
 </section>
 
-<!-- Game Modal — shared overlay, not a page -->
+<!-- Game Modal -->
 <div class="game-modal" id="game-modal">
   <button class="game-modal-close" onclick="closeGame()">✕</button>
   <div id="game-container" style="width:100%;max-width:600px;"></div>
 </div>
 
 <!-- PAGE: SOCIAL PROOF -->
-<section id="page-social" class="page" data-page="social">
+<section id="page-social" class="page">
   <div class="page-inner">
     <div class="container section">
       <div class="section-label reveal">13 — Social Proof</div>
@@ -1021,10 +960,9 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════
-     AUDIO ELEMENTS
-     Untouched — sidebar-controller.js never touches these
-═══════════════════════════════════════════════════════ -->
+<!-- FIX 1: konami-egg div REMOVED entirely -->
+
+<!-- AUDIO -->
 <audio id="rain-song">
   <source src="songs/rimjhim.mp3" type="audio/mpeg">
 </audio>
@@ -1032,20 +970,15 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
   <source src="songs/SONG1.mp3" type="audio/mpeg">
 </audio>
 
-<!-- ═══════════════════════════════════════════════════════
-     VINYL RECORD EASTER EGG
-     Hidden until 7 name clicks — managed by main.js
-═══════════════════════════════════════════════════════ -->
+<!-- VINYL RECORD — hidden until 7 name clicks (easter egg) -->
 <div class="vinyl-player paused hidden" id="vinyl-player">
   <div class="vinyl-disc"></div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     MUSIC PANEL
-     Spotify-style quarter-screen panel — managed by main.js
-═══════════════════════════════════════════════════════ -->
+<!-- MUSIC PANEL BACKDROP — click here to close panel, music keeps playing -->
 <div id="music-backdrop"></div>
 
+<!-- MUSIC PANEL — Spotify-like, quarter screen, hidden by default via CSS -->
 <div id="music-panel" class="music-panel">
   <div class="music-panel-inner">
     <div class="music-panel-header">
@@ -1084,13 +1017,7 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     SCRIPTS
-     ─────────────────────────────────────────────────────
-     Load order is unchanged. sidebar-controller.js is last
-     so it can safely find all DOM elements that other
-     scripts may have already initialised.
-═══════════════════════════════════════════════════════ -->
+<!-- SCRIPTS -->
 <script src="js/roro-intro.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
@@ -1098,13 +1025,9 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
 <script src="js/main.js"></script>
 <script src="js/baseball-game.js"></script>
 <script src="js/manager-roro.js"></script>
-
-<!--
-  sidebar-controller.js — desktop hamburger & sidebar system.
-  Loaded last so navigateTo() (defined in main.js) is already
-  available when firePageTransition() needs to call it.
--->
 <script src="js/sidebar-controller.js"></script>
 
+  
+  
 </body>
 </html>
