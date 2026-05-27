@@ -91,6 +91,7 @@
   <li><a href="#" onclick="navigateTo('social');   return false;">Social</a></li>
   <li><a href="#" onclick="navigateTo('profiles'); return false;">Profile</a></li>
   <li><a href="#" onclick="navigateTo('resume');   return false;">CV</a></li>
+  <li><a href="#" onclick="navigateTo('projects'); return false;">Projects</a></li>
 </ul>
 
   <!--
@@ -162,6 +163,7 @@
   <a href="#" onclick="navigateTo('skills');   toggleMobileNav(); return false;">Traits</a>
   <a href="#" onclick="navigateTo('games');    toggleMobileNav(); return false;">Games</a>
   <a href="#" onclick="navigateTo('social');   toggleMobileNav(); return false;">Social</a>
+  <a href="#" onclick="navigateTo('projects'); toggleMobileNav(); return false;">Projects</a>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
@@ -798,6 +800,110 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
   </div>
 </section>
 
+
+<!-- PAGE: PROJECTS -->
+<!-- Layout mirrors Lists page exactly. Uses same .lists-tabs/.list-panel classes. -->
+<!-- Nationals is always the LAST item in every tab — do not move it. -->
+<section id="page-projects" class="page" data-page="projects">
+  <div class="page-inner">
+    <div class="container section">
+
+      <div class="section-label reveal">11 — Projects</div>
+      <h2 class="section-title reveal reveal-d1">Things I've built.<br>Things I'm building.</h2>
+
+      <!-- Tab navigation — same structure as Lists page -->
+      <div class="lists-tabs">
+        <div class="list-tab active" onclick="switchListTab('completed', this)">Completed</div>
+        <div class="list-tab"        onclick="switchListTab('working',   this)">Currently Working On</div>
+        <div class="list-tab"        onclick="switchListTab('abandoned', this)">Abandoned</div>
+      </div>
+
+      <!-- ── TAB: COMPLETED ── -->
+      <div class="list-panel active" id="list-completed">
+
+        <div class="list-item">
+          <div class="list-item-num">01</div>
+          <div class="list-item-info">
+            <div class="list-item-title">E-commerce Prototype</div>
+            <div class="list-item-meta">Web · 2024</div>
+          </div>
+          <span class="list-item-status status-completed">Completed</span>
+        </div>
+
+        <div class="list-item">
+          <div class="list-item-num">02</div>
+          <div class="list-item-info">
+            <div class="list-item-title">Until The Bullet Woke Me</div>
+            <div class="list-item-meta">Creative Writing · 2024</div>
+          </div>
+          <span class="list-item-status status-completed">Completed</span>
+        </div>
+
+        <!-- NATIONALS — ALWAYS LAST. Do not add items below this. Add above. -->
+        <div class="list-item">
+          <div class="list-item-num">03</div>
+          <div class="list-item-info">
+            <div class="list-item-title">Nationals</div>
+            <div class="list-item-meta">Competition · 2024</div>
+          </div>
+          <span class="list-item-status status-completed">Completed</span>
+        </div>
+
+      </div><!-- /#list-completed -->
+
+      <!-- ── TAB: CURRENTLY WORKING ON ── -->
+      <div class="list-panel" id="list-working">
+
+        <div class="list-item">
+          <div class="list-item-num">01</div>
+          <div class="list-item-info">
+            <div class="list-item-title">MSM Personal Website</div>
+            <div class="list-item-meta">Web · 2025 – Present</div>
+          </div>
+          <span class="list-item-status status-ongoing">Currently Working On</span>
+        </div>
+
+        <!-- NATIONALS — ALWAYS LAST. Add new items above this. -->
+        <div class="list-item">
+          <div class="list-item-num">02</div>
+          <div class="list-item-info">
+            <div class="list-item-title">Nationals</div>
+            <div class="list-item-meta">Competition · Ongoing</div>
+          </div>
+          <span class="list-item-status status-ongoing">Currently Working On</span>
+        </div>
+
+      </div><!-- /#list-working -->
+
+      <!-- ── TAB: ABANDONED ── -->
+      <div class="list-panel" id="list-abandoned">
+
+        <div class="list-item">
+          <div class="list-item-num">01</div>
+          <div class="list-item-info">
+            <div class="list-item-title">xyz Project — REPLACE</div>
+            <div class="list-item-meta">Type · Year</div>
+          </div>
+          <span class="list-item-status status-abandoned">Abandoned</span>
+        </div>
+
+        <!-- NATIONALS — ALWAYS LAST. Add new items above this. -->
+        <div class="list-item">
+          <div class="list-item-num">02</div>
+          <div class="list-item-info">
+            <div class="list-item-title">Nationals</div>
+            <div class="list-item-meta">Competition · Reference</div>
+          </div>
+          <span class="list-item-status status-abandoned">Abandoned</span>
+        </div>
+
+      </div><!-- /#list-abandoned -->
+
+    </div>
+  </div>
+</section>
+
+  
 <!-- PAGE: TRAITS / SKILLS -->
 <section id="page-skills" class="page" data-page="skills">
   <div class="page-inner">
