@@ -1,15 +1,21 @@
 /* ═══════════════════════════════════════════════════════════════════════
    sidebar-controller.js
    Premium Desktop-Only Hamburger Sidebar System
-   MSM Personal Portfolio — v1.1
+   MSM Personal Portfolio — v1.2
    ─────────────────────────────────────────────────────────────────────
-   FIXES v1.1:
-   · Clock page ID fixed: 'clock' → 'birthday' (matches navigateTo)
-   · Panel + overlay now start at top: 64px (below navbar, not over it)
-   · Sidebar visual style matches mobile hamburger exactly
-     (large italic serif, counter number stacked above label)
-   · Per-page-section MutationObserver for reliable active indicator
-   · Page order: Photos · Journey · Clock · Lists · Thoughts · Games
+   FIXES / ADDITIONS v1.2:
+   · Issue 2 FIX — Removed backdrop-filter blur from overlay.
+     The blur caused text/element glow halos. Now uses plain dim overlay.
+   · Issue 3 FIX — Two dividers:
+       sep1: inside .nav-right at start (between page links & controls)
+       sep2: inside .nav-right before desktop hamburger (after themes)
+   · Upgrade 1 — Dynamic active-page crumb in desktop nav.
+     When user is on a sidebar page (Photos, Journey, Clock, Lists,
+     Thoughts, Games), the page name appears in the nav bar between
+     sep1 and the control buttons, with smooth opacity + max-width
+     transition. Disappears when navigating to a standard nav page.
+   · Nav spacing fix — adds gap to .nav-links on desktop so Home /
+     Identity / Social / Profile / CV have proper breathing room.
    ─────────────────────────────────────────────────────────────────────
    DESKTOP ONLY (≥1024px). Mobile navigation is COMPLETELY untouched.
 ═══════════════════════════════════════════════════════════════════════ */
@@ -21,28 +27,26 @@
      CONFIGURATION
   ══════════════════════════════════════════════════════════════════ */
   var CFG = {
-    BREAKPOINT  : 1024,      /* px — desktop only above this            */
-    WIDTH_VW    : 26,        /* sidebar width vw (22–28 range)          */
-    OPEN_MS     : 540,       /* slide-in duration                       */
-    CLOSE_MS    : 420,       /* slide-out duration                      */
-    BLUR_MS     : 360,       /* content blur/unblur duration            */
+    BREAKPOINT  : 1024,
+    WIDTH_VW    : 26,
+    OPEN_MS     : 540,
+    CLOSE_MS    : 420,
+    BLUR_MS     : 360,
     EASE_OUT    : 'cubic-bezier(0.16, 1, 0.3, 1)',
     EASE_IN     : 'cubic-bezier(0.76, 0, 0.24, 1)',
-    HOVER_SHIFT : 4,         /* px rightward shift on hover             */
-    CONTENT_BLUR: 7,         /* px blur on main content                 */
-    CONTENT_DIM : 0.38,      /* dim opacity on main content             */
-    NAV_HEIGHT  : 64,        /* px — must match #nav height in nav.css  */
+    HOVER_SHIFT : 4,
+    CONTENT_DIM : 0.50,   /* dim opacity — slightly higher since no blur */
+    NAV_HEIGHT  : 64,     /* must match #nav height in nav.css           */
 
     /*
-      FIX v1.1 — page IDs must exactly match what navigateTo() in
-      main.js understands. 'clock' renamed to 'birthday' because the
-      page section is #page-birthday and navigateTo('birthday') is
-      what main.js expects. Wrong ID = black screen + broken nav.
+      Page IDs match navigateTo() IDs in main.js exactly.
+      'birthday' = Clock page.  Projects is NOT here — it is a main
+      nav page, shown on desktop nav, not in the sidebar.
     */
     PAGES: [
       { id: 'photos',   label: 'Photos',   num: '01' },
       { id: 'journey',  label: 'Journey',  num: '02' },
-      { id: 'birthday', label: 'Clock',    num: '03' }, /* was 'clock' — FIXED */
+      { id: 'birthday', label: 'Clock',    num: '03' },
       { id: 'lists',    label: 'Lists',    num: '04' },
       { id: 'thoughts', label: 'Thoughts', num: '05' },
       { id: 'games',    label: 'Games',    num: '06' }
@@ -64,7 +68,8 @@
     line1       : null,
     line2       : null,
     line3       : null,
-    navItems    : []
+    navItems    : [],
+    crumb       : null   /* #sb-page-crumb element — dynamic page label in nav */
   };
 
   /* ══════════════════════════════════════════════════════════════════
@@ -92,7 +97,6 @@
     };
   }
 
-  /* Sync accent colour as R/G/B vars so CSS rgba() tints update with theme */
   function syncAccentRgb() {
     var hex = getCssVar('--accent') || '#c8a96e';
     var rgb = hexToRgb(hex);
@@ -102,7 +106,6 @@
     doc.documentElement.style.setProperty('--sb-accent-b', rgb.b);
   }
 
-  /* Reuse the existing mechanical click sound — never creates a new one */
   function playMechanicalClick() {
     if (typeof global.playMechanicalSound === 'function') { global.playMechanicalSound(); return; }
     if (typeof global.playClick           === 'function') { global.playClick();            return; }
@@ -121,9 +124,25 @@
     }
   }
 
+  /**
+   * Returns the display label for a sidebar page ID,
+   * or null if the page is not a sidebar page.
+   * Used by updateNavCrumb().
+   */
+  function getPageLabel(pageId) {
+    for (var i = 0; i < CFG.PAGES.length; i++) {
+      if (CFG.PAGES[i].id === pageId) return CFG.PAGES[i].label;
+    }
+    return null;
+  }
+
   /* ══════════════════════════════════════════════════════════════════
      CSS INJECTION
-     v1.1 changes highlighted with ← FIX comments
+     v1.2 key changes:
+     · Overlay uses plain rgba dim — NO backdrop-filter (fixes glow)
+     · Two .sb-nav-sep dividers styled identically
+     · .sb-page-crumb — dynamic active page label in desktop nav
+     · Nav link spacing fix on desktop
   ══════════════════════════════════════════════════════════════════ */
   function injectStyles() {
     if (doc.getElementById('sb-styles')) return;
@@ -138,24 +157,15 @@
       '  justify-content: center;',
       '  align-items: flex-end;',
       '  gap: 5px;',
-      '  width: 36px;',
-      '  height: 36px;',
-      '  cursor: pointer;',
-      '  background: none;',
-      '  border: none;',
-      '  padding: 0;',
-      '  flex-shrink: 0;',
-      '  outline: none;',
+      '  width: 36px; height: 36px;',
+      '  cursor: pointer; background: none; border: none;',
+      '  padding: 0; flex-shrink: 0; outline: none;',
       '  -webkit-tap-highlight-color: transparent;',
       '}',
-      '@media (min-width: ' + CFG.BREAKPOINT + 'px) {',
-      '  .sb-hamburger { display: flex; }',
-      '}',
+      '@media (min-width: ' + CFG.BREAKPOINT + 'px) { .sb-hamburger { display: flex; } }',
 
-      /* Three descending-length thin lines */
       '.sb-hamburger .sb-line {',
-      '  display: block;',
-      '  height: 1.5px;',
+      '  display: block; height: 1.5px;',
       '  background: var(--text, #f0ebe0);',
       '  border-radius: 1px;',
       '  transform-origin: center center;',
@@ -168,62 +178,112 @@
       '.sb-hamburger .sb-line-1 { width: 24px; }',
       '.sb-hamburger .sb-line-2 { width: 18px; }',
       '.sb-hamburger .sb-line-3 { width: 12px; }',
-
-      /* Morph to X on open */
       '.sb-hamburger.sb-is-open .sb-line-1 { width: 22px; transform: translateY(6.5px) rotate(45deg); }',
       '.sb-hamburger.sb-is-open .sb-line-2 { opacity: 0; width: 0; }',
       '.sb-hamburger.sb-is-open .sb-line-3 { width: 22px; transform: translateY(-6.5px) rotate(-45deg); }',
       '.sb-hamburger:hover .sb-line { opacity: 0.7; }',
 
-      /* ── Divider between page links and control buttons ─────────── */
+      /* ── Nav divider lines (used for BOTH sep1 and sep2) ────────── */
       '.sb-nav-sep {',
       '  display: none;',
-      '  width: 1px;',
-      '  height: 18px;',
-      '  background: rgba(255,255,255,0.12);',
+      '  width: 1px; height: 18px;',
+      '  background: rgba(255, 255, 255, 0.12);',
       '  flex-shrink: 0;',
       '  align-self: center;',
-      '  margin: 0 6px;',
+      '  margin: 0 4px;',
       '}',
       '@media (min-width: ' + CFG.BREAKPOINT + 'px) { .sb-nav-sep { display: block; } }',
 
-      /* ── Overlay — FIX: top:64px so navbar is never blurred/dimmed ─ */
+      /* ── Dynamic active page crumb in desktop nav ───────────────── */
+      /*
+        Upgrade 1: Shows the active sidebar page name in the top nav
+        between sep1 and the control buttons.
+        Transition: opacity + max-width for smooth appear/disappear.
+        Hidden by default (max-width: 0, overflow: hidden).
+      */
+      '.sb-page-crumb {',
+      '  display: none;',
+      '  font-family: var(--ff-body, "DM Sans", sans-serif);',
+      '  font-size: 0.78rem;',
+      '  font-weight: 400;',
+      '  letter-spacing: 0.08em;',
+      '  text-transform: uppercase;',
+      '  color: var(--accent, #c8a96e);',
+      '  white-space: nowrap;',
+      '  overflow: hidden;',
+      '  max-width: 0;',
+      '  opacity: 0;',
+      '  padding: 0;',
+      '  flex-shrink: 0;',
+      '  position: relative;',
+      '  transition:',
+      '    max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1),',
+      '    opacity   0.40s cubic-bezier(0.16, 1, 0.3, 1),',
+      '    padding   0.40s cubic-bezier(0.16, 1, 0.3, 1);',
+      '}',
+      '@media (min-width: ' + CFG.BREAKPOINT + 'px) { .sb-page-crumb { display: block; } }',
+      '.sb-page-crumb.sb-crumb--visible {',
+      '  max-width: 200px;',
+      '  opacity: 1;',
+      '  padding: 0.5rem 0.6rem;',
+      '}',
+      /* Tiny underline decoration on the crumb */
+      '.sb-page-crumb::after {',
+      '  content: "";',
+      '  position: absolute;',
+      '  bottom: 0; left: 0.6rem; right: 0.6rem;',
+      '  height: 1px;',
+      '  background: var(--accent, #c8a96e);',
+      '  opacity: 0.35;',
+      '}',
+
+      /* ── Nav link spacing fix — desktop only ─────────────────────── */
+      /*
+        Issue 1: Home/Identity/Social/Profile/CV too cramped.
+        Adding gap between list items and slightly wider link padding.
+      */
+      '@media (min-width: ' + CFG.BREAKPOINT + 'px) {',
+      '  #nav .nav-links { gap: 0.3rem; }',
+      '  #nav .nav-links a { padding: 0.5rem 1.1rem; }',
+      '}',
+
+      /* ── Overlay ────────────────────────────────────────────────────
+         FIX v1.2: backdrop-filter REMOVED.
+         backdrop-filter: blur() was causing white text / glowing halos
+         around high-contrast elements when the overlay appeared.
+         Solution: plain semi-transparent dark overlay — clean, no glow.
+      ──────────────────────────────────────────────────────────────── */
       '.sb-overlay {',
       '  position: fixed;',
-      '  top: ' + CFG.NAV_HEIGHT + 'px;',    /* ← FIX was: top: 0 */
+      '  top: ' + CFG.NAV_HEIGHT + 'px;',
       '  left: 0; right: 0; bottom: 0;',
       '  z-index: 800;',
       '  pointer-events: none;',
       '  opacity: 0;',
-      '  background: rgba(0,0,0,0);',
-      '  backdrop-filter: blur(0px);',
-      '  -webkit-backdrop-filter: blur(0px);',
+      '  background: rgba(0, 0, 0, 0);',
+      '  /* NO backdrop-filter — prevents text glow artifacts */',
       '  transition:',
-      '    opacity         ' + CFG.BLUR_MS + 'ms cubic-bezier(0.16,1,0.3,1),',
-      '    background      ' + CFG.BLUR_MS + 'ms cubic-bezier(0.16,1,0.3,1),',
-      '    backdrop-filter ' + CFG.BLUR_MS + 'ms cubic-bezier(0.16,1,0.3,1),',
-      '    -webkit-backdrop-filter ' + CFG.BLUR_MS + 'ms cubic-bezier(0.16,1,0.3,1);',
+      '    opacity    ' + CFG.BLUR_MS + 'ms cubic-bezier(0.16, 1, 0.3, 1),',
+      '    background ' + CFG.BLUR_MS + 'ms cubic-bezier(0.16, 1, 0.3, 1);',
       '  visibility: hidden;',
       '}',
       '.sb-overlay.sb-overlay--visible { visibility: visible; }',
       '.sb-overlay.sb-overlay--active {',
-      '  pointer-events: auto; opacity: 1;',
-      '  background: rgba(0,0,0,' + CFG.CONTENT_DIM + ');',
-      '  backdrop-filter: blur(' + CFG.CONTENT_BLUR + 'px);',
-      '  -webkit-backdrop-filter: blur(' + CFG.CONTENT_BLUR + 'px);',
+      '  pointer-events: auto;',
+      '  opacity: 1;',
+      '  background: rgba(0, 0, 0, ' + CFG.CONTENT_DIM + ');',
+      '  /* No blur — just clean dim. Prevents glow on text/elements. */',
       '}',
 
-      /* ── Sidebar panel — FIX: top:64px so it appears below navbar ── */
+      /* ── Sidebar panel — starts below navbar ────────────────────── */
       '.sb-panel {',
       '  position: fixed;',
-      '  top: ' + CFG.NAV_HEIGHT + 'px;',    /* ← FIX was: top: 0 */
+      '  top: ' + CFG.NAV_HEIGHT + 'px;',
       '  right: 0; bottom: 0;',
       '  width: ' + CFG.WIDTH_VW + 'vw;',
-      '  min-width: 260px;',
-      '  max-width: 420px;',
+      '  min-width: 260px; max-width: 420px;',
       '  z-index: 900;',
-      '  display: flex;',
-      '  flex-direction: column;',
+      '  display: flex; flex-direction: column;',
       '  background: var(--bg, #080808);',
       '  border-left: 1px solid var(--border, rgba(255,255,255,0.06));',
       '  transform: translateX(100%);',
@@ -232,15 +292,14 @@
       '  will-change: transform, opacity;',
       '  overflow: hidden;',
       '  transition:',
-      '    transform ' + CFG.OPEN_MS + 'ms cubic-bezier(0.16,1,0.3,1),',
+      '    transform ' + CFG.OPEN_MS + 'ms cubic-bezier(0.16, 1, 0.3, 1),',
       '    opacity   ' + CFG.OPEN_MS + 'ms ease;',
       '}',
 
-      /* Ultra-subtle theme-tinted left edge (paint brush effect, 1/6 width) */
+      /* Ultra-subtle theme-tinted left edge */
       '.sb-panel::before {',
       '  content: "";',
-      '  position: absolute; top: 0; left: 0; bottom: 0;',
-      '  width: 16.667%;',
+      '  position: absolute; top: 0; left: 0; bottom: 0; width: 16.667%;',
       '  pointer-events: none; z-index: 0;',
       '  background: linear-gradient(to right,',
       '    rgba(var(--sb-accent-r,200),var(--sb-accent-g,169),var(--sb-accent-b,110),0.018) 0%,',
@@ -250,7 +309,7 @@
       '  transition: background 0.5s ease;',
       '}',
 
-      '.sb-panel.sb-panel--open    { transform: translateX(0); opacity: 1; pointer-events: auto; }',
+      '.sb-panel.sb-panel--open { transform: translateX(0); opacity: 1; pointer-events: auto; }',
       '.sb-panel.sb-panel--closing {',
       '  transform: translateX(100%); opacity: 0; pointer-events: none;',
       '  transition:',
@@ -258,13 +317,10 @@
       '    opacity   ' + CFG.CLOSE_MS + 'ms ease;',
       '}',
 
-      /* ── Sidebar inner container ─────────────────────────────────── */
-      '.sb-inner {',
-      '  position: relative; z-index: 1;',
-      '  display: flex; flex-direction: column; height: 100%;',
-      '}',
+      /* ── Sidebar inner ── */
+      '.sb-inner { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; }',
 
-      /* ── Sidebar header ─────────────────────────────────────────── */
+      /* ── Sidebar header ── */
       '.sb-header {',
       '  padding: clamp(20px,3.5vh,36px) clamp(24px,2.8vw,40px) clamp(14px,2vh,24px);',
       '  border-bottom: 1px solid var(--border, rgba(255,255,255,0.06));',
@@ -276,20 +332,14 @@
       '  color: var(--text3, rgba(240,235,224,0.32));',
       '}',
 
-      /* ── Sidebar nav list ───────────────────────────────────────── */
+      /* ── Sidebar nav list ── */
       '.sb-nav {',
-      '  flex: 1;',
-      '  padding: clamp(8px,1.5vh,18px) 0;',
-      '  overflow-y: auto; scrollbar-width: none;',
-      '  position: relative;',
+      '  flex: 1; padding: clamp(8px,1.5vh,18px) 0;',
+      '  overflow-y: auto; scrollbar-width: none; position: relative;',
       '}',
       '.sb-nav::-webkit-scrollbar { display: none; }',
 
-      /*
-        Vertical accent line on the LEFT — identical to mobile nav ::before.
-        Mobile uses left: 6% from left edge of the overlay.
-        We mirror that here inside the sidebar panel.
-      */
+      /* Vertical accent line on left — matches mobile nav ::before */
       '.sb-nav::before {',
       '  content: "";',
       '  position: absolute; top: 0; bottom: 0; left: 6%; width: 1px;',
@@ -301,15 +351,10 @@
       '  pointer-events: none; z-index: 0;',
       '}',
 
-      /*
-        FIX v1.1 — nav item now EXACTLY matches mobile nav link:
-        · padding mirrors #mobile-nav a (0.6rem vertical, 9% left indent)
-        · hover: translateX instead of padding shift (cleaner on desktop)
-        · no description / subtitle / extra text
-      */
+      /* Nav item — matches mobile #mobile-nav a exactly */
       '.sb-nav-item {',
       '  display: flex; align-items: center; justify-content: space-between;',
-      '  padding: 0.6rem 1.5rem 0.6rem 9%;',  /* matches mobile link padding */
+      '  padding: 0.6rem 1.5rem 0.6rem 9%;',
       '  cursor: pointer; user-select: none;',
       '  position: relative; z-index: 1;',
       '  transform: translateX(0);',
@@ -318,16 +363,10 @@
       '}',
       '.sb-nav-item:hover { transform: translateX(' + CFG.HOVER_SHIFT + 'px); }',
 
-      /*
-        Left group: counter number stacked ABOVE the label.
-        Mirrors mobile nav counter pseudo-element (display:block above link).
-      */
-      '.sb-nav-item-left {',
-      '  display: flex; flex-direction: column;',
-      '  align-items: flex-start; gap: 0.08rem;',
-      '}',
+      /* Left: counter stacked above label — mirrors mobile counter pseudo */
+      '.sb-nav-item-left { display: flex; flex-direction: column; align-items: flex-start; gap: 0.08rem; }',
 
-      /* Counter — identical to mobile ::before pseudo-element */
+      /* Counter — identical to mobile ::before */
       '.sb-nav-num {',
       '  font-family: var(--ff-mono, "DM Mono", monospace);',
       '  font-size: 0.5rem; letter-spacing: 0.12em;',
@@ -336,7 +375,7 @@
       '  transition: color 0.25s ease, opacity 0.25s ease;',
       '}',
 
-      /* Label — identical to mobile nav link text (large italic serif) */
+      /* Label — identical to mobile nav link */
       '.sb-nav-label {',
       '  font-family: var(--ff-display, "Cormorant Garamond", serif);',
       '  font-size: 1.35rem; font-weight: 300; font-style: italic;',
@@ -345,15 +384,14 @@
       '  transition: color 0.25s ease;',
       '}',
 
-      /* Hover — accent colour, matches mobile hover */
       '.sb-nav-item:hover .sb-nav-label { color: var(--accent, #c8a96e); }',
       '.sb-nav-item:hover .sb-nav-num   { color: var(--accent, #c8a96e); opacity: 0.65; }',
 
-      /* Active — bright text (matches mobile active link) */
+      /* Active state */
       '.sb-nav-item.sb-nav-item--active .sb-nav-label { color: var(--text, #f0ebe0); }',
-      '.sb-nav-item.sb-nav-item--active .sb-nav-num   { color: var(--text3, rgba(240,235,224,0.5)); opacity: 0.6; }',
+      '.sb-nav-item.sb-nav-item--active .sb-nav-num   { color: var(--text3); opacity: 0.6; }',
 
-      /* Right-side active indicator — vertical line, only on active page */
+      /* Right-side vertical indicator line */
       '.sb-nav-indicator {',
       '  width: 1.5px; height: clamp(12px,1.8vh,18px);',
       '  background: var(--accent, #c8a96e); border-radius: 1px;',
@@ -362,33 +400,18 @@
       '}',
       '.sb-nav-item.sb-nav-item--active .sb-nav-indicator { opacity: 1; transform: scaleY(1); }',
 
-      /* ── Thin rule above footer ─────────────────────────────────── */
-      '.sb-rule {',
-      '  height: 1px; margin: 0 clamp(24px,2.8vw,40px);',
-      '  background: rgba(255,255,255,0.04); flex-shrink: 0;',
-      '}',
+      /* Rule */
+      '.sb-rule { height: 1px; margin: 0 clamp(24px,2.8vw,40px); background: rgba(255,255,255,0.04); flex-shrink: 0; }',
 
-      /* ── Footer — ACCESS LEVEL: PUBLIC ──────────────────────────── */
-      '.sb-footer {',
-      '  padding: clamp(14px,2vh,24px) clamp(24px,2.8vw,40px);',
-      '  border-top: 1px solid var(--border, rgba(255,255,255,0.06));',
-      '  flex-shrink: 0;',
-      '}',
+      /* Footer */
+      '.sb-footer { padding: clamp(14px,2vh,24px) clamp(24px,2.8vw,40px); border-top: 1px solid var(--border, rgba(255,255,255,0.06)); flex-shrink: 0; }',
       '.sb-access-row { display: flex; align-items: center; gap: 10px; }',
-      '.sb-access-key {',
-      '  font-family: var(--ff-mono, "DM Mono", monospace);',
-      '  font-size: 0.46rem; letter-spacing: 0.28em; text-transform: uppercase;',
-      '  color: var(--text3, rgba(240,235,224,0.28)); opacity: 0.55;',
-      '}',
-      '.sb-access-val {',
-      '  font-family: var(--ff-mono, "DM Mono", monospace);',
-      '  font-size: 0.50rem; letter-spacing: 0.2em; text-transform: uppercase;',
-      '  color: var(--text3, rgba(240,235,224,0.32)); opacity: 0.65;',
-      '}',
+      '.sb-access-key { font-family: var(--ff-mono,"DM Mono",monospace); font-size: 0.46rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--text3,rgba(240,235,224,0.28)); opacity: 0.55; }',
+      '.sb-access-val { font-family: var(--ff-mono,"DM Mono",monospace); font-size: 0.50rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text3,rgba(240,235,224,0.32)); opacity: 0.65; }',
 
-      /* ── Hard hide on mobile — never interfere with mobile nav ────── */
+      /* ── Hard hide on mobile ── */
       '@media (max-width: ' + (CFG.BREAKPOINT - 1) + 'px) {',
-      '  .sb-panel, .sb-overlay, .sb-hamburger, .sb-nav-sep { display: none !important; }',
+      '  .sb-panel, .sb-overlay, .sb-hamburger, .sb-nav-sep, .sb-page-crumb { display: none !important; }',
       '}'
 
     ].join('\n');
@@ -411,8 +434,6 @@
 
   /* ══════════════════════════════════════════════════════════════════
      DOM — BUILD SIDEBAR PANEL
-     v1.1: Item HTML restructured — counter number stacked above label,
-           matching the mobile nav counter pseudo-element exactly.
   ══════════════════════════════════════════════════════════════════ */
   function buildPanel() {
     if (doc.getElementById('sb-panel')) {
@@ -449,27 +470,20 @@
       item.setAttribute('tabindex', '0');
       item.setAttribute('aria-label', 'Go to ' + page.label);
 
-      /*
-        v1.1 FIX — matches mobile nav structure exactly:
-        .sb-nav-num  (small mono counter) displayed as block ABOVE
-        .sb-nav-label (large italic serif)
-        This mirrors how #mobile-nav a::before shows the counter.
-      */
       var left = doc.createElement('div');
       left.className = 'sb-nav-item-left';
 
       var num = doc.createElement('span');
       num.className = 'sb-nav-num';
-      num.textContent = page.num;            /* "01", "02" … */
+      num.textContent = page.num;
 
       var label = doc.createElement('span');
       label.className = 'sb-nav-label';
-      label.textContent = page.label;       /* "Photos", "Journey" … */
+      label.textContent = page.label;
 
       left.appendChild(num);
       left.appendChild(label);
 
-      /* Right-side active indicator line */
       var indicator = doc.createElement('span');
       indicator.className = 'sb-nav-indicator';
       indicator.setAttribute('aria-hidden', 'true');
@@ -477,18 +491,13 @@
       item.appendChild(left);
       item.appendChild(indicator);
 
-      /* Hover — play mechanical click */
       item.addEventListener('mouseenter', function () {
         if (isDesktop()) playMechanicalClick();
       });
-
-      /* Click — close sidebar then navigate */
       item.addEventListener('click', function () {
         if (!isDesktop()) return;
         handleNavigation(page.id);
       });
-
-      /* Keyboard — Enter / Space */
       item.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -503,12 +512,10 @@
 
     inner.appendChild(nav);
 
-    /* Rule */
     var rule = doc.createElement('div');
     rule.className = 'sb-rule';
     inner.appendChild(rule);
 
-    /* Footer */
     var footer = doc.createElement('footer');
     footer.className = 'sb-footer';
     var row = doc.createElement('div');
@@ -527,17 +534,28 @@
   }
 
   /* ══════════════════════════════════════════════════════════════════
-     DOM — BUILD DESKTOP HAMBURGER & INJECT INTO NAV-RIGHT
+     DOM — BUILD HAMBURGER + BOTH DIVIDERS + CRUMB
+     ─────────────────────────────────────────────────────────────────
+     v1.2 nav-right layout after injection:
+       [sep1] [crumb] [music-toggle] [theme-switcher] [mobile-ham]
+       [sep2] [sb-hamburger]
+
+     sep1 = divider between page links area and control buttons
+     sep2 = divider between theme dots and desktop hamburger
+     crumb = active page label for sidebar pages (hidden by default)
   ══════════════════════════════════════════════════════════════════ */
   function buildHamburger() {
+    /* Already built — just grab references */
     if (doc.getElementById('sb-hamburger')) {
       S.hamburger = doc.getElementById('sb-hamburger');
-      S.line1 = S.hamburger.querySelector('.sb-line-1');
-      S.line2 = S.hamburger.querySelector('.sb-line-2');
-      S.line3 = S.hamburger.querySelector('.sb-line-3');
+      S.line1     = S.hamburger.querySelector('.sb-line-1');
+      S.line2     = S.hamburger.querySelector('.sb-line-2');
+      S.line3     = S.hamburger.querySelector('.sb-line-3');
+      S.crumb     = doc.getElementById('sb-page-crumb') || null;
       return;
     }
 
+    /* Create hamburger button */
     var btn = doc.createElement('button');
     btn.id = 'sb-hamburger'; btn.className = 'sb-hamburger';
     btn.setAttribute('type', 'button');
@@ -553,24 +571,44 @@
 
     S.hamburger = btn; S.line1 = l1; S.line2 = l2; S.line3 = l3;
 
-    /* Inject after theme dots, inside .nav-right */
     var navRight = findDesktopNav();
+
     if (navRight) {
-      var sep = doc.createElement('div');
-      sep.className = 'sb-nav-sep';
-      navRight.appendChild(sep);
-      navRight.appendChild(btn);
+      /* ── CRUMB: active page label (hidden until on sidebar page) ── */
+      var crumb = doc.createElement('span');
+      crumb.id = 'sb-page-crumb'; crumb.className = 'sb-page-crumb';
+      crumb.setAttribute('aria-live', 'polite');
+      crumb.setAttribute('aria-atomic', 'true');
+      S.crumb = crumb;
+
+      /* ── SEP 1: between page links and controls ─────────────────── */
+      var sep1 = doc.createElement('div');
+      sep1.id = 'sb-sep-1'; sep1.className = 'sb-nav-sep';
+
+      /* Prepend sep1 then crumb to start of .nav-right.
+         insertBefore(x, firstChild) twice, in reverse order:         */
+      navRight.insertBefore(crumb, navRight.firstChild);  /* crumb first */
+      navRight.insertBefore(sep1,  navRight.firstChild);  /* sep1 before crumb */
+      /* Result so far: sep1 | crumb | [existing: music, themes, mobile-ham] */
+
+      /* ── SEP 2: between theme dots and desktop hamburger ─────────── */
+      var sep2 = doc.createElement('div');
+      sep2.id = 'sb-sep-2'; sep2.className = 'sb-nav-sep';
+
+      navRight.appendChild(sep2);   /* after existing controls */
+      navRight.appendChild(btn);    /* hamburger is last      */
+      /* Final: sep1 | crumb | music | themes | mobile-ham | sep2 | sb-ham */
+
     } else {
-      /* Fallback if nav not found */
+      /* Fallback: no nav found — fixed position top-right */
       btn.style.cssText = 'position:fixed;top:20px;right:24px;z-index:950;';
       doc.body.appendChild(btn);
     }
   }
 
-  /* Try selectors in priority order. data-desktop-nav is set in index.html */
   function findDesktopNav() {
     var selectors = [
-      '[data-desktop-nav]',  /* set on .nav-right in index.html */
+      '[data-desktop-nav]',
       '.nav-right',
       '.nav-desktop',
       '.desktop-nav',
@@ -587,9 +625,31 @@
   }
 
   /* ══════════════════════════════════════════════════════════════════
+     DYNAMIC NAV CRUMB — Upgrade 1
+     Shows the active sidebar page name in the desktop top nav.
+     Appears with smooth opacity + max-width transition when user
+     navigates to a sidebar page (Photos, Journey, Clock, etc.).
+     Disappears smoothly when navigating back to a standard nav page.
+  ══════════════════════════════════════════════════════════════════ */
+  function updateNavCrumb(pageId) {
+    if (!S.crumb) return;
+
+    var label = getPageLabel(pageId); /* null if not a sidebar page */
+
+    if (label) {
+      /* On a sidebar page — show crumb with page label */
+      S.crumb.textContent = label;
+      requestAnimationFrame(function () {
+        S.crumb.classList.add('sb-crumb--visible');
+      });
+    } else {
+      /* On a standard nav page — hide crumb */
+      S.crumb.classList.remove('sb-crumb--visible');
+    }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
      SCROLL FREEZE
-     Locks body scroll without any layout shift.
-     Compensates for scrollbar width to prevent content jump.
   ══════════════════════════════════════════════════════════════════ */
   function freezeScroll() {
     S.savedScrollY = window.scrollY;
@@ -618,7 +678,7 @@
     playMechanicalClick();
     freezeScroll();
     S.overlay.classList.add('sb-overlay--visible');
-    void S.overlay.offsetHeight; /* force reflow so transition fires */
+    void S.overlay.offsetHeight;
     S.overlay.classList.add('sb-overlay--active');
     S.panel.classList.remove('sb-panel--closing');
     void S.panel.offsetHeight;
@@ -633,7 +693,6 @@
 
   /* ══════════════════════════════════════════════════════════════════
      CLOSE SIDEBAR
-     Optional callback fires AFTER animation completes.
   ══════════════════════════════════════════════════════════════════ */
   function closeSidebar(callback) {
     if (!S.open || S.animating) return;
@@ -662,11 +721,8 @@
   }
 
   /* ══════════════════════════════════════════════════════════════════
-     NAVIGATION — step-by-step:
-     1. Sidebar slides closed
-     2. Blur disappears (part of close)
-     3. navigateTo() fires (page transition)
-     Animations never overlap.
+     NAVIGATION SEQUENCE
+     Step 1: sidebar closes — Step 2: blur gone — Step 3: navigateTo
   ══════════════════════════════════════════════════════════════════ */
   function handleNavigation(pageId) {
     if (S.animating) return;
@@ -674,30 +730,31 @@
   }
 
   function firePageTransition(pageId) {
-    /* Try global navigation functions defined in main.js */
     if (typeof global.navigateTo === 'function') { global.navigateTo(pageId); return; }
     if (typeof global.showPage   === 'function') { global.showPage(pageId);   return; }
     if (typeof global.loadPage   === 'function') { global.loadPage(pageId);   return; }
     if (typeof global.switchPage === 'function') { global.switchPage(pageId); return; }
     if (typeof global.goToPage   === 'function') { global.goToPage(pageId);   return; }
-    /* Fallback: click an existing nav link */
     var link =
       doc.querySelector('[data-page="' + pageId + '"]:not(.sb-nav-item)') ||
       doc.querySelector('[data-target="' + pageId + '"]') ||
       doc.querySelector('[href="#' + pageId + '"]') ||
       doc.querySelector('#nav-' + pageId);
     if (link) { link.click(); return; }
-    /* Last resort: custom event then hash */
     doc.dispatchEvent(new CustomEvent('sb:navigate', { bubbles: true, detail: { page: pageId } }));
     global.location.hash = pageId;
   }
 
   /* ══════════════════════════════════════════════════════════════════
      ACTIVE PAGE INDICATOR
+     v1.2: also calls updateNavCrumb() so the dynamic nav label
+     updates whenever the active page changes.
   ══════════════════════════════════════════════════════════════════ */
   function setActivePage(pageId) {
     if (!pageId) return;
     S.activePage = pageId;
+
+    /* Update sidebar item indicators */
     S.navItems.forEach(function (item) {
       if (item.dataset.sbPage === pageId) {
         item.classList.add('sb-nav-item--active');
@@ -705,6 +762,10 @@
         item.classList.remove('sb-nav-item--active');
       }
     });
+
+    /* Update dynamic nav crumb — Upgrade 1 */
+    updateNavCrumb(pageId);
+
     exposePageState(pageId);
   }
 
@@ -723,13 +784,10 @@
 
   /* ══════════════════════════════════════════════════════════════════
      PAGE CHANGE WATCHER
-     v1.1 FIX: Added per-page-section observer.
-     Watches each .page[data-page] section for the 'active' class
-     being added by main.js → navigateTo(). This is safe (targeted,
-     no subtree:true on body which caused hangs in older version).
+     Watches per-section class changes + custom events + hash.
+     subtree:false on body to avoid performance issues.
   ══════════════════════════════════════════════════════════════════ */
   function watchPageChanges() {
-    /* Body-level observer (keeps existing behaviour) */
     var bodyObs = new MutationObserver(function (mutations) {
       mutations.forEach(function (m) {
         if (m.attributeName === 'class' || m.attributeName === 'data-page') {
@@ -742,12 +800,7 @@
       attributeFilter: ['class', 'data-page']
     });
 
-    /*
-      FIX v1.1 — Per-page-section MutationObserver.
-      Watches each individual page section for class changes.
-      When navigateTo() in main.js adds/removes .active from a section,
-      this fires immediately and updates the sidebar indicator correctly.
-    */
+    /* Per-section observer — fires when navigateTo() toggles .active */
     var pageSections = doc.querySelectorAll('.page[data-page]');
     pageSections.forEach(function (section) {
       var sectionObs = new MutationObserver(function () {
@@ -755,25 +808,14 @@
           setActivePage(section.dataset.page);
         }
       });
-      sectionObs.observe(section, {
-        attributes: true,
-        attributeFilter: ['class']
-      });
+      sectionObs.observe(section, { attributes: true, attributeFilter: ['class'] });
     });
 
-    /* Custom events from navigation system */
-    doc.addEventListener('pageChanged', function (e) {
-      if (e.detail && e.detail.page) setActivePage(e.detail.page);
-    });
-    doc.addEventListener('navigated',   function (e) {
-      if (e.detail && e.detail.page) setActivePage(e.detail.page);
-    });
-    doc.addEventListener('pageSwitch',  function (e) {
-      if (e.detail && e.detail.page) setActivePage(e.detail.page);
-    });
-    doc.addEventListener('sb:setPage',  function (e) {
-      if (e.detail && e.detail.page) setActivePage(e.detail.page);
-    });
+    /* Custom events */
+    doc.addEventListener('pageChanged', function (e) { if (e.detail && e.detail.page) setActivePage(e.detail.page); });
+    doc.addEventListener('navigated',   function (e) { if (e.detail && e.detail.page) setActivePage(e.detail.page); });
+    doc.addEventListener('pageSwitch',  function (e) { if (e.detail && e.detail.page) setActivePage(e.detail.page); });
+    doc.addEventListener('sb:setPage',  function (e) { if (e.detail && e.detail.page) setActivePage(e.detail.page); });
 
     global.addEventListener('hashchange', function () {
       var hash = global.location.hash.replace('#', '');
@@ -783,7 +825,6 @@
 
   /* ══════════════════════════════════════════════════════════════════
      RORO PAGE STATE EXPOSURE
-     Exposes active page for RoRo AI contextual awareness.
   ══════════════════════════════════════════════════════════════════ */
   function exposePageState(pageId) {
     if (!pageId) return;
@@ -835,14 +876,10 @@
   function bindThemeChange() {
     var obs = new MutationObserver(function (mutations) {
       mutations.forEach(function (m) {
-        if (m.attributeName === 'data-theme' || m.attributeName === 'class') {
-          syncAccentRgb();
-        }
+        if (m.attributeName === 'data-theme' || m.attributeName === 'class') syncAccentRgb();
       });
     });
-    obs.observe(doc.documentElement, {
-      attributes: true, attributeFilter: ['data-theme', 'class']
-    });
+    obs.observe(doc.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
     doc.addEventListener('themeChanged',  syncAccentRgb);
     doc.addEventListener('theme:changed', syncAccentRgb);
     doc.addEventListener('sb:themeSync',  syncAccentRgb);
@@ -850,7 +887,6 @@
 
   /* ══════════════════════════════════════════════════════════════════
      PUBLIC API — window.SidebarController
-     Used by RoRo (manager-roro.js) to read current page context.
   ══════════════════════════════════════════════════════════════════ */
   function buildPublicAPI() {
     global.SidebarController = {
@@ -879,7 +915,7 @@
      INIT
   ══════════════════════════════════════════════════════════════════ */
   function init() {
-    if (global.SidebarController) return; /* prevent double init */
+    if (global.SidebarController) return;
     syncAccentRgb();
     injectStyles();
     buildOverlay();
