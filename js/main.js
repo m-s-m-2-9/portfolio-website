@@ -195,9 +195,14 @@ function doTransition(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active', 'exit-up'));
     const next = document.getElementById('page-' + pageId);
     if (next) {
-      next.classList.add('active');
-      next.scrollTop = 0;
-    }
+  next.classList.add('active');
+  next.scrollTop = 0;
+
+  // Lazy render page content
+  if (window.MSM && window.MSM.renderPage) {
+    window.MSM.renderPage(pageId);
+  }
+}
     currentPage = pageId;
     updateNavActive(pageId);
  
