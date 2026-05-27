@@ -26,7 +26,7 @@ window.ADMIN_HOME = {
   },
 
   /* ── Tagline (below hero name) ────────────────────────────────── */
-  tagline: 'Born 2008 · Mumbai · Making something of it all',
+  tagline: 'Connecting the dots · Making something of it all',
 
   /* ── Nav hint paragraph ───────────────────────────────────────── */
   /*
