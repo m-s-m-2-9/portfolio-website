@@ -29,7 +29,9 @@ window.addEventListener("load", () => {
   const bar = document.getElementById("loading-bar");
   const pct = document.getElementById("loading-pct");
  
+ if (loadingScreen) {
   loadingScreen.classList.add("ready");
+}
  
   let progress = 0;
  
@@ -46,8 +48,13 @@ window.addEventListener("load", () => {
       }, 300);
     }
  
-    bar.style.width = progress + "%";
-    pct.textContent = Math.floor(progress) + "%";
+    if (bar) {
+  bar.style.width = progress + "%";
+}
+
+if (pct) {
+  pct.textContent = Math.floor(progress) + "%";
+}
   }, 160);
 });
  
