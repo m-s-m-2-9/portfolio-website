@@ -20,7 +20,7 @@
 
 window.ADMIN_LISTS = {
 
-  sectionLabel: '09 — Curations',
+  sectionLabel: '10 — Curations',
   heading     : 'Things worth\nexperiencing.',  /* \n = line break */
 
   /* ── Web Series ─────────────────────────────────────────────────── */
