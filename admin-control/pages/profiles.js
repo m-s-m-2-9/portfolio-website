@@ -14,7 +14,7 @@
 
 window.ADMIN_PROFILES = {
 
-  sectionLabel: '04 — Digital Presence',
+  sectionLabel: '05 — Digital Presence',
   heading     : 'Find me around\nthe internet.',  /* \n = line break */
 
   /* ── Profile Links Array ────────────────────────────────────────── */
@@ -23,24 +23,24 @@ window.ADMIN_PROFILES = {
       id    : 'linkedin',
       icon  : '💼',
       label : 'LinkedIn',
-      handle: '',            /* ← optional: @yourhandle shown below label */
-      url   : '#',           /* ← paste your LinkedIn URL here            */
+      handle: '@manomay-shailendra-misra',            /* ← optional: @yourhandle shown below label */
+      url   : 'www.linkedin.com/in/manomay-shailendra-misra-406a87394',           /* ← paste your LinkedIn URL here            */
     },
     {
       id    : 'instagram',
       icon  : '📸',
       label : 'Instagram',
-      handle: '',
-      url   : '#',           /* ← paste your Instagram URL here           */
+      handle: '@m-s-m-2-9',
+      url   : 'www.linkedin.com/in/manomay-shailendra-misra-406a87394',           /* ← paste your Instagram URL here           */
     },
     {
       id    : 'resume',
       icon  : '📄',
       label : 'Resume',
-      handle: '',
+      handle: 'Download PDF',
       url   : 'manomay-cv.pdf',
     },
-    /* ── Add more profiles here ──
+    /* ── Add more profiles here ── GITHUB,X,FACEBOOK,WHATSAPP
     {
       id    : 'github',
       icon  : '👾',
