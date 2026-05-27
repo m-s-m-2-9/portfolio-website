@@ -18,7 +18,7 @@ window.ADMIN_IDENTITY = {
   sectionLabel: '01 — Identity',
 
   /* ── Photo caption ─────────────────────────────────────────────── */
-  photoCaption: 'Manomay — 2024',
+  photoCaption: 'Republic Day — 2026',
 
   /* ── Intro quote (large italic, above body text) ──────────────── */
   introQuote: '"Building legacy without losing softness."',
