@@ -17,7 +17,7 @@ window.ADMIN_CV = {
 
   /* ── Page header ───────────────────────────────────────────────── */
   name     : 'Manomay\nShailendra Misra', /* \n = line break in the heading */
-  title    : 'Replace with your title',   /* ← shown below name in accent color */
+  title    : 'Student',   /* ← shown below name in accent color */
 
   /* ── Contact block (top right of CV) ──────────────────────────── */
   contact: [
@@ -28,7 +28,7 @@ window.ADMIN_CV = {
   ],
 
   /* ── Summary paragraph ─────────────────────────────────────────── */
-  summary: 'Replace this with a 2–3 sentence professional summary. Who you are, what you do, what you\'re looking for.',
+  summary: 'Manomay Shailendra Misra is a BBA with Business Analytics student with a strong creative and strategic mindset, blending modern branding, content creation, and visual storytelling with leadership and management skills. Passionate about startups, media, and digital experiences, he focuses on building ideas that feel both professional and creatively distinctive.',
 
   /* ── Work experience entries ───────────────────────────────────── */
   /*
@@ -63,9 +63,9 @@ Beyond the classroom, served as Media Lead — capturing the camp's energy throu
   /* ── Education entries ─────────────────────────────────────────── */
   education: [
     {
-      title: 'Replace — School / College Name',
-      org  : 'Replace — Stream / Board',
-      date : '2008 – Present',
+      title: 'Don Bosco College',
+      org  : 'Bachelors of Business Administration with Business Analytics ',
+      date : '2026 – Present',
     },
     /* ── Add more entries here ── */
   ],
@@ -75,16 +75,19 @@ Beyond the classroom, served as Media Lead — capturing the camp's energy throu
     Add any skill as a string. Keep them short (1–3 words each).
   */
   skills: [
-    'Replace Skill',
-    'Replace Skill',
-    'Replace Skill',
-    'Replace Skill',
-    'Replace Skill',
-    'Replace Skill',
+    'Leadership',
+    'Strategic Thinking',
+    'Social Media Sense',
+    'Public Speaking',
+    'Media & Brand Awareness',
+    'Team Coordination',
+    'Visual Storytelling',
+    'Management',
+    'AI Prompting'
     /* Add more: 'Your Skill', */
   ],
 
   /* ── CV PDF download link ──────────────────────────────────────── */
-  pdfPath: 'manomay-cv.pdf',  /* ← file must be in root of your site */
+  pdfPath: 'manomay-cv.pdf',  /* ← file must be in root of your site replace*/
 
 };
