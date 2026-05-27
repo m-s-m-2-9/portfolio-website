@@ -21,7 +21,7 @@
 
 window.ADMIN_THOUGHTS = {
 
-  sectionLabel: '07 — Thoughts',
+  sectionLabel: '11 — Thoughts',
   heading     : 'On everything that matters.',
 
   /* ── Belief Categories ──────────────────────────────────────────── */
@@ -31,7 +31,7 @@ window.ADMIN_THOUGHTS = {
       id     : 'politics',
       icon   : '🏛️',
       title  : 'Politics',
-      preview: 'Power, governance, and what it means to be Indian in 2026.',
+      preview: 'Power, governance, and what it means to be Indian.',
       posts  : [
         {
           date : 'May 2026',
