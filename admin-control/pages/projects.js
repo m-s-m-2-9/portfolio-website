@@ -22,7 +22,7 @@
 
 window.ADMIN_PROJECTS = {
 
-  sectionLabel: '11 — Projects',
+  sectionLabel: '04 — Projects',
   heading     : 'Things I\'ve built.\nThings I\'m building.',
 
   /* ── Completed Projects ─────────────────────────────────────────── */
@@ -30,27 +30,19 @@ window.ADMIN_PROJECTS = {
 
     {
       title : 'E-commerce Prototype',
-      meta  : 'Web · 2024',
+      meta  : 'Web · 2026',
       status: 'completed',
       label : 'Completed',
     },
 
     {
       title : 'Until The Bullet Woke Me',
-      meta  : 'Creative Writing · 2024',
-      status: 'completed',
-      label : 'Completed',
+      meta  : 'Novel · 2026',
+      status: 'Abandoned',
+      label : 'Abandoned',
     },
 
     /* ── Add new COMPLETED projects above this line ── */
-
-    /* ⚠️  NATIONALS — ALWAYS LAST. DO NOT MOVE. */
-    {
-      title : 'Nationals',
-      meta  : 'Competition · 2024',
-      status: 'completed',
-      label : 'Completed',
-    },
 
   ],
 
@@ -59,21 +51,12 @@ window.ADMIN_PROJECTS = {
 
     {
       title : 'MSM Personal Website',
-      meta  : 'Web · 2025 – Present',
+      meta  : 'Website · 2026 – Present',
       status: 'ongoing',
       label : 'Currently Working On',
     },
 
     /* ── Add new WORKING projects above this line ── */
-
-    /* ⚠️  NATIONALS — ALWAYS LAST. DO NOT MOVE. */
-    {
-      title : 'Nationals',
-      meta  : 'Competition · Ongoing',
-      status: 'ongoing',
-      label : 'Currently Working On',
-    },
-
   ],
 
   /* ── Abandoned ──────────────────────────────────────────────────── */
@@ -88,13 +71,7 @@ window.ADMIN_PROJECTS = {
 
     /* ── Add new ABANDONED projects above this line ── */
 
-    /* ⚠️  NATIONALS — ALWAYS LAST. DO NOT MOVE. */
-    {
-      title : 'Nationals',
-      meta  : 'Competition · Reference',
-      status: 'abandoned',
-      label : 'Abandoned',
-    },
+   
 
   ],
 
