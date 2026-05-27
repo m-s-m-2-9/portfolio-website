@@ -16,7 +16,7 @@
 
 window.ADMIN_GAMES = {
 
-  sectionLabel: '12 — Games',
+  sectionLabel: '13 — Games',
   heading     : 'Take a break.\nPlay something.',
 
   /* ── Public Games ───────────────────────────────────────────────── */
@@ -25,7 +25,7 @@ window.ADMIN_GAMES = {
       type : 'snake',
       icon : '🐍',
       name : 'Snake',
-      desc : 'Classic snake. Arrow keys or WASD. Eat, grow, don\'t die.',
+      desc : 'Classic snake. Swipe,Arrow keys or WASD. Eat, grow, don\'t die.',
     },
     {
       type : 'memory',
