@@ -30,9 +30,16 @@ window.ADMIN_IDENTITY = {
     ─────────────────────────────────────────────────────────────────
     Currently placeholder — replace with your real story.
   */
-  bodyText: `Replace this with your actual about text. Write in first person. Tell the reader who you are, what drives you, what you're building. Keep it honest and specific — the more personal the better. Avoid generic phrases like "passionate about" or "hard-working". Instead, talk about something real you did, made, or felt.
+  bodyText: `Manomay Shailendra Misra is a Business Administration student, creative strategist, and digital storyteller driven by the idea that identity should feel timeless, not temporary. Raised across different cities and cultures of India, his perspective was shaped by movement, observation, and adaptation — blending old-world values with modern creative ambition.
 
-This section should feel like the first page of a book, not a LinkedIn profile. You have about 150–200 words. Use them well.`,
+His work exists at the intersection of aesthetics, leadership, media, and technology. From directing visual concepts and cinematic web experiences to managing creative teams, educational programs, and storytelling-driven projects, he focuses on creating things that feel emotionally human yet professionally refined.
+
+Deeply inspired by vintage culture, 90s atmosphere, classic music, meaningful conversations, and quiet details often ignored by fast modern life, he believes creativity should carry emotion, memory, and presence — not just attention.
+
+Beyond academics, he has worked in media coordination, photography, videography, branding concepts, event management, and creative leadership roles. Whether building digital experiences, crafting narratives, or shaping future startup ideas, his approach remains the same: calm execution, strong identity, and thoughtful detail.
+
+This website is not just a portfolio.
+It is an archive of thought, growth, experiments, memories, aesthetics, and the quiet construction of a future still unfolding.`,
 
   /* ── Secret / private text (unlocked by password) ─────────────── */
   /*
@@ -40,6 +47,6 @@ This section should feel like the first page of a book, not a LinkedIn profile. 
     from admin-control/other/passwords.js → about.
     Write whatever you want here — it's private.
   */
-  secretText: 'Your private story goes here. This is only visible to people with the password.',
+  secretText: 'Your private story goes here. ----------------------REPLACEEEEE------------------------This is only visible to people with the password.',
 
 };
