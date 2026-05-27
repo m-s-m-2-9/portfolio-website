@@ -35,8 +35,8 @@ window.ADMIN_HOME = {
     clickable link that goes to the Contact page.
     Leave {contactLink} exactly as-is.
   */
-  navHint: 'Navigate using the links above. Some sections are protected — {contactLink} for the password.',
-  navHintLinkText: 'contact Manomay Shailendra Misra', /* ← the clickable part */
+  navHint: 'Navigate using the links above. Some sections are protected — contact {contactLink} for the password.',
+  navHintLinkText: 'Manomay Shailendra Misra', /* ← the clickable part */
 
   /* ── Scroll indicator ─────────────────────────────────────────── */
   scrollLabel: 'Explore',
