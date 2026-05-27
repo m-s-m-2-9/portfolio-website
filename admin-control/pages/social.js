@@ -7,7 +7,7 @@
 
 window.ADMIN_SOCIAL = {
 
-  sectionLabel: '13 — Social Proof',
+  sectionLabel: '02 — Social Proof',
   heading     : 'People & places\nI\'ve worked with.',
 
   /* ── Scrolling logos / company names ────────────────────────────── */
@@ -16,11 +16,10 @@ window.ADMIN_SOCIAL = {
     Add your real company/org names here.
   */
   logos: [
-    'ISKCON',
-    'Replace Company',
-    'Replace Organisation',
-    'Replace Studio',
-    'Replace Brand',
+    'Iskcon',
+    'Mayura Woods',
+    'Golden Star PG',
+    'Work In Progress',
     /* Add more: 'Company Name', */
   ],
 
@@ -33,8 +32,8 @@ window.ADMIN_SOCIAL = {
     },
     {
       stars : 5,
-      text  : '"Replace this with another testimonial."',
-      author: '— Name, Role @ Company',
+      text  : '"Manomay successfully integrated our website’s chatbot automation, delivering human-like, 24/7 customer support. Their technical expertise and smart workflows reduced our support workload and streamlined lead qualification. Highly recommended for anyone wanting to elevate their digital presence!"',
+      author: '— Ramaiah SK, Manager @ Mayura Woods',
     },
     {
       stars : 5,
