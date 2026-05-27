@@ -21,7 +21,7 @@
 
 window.ADMIN_JOURNEY = {
 
-  sectionLabel      : '05 — Journey',
+  sectionLabel      : '09 — Journey',
   heading           : '2008 to present.',
   subheading        : 'Click a year on the timeline to explore that chapter.',
   emptyPlaceholder  : 'Nothing recorded yet for this year.',
@@ -32,7 +32,7 @@ window.ADMIN_JOURNEY = {
     {
       year      : 2008,
       title     : 'Born.',
-      body      : `Manomay Shailendra Misra was born on 29 August 2008 in Andheri, Mumbai, Maharashtra. This is where it begins.`,
+      body      : `Manomay Shailendra Misra REPLACEEEEEEEEEEEEEE was born on 29 August 2008 in Andheri, Mumbai, Maharashtra. This is where it begins.`,
       hasContent: true,
       private   : false,
     },
