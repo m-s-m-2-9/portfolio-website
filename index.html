@@ -86,13 +86,13 @@
 
   <!-- Desktop page links (hidden on mobile via nav.css) -->
   <ul class="nav-links" id="nav-links">
-  <li><a href="#" onclick="navigateTo('home');     return false;">Home</a></li>
-  <li><a href="#" onclick="navigateTo('about');    return false;">Identity</a></li>
-  <li><a href="#" onclick="navigateTo('social');   return false;">Social</a></li>
-  <li><a href="#" onclick="navigateTo('profiles'); return false;">Profile</a></li>
-  <li><a href="#" onclick="navigateTo('resume');   return false;">CV</a></li>
-  <li><a href="#" onclick="navigateTo('projects'); return false;">Projects</a></li>
-</ul>
+    <li><a href="#" onclick="navigateTo('home');     return false;">Home</a></li>
+    <li><a href="#" onclick="navigateTo('about');    return false;">Identity</a></li>
+    <li><a href="#" onclick="navigateTo('social');   return false;">Social</a></li>
+    <li><a href="#" onclick="navigateTo('profiles'); return false;">Profile</a></li>
+    <li><a href="#" onclick="navigateTo('resume');   return false;">CV</a></li>
+    <li><a href="#" onclick="navigateTo('projects'); return false;">Projects</a></li>
+  </ul>
 
   <!--
     ┌─────────────────────────────────────────────────────┐
@@ -185,10 +185,12 @@
       <div class="hero-grid"></div>
 
       <div class="hero-photo-wrap">
+        <!-- src is set by data.js from admin-control/other/images.js → hero -->
         <img src="assets/photos/profilepic.jpeg" alt="Manomay" class="hero-photo">
         <div class="hero-photo-ring"></div>
       </div>
 
+      <!-- Hero name — text set by data.js from admin-control/pages/home.js → heroName -->
       <h1 class="hero-name" id="hero-name" onclick="nameclickHandler()">
         <span class="word"><span id="name-part-1">Manomay</span></span>
         <span class="word"><span id="name-part-2">Shailendra</span></span>
@@ -197,10 +199,12 @@
 
       <div class="name-click-hint" id="name-click-hint"></div>
 
+      <!-- Tagline — text set by data.js from admin-control/pages/home.js → tagline -->
       <p class="hero-tagline" id="hero-tagline">
         Born 2008 · Mumbai · Making something of it all
       </p>
 
+      <!-- Nav hint — set by data.js from admin-control/pages/home.js → navHint -->
       <p class="hero-nav-hint" id="hero-nav-hint">
         Navigate using the links above. Some sections are protected —
         <a href="#" onclick="navigateTo('contact'); return false;">contact Manomay Shailendra Misra</a>
@@ -213,6 +217,7 @@
       </div>
     </div>
 
+    <!-- Hero quick-links — rebuilt by data.js from admin-control/buttons/home.js → links -->
     <div class="hero-links">
       <a class="hero-link-item" href="#" onclick="navigateTo('about'); return false;">
         <span class="link-label">Identity</span>
@@ -240,6 +245,7 @@
       </a>
     </div>
 
+    <!-- Footer — text set by data.js from admin-control/pages/home.js → footerLeft / footerRight -->
     <footer class="footer">
       <div class="footer-left">
         <span class="footer-desktop-only">© 2026 Manomay Shailendra Misra</span>
@@ -257,21 +263,26 @@
 <section id="page-about" class="page" data-page="about">
   <div class="page-inner">
     <div class="container section">
+      <!-- section-label set by data.js from admin-control/pages/identity.js → sectionLabel -->
       <div class="section-label reveal">01 — Identity</div>
       <div class="about-grid">
 
         <div class="about-photo-col reveal">
           <div class="about-photo-wrap">
+            <!-- src set by data.js from admin-control/other/images.js → about -->
             <img src="assets/photos/stagepic.jpeg" alt="Manomay" class="about-photo">
+            <!-- caption set by data.js from admin-control/pages/identity.js → photoCaption -->
             <div class="about-photo-label">Manomay — 2024</div>
           </div>
         </div>
 
         <div class="about-text-col">
+          <!-- intro quote set by data.js from admin-control/pages/identity.js → introQuote -->
           <p class="about-intro reveal reveal-d1">
             "Building legacy without losing softness."
           </p>
 
+          <!-- body text set by data.js from admin-control/pages/identity.js → bodyText -->
           <p class="about-body reveal reveal-d2" id="about-text">
             Loading about section...
           </p>
@@ -285,11 +296,13 @@
             <p style="font-size:0.8rem;color:var(--text3);margin-bottom:1rem;">
               There's a hidden layer here. Enter the password to read the real story.
             </p>
+            <!-- CHANGE: added 'about' as third arg — password key from admin-control/other/passwords.js -->
             <div class="inline-password-form">
               <input type="password" id="about-pw" placeholder="password" autocomplete="off"
-                onkeydown="if(event.key==='Enter')unlockSection('about-pw','secret-about-content')" />
-              <button onclick="unlockSection('about-pw','secret-about-content')">Unlock</button>
+                onkeydown="if(event.key==='Enter')unlockSection('about-pw','secret-about-content','about')" />
+              <button onclick="unlockSection('about-pw','secret-about-content','about')">Unlock</button>
             </div>
+            <!-- secret text set by data.js from admin-control/pages/identity.js → secretText -->
             <div class="secret-content" id="secret-about-content">
               <p class="about-body" style="margin-top:1.5rem;">Your private story goes here.</p>
             </div>
@@ -314,6 +327,7 @@
       </div>
 
       <div class="section-label" style="margin-bottom:1rem;">Public Albums</div>
+      <!-- Albums rebuilt by data.js from admin-control/other/images.js → publicAlbums -->
       <div class="albums-grid" id="public-albums">
         <div class="album-card" onclick="openAlbum('album1')">
           <div class="album-thumb-placeholder"><span style="font-size:2rem;color:var(--text3);">🌆</span></div>
@@ -349,11 +363,13 @@
       <p style="font-size:0.8rem;color:var(--text3);margin-bottom:1.5rem;">
         These albums are private. Enter the password to view them.
       </p>
+      <!-- CHANGE: added 'photos' as third arg — password key from admin-control/other/passwords.js -->
       <div class="inline-password-form" style="margin-bottom:2rem;">
         <input type="password" id="photos-pw" placeholder="password" autocomplete="off"
-          onkeydown="if(event.key==='Enter')unlockSection('photos-pw','secret-albums')" />
-        <button onclick="unlockSection('photos-pw','secret-albums')">Unlock</button>
+          onkeydown="if(event.key==='Enter')unlockSection('photos-pw','secret-albums','photos')" />
+        <button onclick="unlockSection('photos-pw','secret-albums','photos')">Unlock</button>
       </div>
+      <!-- Private albums rebuilt by data.js from admin-control/other/images.js → privateAlbums -->
       <div class="secret-content" id="secret-albums">
         <div class="albums-grid">
           <div class="album-card" onclick="openAlbum('secret1')">
@@ -395,6 +411,7 @@
 <section id="page-resume" class="page" data-page="resume">
   <div class="page-inner">
     <div class="resume-wrap">
+      <!-- Header block rebuilt by data.js from admin-control/pages/cv.js → name, title, contact -->
       <div class="resume-header-block reveal">
         <div>
           <div class="resume-name">Manomay<br>Shailendra Misra</div>
@@ -408,12 +425,16 @@
         </div>
       </div>
 
-      <div class="resume-section reveal reveal-d1">
+      <!-- CHANGE: added data-section="summary" so data.js can target this section -->
+      <!-- Content rebuilt by data.js from admin-control/pages/cv.js → summary -->
+      <div class="resume-section reveal reveal-d1" data-section="summary">
         <div class="resume-section-title">Summary</div>
         <p style="font-size:0.9rem;color:var(--text2);line-height:1.8;">replace</p>
       </div>
 
-      <div class="resume-section reveal reveal-d2">
+      <!-- CHANGE: added data-section="experience" so data.js can target this section -->
+      <!-- Content rebuilt by data.js from admin-control/pages/cv.js → experience -->
+      <div class="resume-section reveal reveal-d2" data-section="experience">
         <div class="resume-section-title">Experience</div>
         <div class="resume-entry">
           <div>
@@ -435,7 +456,9 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
         </div>
       </div>
 
-      <div class="resume-section reveal reveal-d3">
+      <!-- CHANGE: added data-section="education" so data.js can target this section -->
+      <!-- Content rebuilt by data.js from admin-control/pages/cv.js → education -->
+      <div class="resume-section reveal reveal-d3" data-section="education">
         <div class="resume-section-title">Education</div>
         <div class="resume-entry">
           <div>
@@ -446,7 +469,9 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
         </div>
       </div>
 
-      <div class="resume-section reveal reveal-d4">
+      <!-- CHANGE: added data-section="skills" so data.js can target this section -->
+      <!-- Skill tags rebuilt by data.js from admin-control/pages/cv.js → skills -->
+      <div class="resume-section reveal reveal-d4" data-section="skills">
         <div class="resume-section-title">Skills</div>
         <div class="resume-skills">
           <span class="skill-tag">xyz Skill</span>
@@ -458,6 +483,7 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
         </div>
       </div>
 
+      <!-- PDF link set by data.js from admin-control/pages/cv.js → pdfPath -->
       <div class="resume-download reveal reveal-d5">
         <a href="manomay-cv.pdf" download class="btn btn-accent">↓ &nbsp; Download PDF</a>
       </div>
@@ -472,6 +498,7 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
       <div class="section-label reveal">04 — Digital Presence</div>
       <h2 class="section-title reveal reveal-d1">Find me around<br>the internet.</h2>
 
+      <!-- Grid rebuilt by data.js from admin-control/pages/profiles.js → links -->
       <div class="profiles-grid reveal reveal-d2">
         <a class="profile-item" id="linkedin-link" href="#" target="_blank">
           <div class="profile-icon">💼</div>
@@ -506,6 +533,7 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
       </div>
     </div>
 
+    <!-- Year nodes built by data.js from admin-control/pages/journey.js → years -->
     <div class="years-mindmap">
       <div class="years-track" id="years-track"></div>
     </div>
@@ -526,10 +554,11 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
       <p style="font-size:0.8rem;color:var(--text3);margin-bottom:1.5rem;">
         Certain chapters are private. Enter password to read.
       </p>
+      <!-- CHANGE: added 'journey' as third arg — password key from admin-control/other/passwords.js -->
       <div class="inline-password-form" style="margin-bottom:2rem;">
         <input type="password" id="journey-pw" placeholder="password" autocomplete="off"
-          onkeydown="if(event.key==='Enter')unlockSection('journey-pw','secret-journey')" />
-        <button onclick="unlockSection('journey-pw','secret-journey')">Unlock</button>
+          onkeydown="if(event.key==='Enter')unlockSection('journey-pw','secret-journey','journey')" />
+        <button onclick="unlockSection('journey-pw','secret-journey','journey')">Unlock</button>
       </div>
       <div class="secret-content" id="secret-journey">
         <p style="font-size:0.9rem;color:var(--text2);line-height:1.8;">
@@ -546,8 +575,10 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
   <div class="page-inner">
     <div class="birthday-hero">
       <div class="section-label" style="margin-bottom:2rem;">06 — Clock</div>
+      <!-- Countdown label set by data.js from admin-control/pages/clock.js → countdownLabel -->
       <h2 class="bday-title">Next birthday in...</h2>
 
+      <!-- Timer values set by data.js startBirthdayTimer() using admin-control/pages/clock.js → birthdayDate -->
       <div class="bday-timer" id="bday-timer">
         <div class="bday-unit">
           <div class="bday-value" id="bd-days">--</div>
@@ -576,11 +607,14 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
         <div class="section-label" style="margin-bottom:1rem;justify-content:center;">
           Birth details <span class="locked-badge" style="margin-left:0.5rem;">🔒</span>
         </div>
+        <!-- CHANGE: changed to unlockBirthday() — this also calls renderBirthdayDetails()
+             which fills the details from admin-control/pages/clock.js -->
         <div class="inline-password-form" style="justify-content:center;">
           <input type="password" id="bday-pw" placeholder="password" autocomplete="off"
-            onkeydown="if(event.key==='Enter')unlockSection('bday-pw','bday-secret-info')" />
-          <button onclick="unlockSection('bday-pw','bday-secret-info')">Unlock</button>
+            onkeydown="if(event.key==='Enter')unlockBirthday()" />
+          <button onclick="unlockBirthday()">Unlock</button>
         </div>
+        <!-- Birth details rebuilt by data.js renderBirthdayDetails() from admin-control/pages/clock.js -->
         <div class="bday-date-info unlocked" id="bday-secret-info" style="display:none;max-width:400px;margin:2rem auto 0;text-align:left;">
           <p><strong style="color:var(--text);">Date of Birth:</strong> 29 August 2008</p>
           <p><strong style="color:var(--text);">Time:</strong> Approximately 1:00 – 1:30 PM IST</p>
@@ -599,6 +633,7 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
       <div class="section-label reveal">07 — Thoughts</div>
       <h2 class="section-title reveal reveal-d1">On everything that matters.</h2>
 
+      <!-- Beliefs grid rebuilt by data.js from admin-control/pages/thoughts.js → categories -->
       <div id="beliefs-overview">
         <div class="beliefs-grid reveal reveal-d2">
           <div class="belief-card" onclick="openBelief('politics')">
@@ -655,11 +690,13 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
     <div class="contact-wrap">
       <div class="section-label reveal">08 — Contact</div>
       <h2 class="section-title reveal reveal-d1">Say something<br>worth saying.</h2>
+      <!-- Intro text set by data.js from admin-control/pages/identity.js (contact.intro not yet used) -->
       <p class="contact-intro reveal reveal-d2">
         I read every message. I reply to the ones that make me think.
         If you're reaching out for the password — tell me why.
       </p>
 
+      <!-- Form uses EmailJS keys from admin-control/other/settings.js → emailjs -->
       <form id="contact-form" onsubmit="submitContactForm(event)">
         <div class="form-group reveal reveal-d3">
           <label class="form-label">Your name</label>
@@ -697,10 +734,11 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
         <div class="section-label" style="margin-bottom:0.75rem;">
           Full list is private <span class="locked-badge" style="margin-left:0.5rem;">🔒</span>
         </div>
+        <!-- CHANGE: added 'lists' as third arg — password key from admin-control/other/passwords.js -->
         <div class="inline-password-form">
           <input type="password" id="lists-pw" placeholder="password" autocomplete="off"
-            onkeydown="if(event.key==='Enter')unlockSection('lists-pw','lists-content')" />
-          <button onclick="unlockSection('lists-pw','lists-content')">Unlock</button>
+            onkeydown="if(event.key==='Enter')unlockSection('lists-pw','lists-content','lists')" />
+          <button onclick="unlockSection('lists-pw','lists-content','lists')">Unlock</button>
         </div>
       </div>
 
@@ -712,6 +750,7 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
           <div class="list-tab"        onclick="switchListTab('movies', this)">Movies</div>
         </div>
 
+        <!-- List panels rebuilt by data.js from admin-control/pages/lists.js → series/books/places/movies -->
         <div class="list-panel active" id="list-series">
           <div class="list-item">
             <div class="list-item-num">01</div>
@@ -800,7 +839,6 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
   </div>
 </section>
 
-
 <!-- PAGE: PROJECTS -->
 <!-- Layout mirrors Lists page exactly. Uses same .lists-tabs/.list-panel classes. -->
 <!-- Nationals is always the LAST item in every tab — do not move it. -->
@@ -809,6 +847,7 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
     <div class="container section">
 
       <div class="section-label reveal">11 — Projects</div>
+      <!-- Heading set by data.js from admin-control/pages/projects.js → heading -->
       <h2 class="section-title reveal reveal-d1">Things I've built.<br>Things I'm building.</h2>
 
       <!-- Tab navigation — same structure as Lists page -->
@@ -818,9 +857,10 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
         <div class="list-tab"        onclick="switchListTab('abandoned', this)">Abandoned</div>
       </div>
 
+      <!-- Project panels rebuilt by data.js from admin-control/pages/projects.js → completed/working/abandoned -->
+
       <!-- ── TAB: COMPLETED ── -->
       <div class="list-panel active" id="list-completed">
-
         <div class="list-item">
           <div class="list-item-num">01</div>
           <div class="list-item-info">
@@ -829,7 +869,6 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
           </div>
           <span class="list-item-status status-completed">Completed</span>
         </div>
-
         <div class="list-item">
           <div class="list-item-num">02</div>
           <div class="list-item-info">
@@ -838,7 +877,6 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
           </div>
           <span class="list-item-status status-completed">Completed</span>
         </div>
-
         <!-- NATIONALS — ALWAYS LAST. Do not add items below this. Add above. -->
         <div class="list-item">
           <div class="list-item-num">03</div>
@@ -848,12 +886,10 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
           </div>
           <span class="list-item-status status-completed">Completed</span>
         </div>
-
       </div><!-- /#list-completed -->
 
       <!-- ── TAB: CURRENTLY WORKING ON ── -->
       <div class="list-panel" id="list-working">
-
         <div class="list-item">
           <div class="list-item-num">01</div>
           <div class="list-item-info">
@@ -862,7 +898,6 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
           </div>
           <span class="list-item-status status-ongoing">Currently Working On</span>
         </div>
-
         <!-- NATIONALS — ALWAYS LAST. Add new items above this. -->
         <div class="list-item">
           <div class="list-item-num">02</div>
@@ -872,12 +907,10 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
           </div>
           <span class="list-item-status status-ongoing">Currently Working On</span>
         </div>
-
       </div><!-- /#list-working -->
 
       <!-- ── TAB: ABANDONED ── -->
       <div class="list-panel" id="list-abandoned">
-
         <div class="list-item">
           <div class="list-item-num">01</div>
           <div class="list-item-info">
@@ -886,7 +919,6 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
           </div>
           <span class="list-item-status status-abandoned">Abandoned</span>
         </div>
-
         <!-- NATIONALS — ALWAYS LAST. Add new items above this. -->
         <div class="list-item">
           <div class="list-item-num">02</div>
@@ -896,14 +928,12 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
           </div>
           <span class="list-item-status status-abandoned">Abandoned</span>
         </div>
-
       </div><!-- /#list-abandoned -->
 
     </div>
   </div>
 </section>
 
-  
 <!-- PAGE: TRAITS / SKILLS -->
 <section id="page-skills" class="page" data-page="skills">
   <div class="page-inner">
@@ -984,8 +1014,10 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
   <div class="page-inner">
     <div class="container section">
       <div class="section-label reveal">12 — Games</div>
+      <!-- Heading set by data.js from admin-control/pages/games.js → heading -->
       <h2 class="section-title reveal reveal-d1">Take a break.<br>Play something.</h2>
 
+      <!-- Public games rebuilt by data.js from admin-control/pages/games.js → publicGames -->
       <div class="games-grid reveal reveal-d2">
         <div class="game-card" onclick="openGame('snake')">
           <div class="game-icon">🐍</div>
@@ -1028,12 +1060,14 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
       <p style="font-size:0.8rem;color:var(--text3);margin-bottom:1.5rem;line-height:1.6;" class="reveal reveal-d1">
         Personal games built exclusively for family. Not playable on this site — access links below after unlocking.
       </p>
+      <!-- CHANGE: added 'games' as third arg — password key from admin-control/other/passwords.js -->
       <div class="inline-password-form reveal reveal-d2">
         <input type="password" id="private-games-pw" placeholder="password" autocomplete="off"
-          onkeydown="if(event.key==='Enter')unlockSection('private-games-pw','private-games-content')" />
-        <button onclick="unlockSection('private-games-pw','private-games-content')">Unlock</button>
+          onkeydown="if(event.key==='Enter')unlockSection('private-games-pw','private-games-content','games')" />
+        <button onclick="unlockSection('private-games-pw','private-games-content','games')">Unlock</button>
       </div>
 
+      <!-- Private games rebuilt by data.js from admin-control/pages/games.js → privateGames -->
       <div class="secret-content" id="private-games-content">
         <div class="games-grid" style="margin-top:1.5rem;">
           <div class="game-card">
@@ -1073,6 +1107,7 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
       <div class="section-label reveal">13 — Social Proof</div>
       <h2 class="section-title reveal reveal-d1">People & places<br>I've worked with.</h2>
 
+      <!-- Logos marquee rebuilt by data.js from admin-control/pages/social.js → logos -->
       <div class="logos-marquee reveal reveal-d2">
         <div class="logos-track">
           <span class="logo-item">Company Name</span>
@@ -1098,6 +1133,7 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
         </div>
       </div>
 
+      <!-- Testimonials rebuilt by data.js from admin-control/pages/social.js → testimonials -->
       <div class="testimonials-grid reveal reveal-d3">
         <div class="testimonial-card">
           <div class="stars">★★★★★</div>
@@ -1185,13 +1221,48 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
 <!-- ═══════════════════════════════════════════════════════
      SCRIPTS
      ─────────────────────────────────────────────────────
-     Load order is unchanged. sidebar-controller.js is last
-     so it can safely find all DOM elements that other
-     scripts may have already initialised.
+     Load order:
+     1. roro-intro.js         — splash screen
+     2. EmailJS               — contact form
+     3. Netlify Identity      — CMS auth (kept for compat)
+     4. admin-control/        — YOUR CONTENT LAYER (edit here)
+     5. data.js               — reads MSM_DATA, populates DOM
+     6. main.js               — page logic, interactions
+     7. baseball-game.js      — baseball mini-game
+     8. manager-roro.js       — RoRo AI assistant
+     9. sidebar-controller.js — desktop sidebar (always last)
 ═══════════════════════════════════════════════════════ -->
 <script src="js/roro-intro.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+<!-- ═══════════════════════════════════════════════════════
+     ADMIN CONTROL SYSTEM
+     Edit your content in the admin-control/ folder.
+     These files set window.ADMIN_* variables.
+     admin-control/index.js combines them into window.MSM_DATA.
+     data.js then reads from window.MSM_DATA to populate the site.
+     DO NOT reorder these script tags.
+═══════════════════════════════════════════════════════ -->
+<script src="admin-control/other/settings.js"></script>
+<script src="admin-control/other/passwords.js"></script>
+<script src="admin-control/other/images.js"></script>
+<script src="admin-control/buttons/nav.js"></script>
+<script src="admin-control/buttons/home.js"></script>
+<script src="admin-control/pages/home.js"></script>
+<script src="admin-control/pages/identity.js"></script>
+<script src="admin-control/pages/cv.js"></script>
+<script src="admin-control/pages/social.js"></script>
+<script src="admin-control/pages/profiles.js"></script>
+<script src="admin-control/pages/journey.js"></script>
+<script src="admin-control/pages/photos.js"></script>
+<script src="admin-control/pages/thoughts.js"></script>
+<script src="admin-control/pages/lists.js"></script>
+<script src="admin-control/pages/games.js"></script>
+<script src="admin-control/pages/clock.js"></script>
+<script src="admin-control/pages/projects.js"></script>
+<script src="admin-control/index.js"></script><!-- ← ALWAYS LAST in this block -->
+
 <script src="js/data.js"></script>
 <script src="js/main.js"></script>
 <script src="js/baseball-game.js"></script>
