@@ -841,6 +841,7 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
 <!-- PAGE: PROJECTS -->
 <!-- Layout mirrors Lists page exactly. Uses same .lists-tabs/.list-panel classes. -->
 <!-- Nationals is always the LAST item in every tab — do not move it. -->
+<!-- PAGE: PROJECTS — flat list, click for popup -->
 <section id="page-projects" class="page" data-page="projects">
   <div class="page-inner">
     <div class="container section">
@@ -849,18 +850,13 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
       <!-- Heading set by data.js from admin-control/pages/projects.js → heading -->
       <h2 class="section-title reveal reveal-d1">Things I've built.<br>Things I'm building.</h2>
 
-      <!-- Tab navigation — same structure as Lists page -->
-      <div class="lists-tabs">
-        <div class="list-tab active" onclick="switchListTab('completed', this)">Completed</div>
-        <div class="list-tab"        onclick="switchListTab('working',   this)">Currently Working On</div>
-        <div class="list-tab"        onclick="switchListTab('abandoned', this)">Abandoned</div>
-      </div>
+      <!-- Flat list rebuilt by data.js from admin-control/pages/projects.js → projects array.
+           Each item shows: number | title | meta | status badge.
+           Clicking any row opens the popup with the full description. -->
+      <div id="projects-list" class="reveal reveal-d2">
 
-      <!-- Project panels rebuilt by data.js from admin-control/pages/projects.js → completed/working/abandoned -->
-
-      <!-- ── TAB: COMPLETED ── -->
-      <div class="list-panel active" id="list-completed">
-        <div class="list-item">
+        <!-- Fallback content — overwritten by data.js on page open -->
+        <div class="list-item project-item" onclick="openProject(0)">
           <div class="list-item-num">01</div>
           <div class="list-item-info">
             <div class="list-item-title">E-commerce Prototype</div>
@@ -868,7 +864,8 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
           </div>
           <span class="list-item-status status-completed">Completed</span>
         </div>
-        <div class="list-item">
+
+        <div class="list-item project-item" onclick="openProject(1)">
           <div class="list-item-num">02</div>
           <div class="list-item-info">
             <div class="list-item-title">Until The Bullet Woke Me</div>
@@ -876,63 +873,33 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
           </div>
           <span class="list-item-status status-completed">Completed</span>
         </div>
-        <!-- NATIONALS — ALWAYS LAST. Do not add items below this. Add above. -->
-        <div class="list-item">
-          <div class="list-item-num">03</div>
-          <div class="list-item-info">
-            <div class="list-item-title">Nationals</div>
-            <div class="list-item-meta">Competition · 2024</div>
-          </div>
-          <span class="list-item-status status-completed">Completed</span>
-        </div>
-      </div><!-- /#list-completed -->
 
-      <!-- ── TAB: CURRENTLY WORKING ON ── -->
-      <div class="list-panel" id="list-working">
-        <div class="list-item">
-          <div class="list-item-num">01</div>
+        <div class="list-item project-item" onclick="openProject(2)">
+          <div class="list-item-num">03</div>
           <div class="list-item-info">
             <div class="list-item-title">MSM Personal Website</div>
             <div class="list-item-meta">Web · 2025 – Present</div>
           </div>
           <span class="list-item-status status-ongoing">Currently Working On</span>
         </div>
-        <!-- NATIONALS — ALWAYS LAST. Add new items above this. -->
-        <div class="list-item">
-          <div class="list-item-num">02</div>
-          <div class="list-item-info">
-            <div class="list-item-title">Nationals</div>
-            <div class="list-item-meta">Competition · Ongoing</div>
-          </div>
-          <span class="list-item-status status-ongoing">Currently Working On</span>
-        </div>
-      </div><!-- /#list-working -->
 
-      <!-- ── TAB: ABANDONED ── -->
-      <div class="list-panel" id="list-abandoned">
-        <div class="list-item">
-          <div class="list-item-num">01</div>
-          <div class="list-item-info">
-            <div class="list-item-title">xyz Project — REPLACE</div>
-            <div class="list-item-meta">Type · Year</div>
-          </div>
-          <span class="list-item-status status-abandoned">Abandoned</span>
-        </div>
-        <!-- NATIONALS — ALWAYS LAST. Add new items above this. -->
-        <div class="list-item">
-          <div class="list-item-num">02</div>
+        <!-- ⚠️ Nationals always last -->
+        <div class="list-item project-item" onclick="openProject(3)">
+          <div class="list-item-num">04</div>
           <div class="list-item-info">
             <div class="list-item-title">Nationals</div>
-            <div class="list-item-meta">Competition · Reference</div>
+            <div class="list-item-meta">Competition · 2024</div>
           </div>
-          <span class="list-item-status status-abandoned">Abandoned</span>
+          <span class="list-item-status status-completed">Completed</span>
         </div>
-      </div><!-- /#list-abandoned -->
+
+      </div><!-- /#projects-list -->
 
     </div>
   </div>
 </section>
 
+  
 <!-- PAGE: TRAITS / SKILLS -->
 <section id="page-skills" class="page" data-page="skills">
   <div class="page-inner">
@@ -1098,6 +1065,29 @@ Beyond the classroom, I served as the Media Lead, capturing the camp's energy th
   <button class="game-modal-close" onclick="closeGame()">✕</button>
   <div id="game-container" style="width:100%;max-width:600px;"></div>
 </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+     PROJECT POPUP MODAL
+     Opens when user clicks any project row.
+     Content populated by openProject() in main.js.
+     Managed by: main.js → openProject() / closeProject()
+═══════════════════════════════════════════════════════ -->
+<div class="project-modal" id="project-modal">
+  <!-- Clicking the dark backdrop closes the popup -->
+  <div class="project-modal-backdrop" onclick="closeProject()"></div>
+  <div class="project-modal-inner">
+    <button class="project-modal-close" onclick="closeProject()">✕</button>
+    <div class="project-modal-num"    id="project-modal-num"></div>
+    <div class="project-modal-title"  id="project-modal-title"></div>
+    <div class="project-modal-meta"   id="project-modal-meta"></div>
+    <span class="project-modal-badge" id="project-modal-badge"></span>
+    <div class="project-modal-divider"></div>
+    <!-- Description from admin-control/pages/projects.js → projects[n].description -->
+    <div class="project-modal-body"   id="project-modal-body"></div>
+  </div>
+</div>
+
+  
 
 <!-- PAGE: SOCIAL PROOF -->
 <section id="page-social" class="page" data-page="social">
