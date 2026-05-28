@@ -696,21 +696,33 @@
      PROJECTS PAGE
   ══════════════════════════════════════════════════════════════════ */
 
-  function renderProjects() {
-    var pj = D.projects || {};
+  /* ══════════════════════════════════════════════════════════
+   PROJECTS PAGE — flat list, click opens popup
+   Reads from: admin-control/pages/projects.js → projects array
+══════════════════════════════════════════════════════════ */
+function renderProjects() {
+  var pj       = D.projects || {};
+  var projects = pj.projects || [];   /* flat array — no tabs */
+  var container = el('projects-list');
+  if (!container) return;
+  if (!projects.length) return;
 
-    renderProjectPanel('list-completed', pj.completed || []);
-    renderProjectPanel('list-working',   pj.working   || []);
-    renderProjectPanel('list-abandoned', pj.abandoned || []);
-  }
-
-  function renderProjectPanel(panelId, items) {
-    var panel = el(panelId);
-    if (!panel) return;
-    panel.innerHTML = items.map(function (item, i) {
-      return buildListItem(i + 1, item.title, item.meta, item.status, item.label);
-    }).join('');
-  }
+  container.innerHTML = projects.map(function (item, i) {
+    var numStr = (i + 1) < 10 ? '0' + (i + 1) : '' + (i + 1);
+    return [
+      '<div class="list-item project-item" onclick="openProject(' + i + ')">',
+        '<div class="list-item-num">' + numStr + '</div>',
+        '<div class="list-item-info">',
+          '<div class="list-item-title">' + escapeHTML(item.title || '') + '</div>',
+          '<div class="list-item-meta">'  + escapeHTML(item.meta  || '') + '</div>',
+        '</div>',
+        '<span class="list-item-status status-' + (item.status || 'completed') + '">' +
+          escapeHTML(item.label || '') +
+        '</span>',
+      '</div>'
+    ].join('');
+  }).join('');
+}
 
   /* ══════════════════════════════════════════════════════════════════
      GAMES PAGE
@@ -883,8 +895,8 @@
       case 'thoughts': renderThoughts();   break;
       case 'photos'  : renderPhotos();     break;
       case 'lists'   : renderLists();      break;
-      case 'skills'  : window.MSM.animateSkillBars(); break;
-      case 'games'   : renderGames();      break;
+case 'skills'  : renderSkills(); window.MSM.animateSkillBars(); break;
+case 'contact' : renderContact(); break;      case 'games'   : renderGames();      break;
       case 'social'  : renderSocial();     break;
       case 'projects': renderProjects();   break;
     }
