@@ -76,8 +76,8 @@ window.ADMIN_LISTS = {
      {
       title : 'House M.D',
       meta  : 'Medical Drama, Mystery · 2004–2012',
-      status: 'seen',
-      label : 'Watched',
+      status: 'ongoing',
+      label : 'Watching',
     },
 
 
@@ -91,8 +91,8 @@ window.ADMIN_LISTS = {
  {
       title : 'The Rookie',
       meta  : 'Police Procedural, Crime Drama, Action · 2018–Present',
-      status: 'seen',
-      label : 'Watched',
+      status: 'ongoing',
+      label : 'Watching',
     },
 
 
