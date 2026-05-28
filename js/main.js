@@ -1579,3 +1579,62 @@ if (document.readyState === 'loading') {
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(_bindSoundsToAll, 2500);
 });
+
+
+
+
+
+/* ═══════════════════════════════════════════════════════════
+   PROJECT POPUP
+   Opens when user clicks a row on the Projects page.
+   Reads data from admin-control/pages/projects.js via MSM_DATA.
+   ─────────────────────────────────────────────────────────
+   TO EDIT PROJECT CONTENT: admin-control/pages/projects.js
+   Each project object in the 'projects' array has a
+   'description' field that appears in this popup.
+═══════════════════════════════════════════════════════════ */
+function openProject(index) {
+  /* Read flat projects array from admin-control/pages/projects.js */
+  var projects = (window.MSM_DATA && window.MSM_DATA.projects && window.MSM_DATA.projects.projects) || [];
+  var project  = projects[index];
+  if (!project) return;
+
+  var num    = index + 1;
+  var numStr = num < 10 ? '0' + num : '' + num;
+
+  var numEl   = document.getElementById('project-modal-num');
+  var titleEl = document.getElementById('project-modal-title');
+  var metaEl  = document.getElementById('project-modal-meta');
+  var badgeEl = document.getElementById('project-modal-badge');
+  var bodyEl  = document.getElementById('project-modal-body');
+
+  if (numEl)   numEl.textContent   = numStr;
+  if (titleEl) titleEl.textContent = project.title       || '';
+  if (metaEl)  metaEl.textContent  = project.meta        || '';
+  if (bodyEl)  bodyEl.textContent  = project.description || 'No description yet. Add one in admin-control/pages/projects.js';
+
+  if (badgeEl) {
+    badgeEl.textContent = project.label || '';
+    badgeEl.className   = 'project-modal-badge status-' + (project.status || 'completed');
+  }
+
+  var modal = document.getElementById('project-modal');
+  if (modal) modal.classList.add('open');
+
+  /* Freeze scroll while popup is open */
+  document.body.style.overflow = 'hidden';
+
+  /* ESC key closes popup */
+  document.addEventListener('keydown', _closeProjectOnEsc);
+}
+
+function closeProject() {
+  var modal = document.getElementById('project-modal');
+  if (modal) modal.classList.remove('open');
+  document.body.style.overflow = '';
+  document.removeEventListener('keydown', _closeProjectOnEsc);
+}
+
+function _closeProjectOnEsc(e) {
+  if (e.key === 'Escape') closeProject();
+}
