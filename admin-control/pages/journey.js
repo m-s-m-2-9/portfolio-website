@@ -185,35 +185,79 @@ Even though I was born in 2008, there was something oddly old-school about the w
 },
 
 
-    {
-      year      : 2023,
-      title     : 'Year Fifteen.',
-      body      : '',
-      hasContent: false,
-      private   : false,
+    { 
+       year : 2023, 
+       title : 'Boards Began, Childhood Ended Slowly.', 
+       body : '2023 marked the point where life stopped feeling like casual school days and started feeling like preparation for something heavier. I was in ninth class and slowly moving into half of tenth, and the most repeated thought around me became simple but powerful: next year is board exams instead of fun. That sentence alone changed the entire atmosphere of life.\\n\\nAcademically, pressure started becoming real. Teachers and parents both expected consistency now, not casual performance. I had to start studying properly instead of just getting by. My Class Teacher, Shantiniketan Ma’am, was extremely strict yet equally caring. She had a strong presence in class and used to discipline us boys very strictly, sometimes even with a bamboo stick. She taught Mathematics, and although that subject remained my weakest point, the discipline around it made me more serious. My Social Science became strong because of Meharan Ma’am, and Hindi improved significantly under Mastan Sir. Slowly, I started scoring above 90 in subjects like SST and Hindi, even while Mathematics continued to remain a struggle.\\n\\nAt this stage, I still had not properly thought about my career. It felt too far away to even imagine seriously. But pressure had definitely started building from both teachers and parents, and I could feel the expectation of “boards” quietly sitting behind every normal school day.\\n\\nMy personality during this time was stable but not extraordinary. I was not awkward in groups anymore, but I was also not the dominant or overly confident version of myself. I had become more socially balanced, sometimes too friendly with everyone, which slowly reduced that earlier “senior-type” presence I once carried. People still respected me, but I no longer maintained that strict image I had built in previous years.\\n\\nFriendship-wise, Himanish became my closest friend and remained so. That bond became one of the most consistent parts of my school life during this phase.\\n\\nThe love story aspect of my life existed, but it is intentionally kept hidden here, belonging to a more private layer of memory rather than this timeline.\\n\\nTechnology and interests shifted heavily during this time. Instagram became active in my life, while Discord faded away almost completely. Artificial intelligence and online tools started becoming a major curiosity point for me. Gaming reduced drastically and became almost non-existent, except rare console moments.\\n\\nMy music taste remained mostly retro, which somehow matched my internal emotional state more than modern trends.\\n\\nCreatively, I started writing more poems without fully understanding why. There was no structured intention behind it, but thoughts started forming in a cinematic way inside my mind. I do not even know when or how that shift happened, but suddenly I began seeing life as scenes, moments, and frames rather than just routine days.\\n\\nMy drawing skills also remained strong and expressive during this period, acting as one of the few consistent creative outlets I still fully trusted.\\n\\nLooking back, 2023 feels like a quiet turning point. Not dramatic on the surface, but deeply structural underneath. It was the year where pressure entered life seriously, creativity became internal, and childhood slowly started transitioning into something more focused, more aware, and more defined.', 
+     hasContent: true,
+     private : false,
     },
 
-    {
-      year      : 2024,
-      title     : 'ISKCON. Nationals. Things built.',
-      body      : `Led 40+ students at ISKCON Summer Camp as Creative Educator and Media Coordinator. Competed at Nationals. Built the first real projects. This year was the beginning of something.`,
-      hasContent: true,
-      private   : false,
-    },
+
+     
+{
+  year      : 2024,
+  title     : 'Pressure, Performance & First Real Direction.',
+  body      : '2024 entered with one clear atmosphere: full board exam pressure. Unlike earlier years where studies felt flexible or semi-relaxed, this time consistency was expected. I was somewhat consistent, but like always, the last-minute cycle still hit differently. Exams felt serious, and even though I knew I would pass, the real goal had shifted to getting good marks rather than just surviving.\\n\\nMy exam center itself felt relatively calm, which helped reduce external stress, but internally I had already started becoming more mature. Not extremely serious, not careless either — just neutral, balanced somewhere in between.\\n\\nHimanish remained my closest friend through this phase, and that bond stayed stable even when everything else felt pressurized.\\n\\nTo force focus during this period, my tablet was taken away, and distractions were reduced significantly. In a way, it helped structure my attention more towards studies. At the same time, creative outlets like poetry and writing became stronger rather than weaker. I started writing more naturally, without forcing it.\\n\\nDuring summer holidays, I worked on small teaching activities at an ISKCON center, helping small children with crafts and paper-based activities. I also managed small video and media work during a temple trip, where I edited footage I had personally shot and helped organize content with kids. This became one of my early experiences with creative management and visual storytelling.\\n\\nAround this time, I also participated in EBSB (Ek Bharat Shreshtha Bharat) events. I cleared the school cluster level in first position and the regional level in second position. However, only the first position qualified for nationals. My topic was Indigenous Toy Making, where I created Bengal-inspired traditional toys under the guidance of Sylvia Ma’am, who herself was originally from Bengal.\\n\\nAcademically and structurally, this period also became a decision point for my future. After Class 10, I chose Commerce (SSE stream), since my school did not have Class 11 and 12. Instead of switching to a different board like PUC, I decided to continue schooling for two more years in another Kendriya Vidyalaya. This decision marked the beginning of a new academic phase beyond the world I had known until now.\\n\\nLooking back, 2024 feels like a structured pressure year that slowly shaped direction. It was the year where performance mattered more, creativity became practical, and future decisions stopped being optional and started becoming necessary.',
+  
+  hasContent: true,
+  private   : false,
+},
+
+
+    
+{
+  year      : 2025,
+  title     : 'New Command.',
+  body      : '2025 began with a complete shift in environment as I joined PM SHRI Kendriya Vidyalaya MEG and Centre. The initial atmosphere felt unfamiliar and almost dark in comparison to my previous school life, as everything was new and unstructured at first. However, within the first few weeks, things changed rapidly. I adapted faster than expected, and within just a short period after joining, I became a candidate for Vice Captain. I saw potential in myself early in this environment, and the surroundings responded to it as well.\\n\\nAfter the election process, I won and officially became School Vice Captain. With that position came respect, recognition, responsibility, and a completely different level of interaction with teachers and students. I also briefly became class monitor on the first day, but later had to leave that role due to the responsibilities of being Vice Captain. Despite this, my presence in school grew quickly, and I became known among both students and teachers within a very short time.\\n\\nAcademically, I chose Commerce with IP (Informatics Practices), which introduced me properly to Python, SQL, coding systems, and artificial intelligence concepts. This became one of the most interesting academic shifts in my life. For the first time, subjects like business and AI felt genuinely engaging instead of just theoretical study material. At the same time, I already had known weaknesses in mathematics, and now Accountancy became another challenging subject, making academics more demanding overall.\\n\\nFriendship dynamics changed again as a new group formed around this phase. I started connecting with people like Suraj, Abhijeet, Dhruv, Aman, and Amay. Socially, I felt more confident and stable compared to previous years. However, emotional attachments still existed in the background, though those details remain part of a more private layer of memory.\\n\\nTechnology became a major part of my identity during this year. Instagram usage increased significantly, AI tools became heavily integrated into my daily routine, GitHub exploration started, and my interest in coding expanded further. Gaming, however, completely faded away. My music taste also evolved again, and my digital behavior became more structured and interest-driven rather than random entertainment.\\n\\nI also participated again in Kala Utsav during 11th class, where I cleared school and cluster level in first position and regional level as well. This time I was selected for Nationals and travelled to Hyderabad via Garib Rath and returned through Vande Bharat Express. My topic was artifacts of Uttarakhand, and I participated as part of a team. This experience gave me exposure at a national-level platform and strengthened my confidence in creative and cultural expression.\\n\\nCareer thoughts also began to form more seriously during this phase, although clarity was still missing. I knew what kind of job environment I wanted, but not exactly what role I should pursue. The uncertainty remained, but direction had started taking shape.\\n\\nOverall, 2025 became a defining transition year. In a new school, I quickly rose into leadership, developed stronger academic interests in technology and business, expanded my social circle, and began thinking more seriously about my future while still carrying emotional layers from the past. It was the year where identity, responsibility, and ambition started existing together in the same frame.',
+  
+  hasContent: true,
+  private   : false,
+},
+
+
+     
+     
+{
+  year      : 2026,
+  title     : 'Becoming Real.',
+  body      : '2026 marks the completion of my school journey as I finished Class 12th and stepped into a completely new phase of life. I chose BBA with Business Analytics and prepared to join Don Bosco College, entering an environment that felt unfamiliar yet full of possibility. This transition did not feel like a continuation of school anymore — it felt like the beginning of something independent.\\n\\nEverything around me felt new again. New people, new structure, new expectations. I am still in the process of exploring this phase — building friendships, understanding social dynamics, and slowly shaping my identity in a more professional direction. Unlike earlier years, I am now actively working on myself beyond academics.\\n\\nA major shift in this year has been the way I approach my future. I have started building my LinkedIn profile, collecting certifications, gaining exposure to tools, and participating in webinars and tech events. These experiences have made me more aware of how the real world functions outside classroom boundaries.\\n\\nConfidence has also noticeably increased. I feel more comfortable interacting with people, attending professional events, and presenting myself in structured environments. There is a growing sense of direction in how I want to position myself in the future — especially around business, analytics, and technology-driven fields.\\n\\nAt the same time, this year is still ongoing. It is not a completed chapter yet, but a developing one. I am still learning, still adjusting, still observing. Friendships are forming gradually, and my professional identity is slowly taking shape through small consistent steps rather than sudden changes.\\n\\nLooking at 2026 so far, it feels like the year where I stopped only being a student and started becoming something closer to a professional identity. Not fully defined yet, but clearly in progress — a transition from structured education into real-world exploration.',
+  
+  hasContent: true,
+  private   : false,
+},
+
+
 
     {
-      year      : 2025,
-      title     : 'Building in public.',
-      body      : `Replace this with your 2025 story.`,
-      hasContent: true,
-      private   : false,
-    },
+  year: 2027,
+  title: 'Execution Phase Begins',
+  body: `
+2027 is the year where ambition stops being abstract and starts becoming structured execution.
 
-    {
-      year      : 2026,
-      title     : 'Right now.',
+I want to study BBA in Business Analytics while actively building real-world experience through internships. College is not just education anymore — it is a platform for exposure, skill-building, and early professional entry.
+
+My focus is clear: I want strong command over SQL, Python, Tableau, and Excel. These are not optional skills anymore — they are core tools I want to be comfortable using in real scenarios, not just academic settings.
+
+At the same time, I want to build a strong LinkedIn presence. Not for validation, but for visibility, networking, and long-term professional positioning. I want to be known through my work, projects, and consistency.
+
+Corporate exposure is a major goal. I want internships in structured, high-salary-oriented environments where I can understand how real business systems operate. Learning through real work matters more than theory at this stage.
+
+Instagram remains part of my identity, but more as a controlled personal presence rather than distraction. I want my online identity to feel intentional, not random.
+
+My mindset is focused on growth, discipline, and independence. I want to operate in a system where learning, earning, and building happen together — not separately.
+
+2027 is not about dreaming anymore. It is about building, testing, failing, learning, and slowly stepping into a real professional identity.
+  `
+},
+
+
+
+     {
+      year      : 2028,
+      title     : '',
       body      : `This is where you are. Replace this with what is happening today.`,
-      hasContent: true,
+      hasContent: false,
       private   : false,
     },
 
