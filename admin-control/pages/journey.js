@@ -99,13 +99,14 @@ Even though I was born in 2008, there was something oddly old-school about the w
 },
 
 
-    {
-      year      : 2015,
-      title     : 'Year Seven.',
-      body      : '',
-      hasContent: false,
-      private   : false,
-    },
+{
+  year      : 2015,
+  title     : 'When Applause Started Fading.',
+  body      : '2015 was strange in ways I could not fully understand back then. I was still studying in Kendriya Vidyalaya Number 1 Jaipur, somewhere between the later half of second class and the beginning of growing up emotionally. Studies still felt easy to me, especially EVS, which remained my favorite subject because it connected school to the real world around me. But this was also the year I slowly realized something important — I was the main character of my own life, yet every single person around me felt the exact same way about theirs. For the first time, I understood that the world did not revolve around me alone.\\n\\nCompetition had started becoming serious now. There were many students better than me in academics, drawing, sketches, and other activities teachers valued more openly. I still loved singing, dancing, instruments, and performing, but slowly those things stopped feeling appreciated in the environment around me. Somewhere during that time, someone casually told me that dancing and singing were “for girls” and that I did not fit there. I do not know why those words affected me so much. I did not argue. I did not defend myself. I simply started accepting it quietly, and over time I slowly began losing interest in the things that once made me happiest. Even today, I regret that silence.\\n\\nDespite that, performance and creativity still remained part of me. I sang, danced, acted in plays, and played instruments whenever I got opportunities. It was impossible to remove that side of me completely because it had already become part of my personality long before anyone tried labeling it.\\n\\nThat year also carried a softer loneliness at home because my father had been transferred to Maharashtra for work. During summer holidays, my mother enrolled me in skating classes near Nehru Garden. I learned skating there and eventually became surprisingly good at it. Every day while returning from classes, I crossed the same roads filled with familiar faces. I often saw people smoking nearby, and for some reason tiny-me took it upon himself to personally convince random adults to stop. I used to lecture them seriously about how bad smoking was, and somehow a few of them even claimed they had quit, or at least stopped smoking in front of me afterward.\\n\\nNear our house there was also a huge sugarcane warehouse owned by some incredibly kind people. After skating classes, they often gave me free sugarcane while I walked back home. Those tiny moments carried a warmth difficult to explain now. I still remember sitting inside a tub eating sugarcane pieces before taking cold water baths afterward, the kind of small summer memory that somehow stays alive forever.\\n\\nEmotionally, I had started changing too. I became more observant, quieter in certain ways, more emotional, and slightly insecure beneath the confident exterior people usually saw. Underconfidence had quietly entered places where endless energy once existed naturally. Phones were still mostly keypads back then, technology remained distant, and life still moved slowly enough for ordinary moments to feel complete on their own.\\n\\nLooking back now, 2015 feels like the year childhood innocence collided with self-awareness for the first time. It was the year applause stopped feeling guaranteed, the year comparison entered my mind, and the year I slowly began learning how deeply words from others could shape the version of ourselves we choose to become.',
+  
+  hasContent: true,
+  private   : false,
+},
 
     {
       year      : 2016,
