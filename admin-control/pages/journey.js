@@ -71,15 +71,15 @@ Even though I was born in 2008, there was something oddly old-school about the w
 },
 
 
-    {
-      year      : 2012,
-      title     : 'Year Four.',
-      body      : '',
-      hasContent: false,
-      private   : false,
-    },
+{
+ year      : 2012,
+ title     : 'A Tiny Crush & a Dusty Fall.',
+ body      :   'By 2012, Jaipur no longer felt unfamiliar. Life had settled into routines, and childhood had started becoming clearer, louder, and far more memorable. I was still studying at Star Kids, and strangely enough, mathematics had become my strongest subject. I used to score full marks constantly — 40 out of 40 almost every time — and the questions felt so easy that I genuinely started wondering whether I had accidentally been placed in the wrong class. Eventually, I was promoted directly from LKG to UKG, which, at that age, felt less like an academic achievement and more like proof that I was secretly some tiny genius wandering around in a school uniform.\\n\\nI barely remember my teachers now except for faint flashes of the principal, but I definitely remember being known around school. I was energetic, loud, constantly involved in something, and weirdly popular for one very specific reason that shall remain classified forever. Dance performances, sports competitions, school activities — I jumped into everything with full confidence and somehow managed to conquer most of it. Sitting quietly was never really an option for me.\\n\\nFragments of old classmates still survive in my memory like scattered names written on the last pages of a forgotten notebook — Poorvi, Anjali, Ram, Saurabh, and many others I can no longer fully remember. Some faces faded with time, but the feeling of those school years never really disappeared.\\n\\nAnd then there was my first crush, which still sounds absolutely ridiculous considering I was barely four or five years old. One day while walking back home from school with my mother, I randomly asked her, “Mummy, once I grow up, you’ll have to find a bride for me, right?” She casually said yes. With the confidence of a man who apparently had his entire future planned already, I proudly announced, “No need mummy, I already found her.” Immediately after delivering this historic statement, I ran away in embarrassment like my life depended on it. Unfortunately, destiny had other plans. Before reaching home, I fell straight onto the dusty road and earned the kind of scraped injury every child remembers — the burning, sandy pain where your skin feels completely shredded for days afterward. Childhood romance lasted approximately thirty seconds before gravity personally intervened.\\n\\nOutside school, one of my favorite places in the world was Nehru Garden. To reach it, we crossed the sabji mandi and the railway crossing before finally arriving there. Even though it was close to home, visiting it only once a week somehow made it feel magical. That park felt enormous to me back then, almost like another universe hidden inside Jaipur.\\n\\nTechnology barely existed in my life during those years. No phones, no computers, no gaming obsession, nothing. I did not even know devices could be used for entertainment. My world was built from school corridors, dance stages, evening walks, playground dust, radio songs, and imagination. Looking back now, it feels beautifully untouched.',
+ hasContent: true, 
+ private : false,
+},
 
-    {
+     {
       year      : 2013,
       title     : 'Year Five.',
       body      : '',
