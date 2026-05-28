@@ -105,84 +105,84 @@ window.ADMIN_LISTS = {
 title : 'It Starts With Us',
 meta  : 'Colleen Hoover · 2022',
 status: 'seen',
-label : 'read',
+label : 'Read',
 },
 
 {
 title : 'It Ends With Us',
 meta  : 'Colleen Hoover · 2016',
 status: 'seen',
-label : 'read',
+label : 'Read',
 },
 
 {
 title : 'Twisted Love',
 meta  : 'Ana Huang · 2021',
 status: 'ongoing',
-label : 'currently watching',
+label : 'Currently Watching',
 },
 
 {
 title : 'Ikigai',
 meta  : 'Héctor García and Francesc Miralles · 2016',
 status: 'seen',
-label : 'read / seen',
+label : 'Read',
 },
 
 {
 title : 'To Kill a Mockingbird',
 meta  : 'Harper Lee · 1960',
 status: 'seen',
-label : 'read / seen',
+label : 'Read',
 },
 
 {
 title : 'Rich Dad Poor Dad',
 meta  : 'Robert T. Kiyosaki · 1997',
 status: 'seen',
-label : 'read / seen',
+label : 'Read',
 },
 
 {
 title : 'The Psychology of Money',
 meta  : 'Morgan Housel · 2020',
 status: 'ongoing',
-label : 'currently watching',
+label : 'Currently Watching',
 },
 
 {
 title : 'A Man Called Ove',
 meta  : 'Fredrik Backman · 2012',
 status: 'seen',
-label : 'read',
+label : 'Read',
 },
 
 {
 title : 'The Subtle Art of Not Giving a F*ck',
 meta  : 'Mark Manson · 2016',
 status: 'seen',
-label : 'read',
+label : 'Read',
 },
 
 {
 title : 'Everything Is F*cked',
 meta  : 'Mark Manson · 2019',
 status: 'want',
-label : 'want to watch/read/visit',
+label : 'Want To Watch',
 },
 
 {
 title : 'Without Merit',
 meta  : 'Colleen Hoover · 2017',
 status: 'want',
-label : 'read',
+label : 'Want To Watch',
 },
 
 {
 title : 'Man Kya Hai',
 meta  : 'J. Krishnamurti · 2015',
 status: 'seen',
-label : 'read',
+label : 'Read',
 },
 ],
   /* ── Places ─────────────────────────────────────────────────────── */
