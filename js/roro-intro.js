@@ -659,17 +659,33 @@ transform: translateX(-50%);
   };
 
   RoroSplash.prototype._revealSplash = function () {
-    var self = this;
-    var oldLS = document.getElementById('loading-screen');
-    if (oldLS) oldLS.style.cssText = 'display:none!important';
+  var self = this;
+  var oldLS = document.getElementById('loading-screen');
+  if (oldLS) oldLS.style.cssText = 'display:none!important';
+  requestAnimationFrame(function () {
     requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        self._root.classList.add('rs-show');
-        var cover = document.getElementById('roro-cover');
-        if (cover) setTimeout(function () { if (cover.parentNode) cover.remove(); }, 460);
-      });
+      self._root.classList.add('rs-show');
+      var cover = document.getElementById('roro-cover');
+      if (cover) setTimeout(function () { if (cover.parentNode) cover.remove(); }, 460);
     });
-  };
+  });
+
+  /* ── Skip splash on rapid clicking ─────────────────────────
+     Click anywhere on the splash 20–25 times rapidly to skip
+     the whole intro and go straight to the homepage.
+     Hidden feature — no UI hint. Useful when you need to test.
+  ───────────────────────────────────────────────────────── */
+  var _skipCount = 0;
+  var _skipAt    = 20 + Math.floor(Math.random() * 6); /* random 20–25 */
+  self._root.addEventListener('click', function (e) {
+    /* Ignore clicks on the Continue button — that's the normal exit */
+    if (e.target.id === 'rs-continue' || e.target.closest('#rs-continue')) return;
+    _skipCount++;
+    if (_skipCount >= _skipAt) {
+      self._finish();
+    }
+  });
+};
 
   RoroSplash.prototype._runIntro = function () {
     var self=this, gsap=window.gsap;
