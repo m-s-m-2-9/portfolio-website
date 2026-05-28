@@ -33,54 +33,52 @@
    <script src="admin-control/index.js"></script>  ← ALWAYS LAST
 ═══════════════════════════════════════════════════════════════════ */
 
+/* ═══════════════════════════════════════════════════════════
+   admin-control/index.js
+   THIS IS THE MASTER COMBINER. DO NOT EDIT.
+═══════════════════════════════════════════════════════════ */
+
 (function () {
   'use strict';
 
-  /* ── Guard: if any ADMIN_ variable is missing, use empty object ──
-     This prevents the whole site from crashing if one file fails.   */
-  var S  = window.ADMIN_SETTINGS  || {};
-  var PW = window.ADMIN_PASSWORDS || {};
-  var IM = window.ADMIN_IMAGES    || {};
-  var NV = window.ADMIN_NAV       || {};
-  var HB = window.ADMIN_HOME_BUTTONS || {};
+  var S  = window.ADMIN_SETTINGS    || {};
+  var PW = window.ADMIN_PASSWORDS   || {};
+  var IM = window.ADMIN_IMAGES      || {};
+  var NV = window.ADMIN_NAV         || {};
+  var HB = window.ADMIN_HOME_BUTTONS|| {};
 
-  var HO = window.ADMIN_HOME     || {};
-  var ID = window.ADMIN_IDENTITY || {};
-  var CV = window.ADMIN_CV       || {};
-  var SO = window.ADMIN_SOCIAL   || {};
-  var PR = window.ADMIN_PROFILES || {};
-  var JR = window.ADMIN_JOURNEY  || {};
-  var PH = window.ADMIN_PHOTOS   || {};
-  var TH = window.ADMIN_THOUGHTS || {};
-  var LI = window.ADMIN_LISTS    || {};
-  var GA = window.ADMIN_GAMES    || {};
-  var CL = window.ADMIN_CLOCK    || {};
-  var PJ = window.ADMIN_PROJECTS || {};
+  var HO = window.ADMIN_HOME        || {};
+  var ID = window.ADMIN_IDENTITY    || {};
+  var CV = window.ADMIN_CV          || {};
+  var SO = window.ADMIN_SOCIAL      || {};
+  var PR = window.ADMIN_PROFILES    || {};
+  var JR = window.ADMIN_JOURNEY     || {};
+  var PH = window.ADMIN_PHOTOS      || {};
+  var TH = window.ADMIN_THOUGHTS    || {};
+  var LI = window.ADMIN_LISTS       || {};
+  var GA = window.ADMIN_GAMES       || {};
+  var CL = window.ADMIN_CLOCK       || {};
+  var PJ = window.ADMIN_PROJECTS    || {};
+  var TR = window.ADMIN_TRAITS      || {};   /* ← NEW */
+  var CO = window.ADMIN_CONTACT     || {};   /* ← NEW */
 
-  /* ── Build the unified MSM_DATA object ─────────────────────────── */
   window.MSM_DATA = {
 
-    /* ── Site-level settings ── */
-    site     : S.site     || {},
-    emailjs  : S.emailjs  || {},
-    behaviour: S.behaviour || {},
+    site      : S.site      || {},
+    emailjs   : S.emailjs   || {},
+    behaviour : S.behaviour || {},
 
-    /* ── Passwords ── */
-    passwords: PW,
-
-    /* ── Images & albums ── */
+    passwords    : PW,
     images       : IM,
     publicAlbums : IM.publicAlbums  || [],
     privateAlbums: IM.privateAlbums || [],
 
-    /* ── Navigation ── */
-    nav          : NV,
-    desktopLinks : NV.desktopLinks  || [],
-    mobileLinks  : NV.mobileLinks   || [],
-    sidebarLinks : NV.sidebarLinks  || [],
-    homeLinks    : HB.links         || [],
+    nav         : NV,
+    desktopLinks: NV.desktopLinks || [],
+    mobileLinks : NV.mobileLinks  || [],
+    sidebarLinks: NV.sidebarLinks || [],
+    homeLinks   : HB.links        || [],
 
-    /* ── Page content ── */
     home    : HO,
     about   : ID,
     resume  : CV,
@@ -93,28 +91,25 @@
     games   : GA,
     birthday: CL,
     projects: PJ,
+    traits  : TR,   /* ← NEW */
+    contact : CO,   /* ← NEW */
 
-    /* ── Flat shortcuts that data.js uses directly ────────────────── */
-    heroName     : HO.heroName    || { word1: '', word2: '', word3: '' },
-    tagline      : HO.tagline     || '',
-    aboutText    : ID.bodyText    || '',
-    secretAbout  : ID.secretText  || '',
-    introQuote   : ID.introQuote  || '',
-    heroLinks    : HB.links       || [],
-    footerLeft   : HO.footerLeft  || '',
-    footerRight  : HO.footerRight || '',
-
-    /* ── Hero photo + about photo shortcuts ── */
-    heroPhoto : IM.hero  || 'assets/photos/profilepic.jpeg',
-    aboutPhoto: IM.about || 'assets/photos/stagepic.jpeg',
-
+    heroName    : HO.heroName || { word1:'', word2:'', word3:'' },
+    tagline     : HO.tagline  || '',
+    aboutText   : ID.bodyText || '',
+    secretAbout : ID.secretText || '',
+    introQuote  : ID.introQuote || '',
+    heroLinks   : HB.links    || [],
+    footerLeft  : HO.footerLeft  || '',
+    footerRight : HO.footerRight || '',
+    heroPhoto   : IM.hero  || 'assets/photos/profilepic.jpeg',
+    aboutPhoto  : IM.about || 'assets/photos/stagepic.jpeg',
   };
 
-  /* ── Console confirmation ───────────────────────────────────────── */
-  var pages = ['home','about','resume','social','profiles',
-               'journey','photos','thoughts','lists','games',
-               'birthday','projects'];
+  var pages = ['home','about','resume','social','profiles','journey',
+               'photos','thoughts','lists','games','birthday','projects',
+               'traits','contact'];
   var loaded = pages.filter(function(p){ return !!window.MSM_DATA[p]; });
-  console.log('[MSM] Admin data ready. Pages loaded: ' + loaded.join(', '));
+  console.log('[MSM] Admin data ready. Pages: ' + loaded.join(', '));
 
 })();
