@@ -79,21 +79,25 @@ Even though I was born in 2008, there was something oddly old-school about the w
  private : false,
 },
 
-     {
-      year      : 2013,
-      title     : 'Year Five.',
-      body      : '',
-      hasContent: false,
-      private   : false,
-    },
+     { 
+        
+        year        : 2013,
+        title       : 'The Boy Who Kept Dancing.',
+        body        : '2013 was my final year at Star Kids, and by then I had fully transformed into the child everyone in school seemed to recognize instantly. Studies still felt ridiculously easy to me. Mischief was practically part of my personality, yet somehow my talent constantly saved me from punishments. I talked too much, created chaos wherever I went, participated in almost everything possible, and still somehow remained a teacher’s favorite. Looking back now, I honestly have no idea how I managed that balance.\\n\\nSchool events had slowly started becoming my territory. Fancy dress competitions turned into full performances rather than simple costumes. One day I became Gandhi, another day Krishna, and somehow at one point even a lotus flower. I danced everywhere I could. Annual functions, competitions, performances — if there was a stage, I wanted to be on it. Songs like Chammak Challo and Lungi Dance completely ruled that phase of my life, and apparently those performances became memorable enough for my family to still talk about them years later.\\n\\nOne particular moment stayed frozen in everyone’s memory. During a performance, my scarf suddenly fell off in the middle of the stage. Most children would have panicked or stopped dancing, but I simply ignored it and continued performing like nothing had happened. The audience erupted into cheers, and somehow that tiny moment accidentally became one of my earliest “main character” memories. I rarely remember standing anywhere except first place back then. Winning had quietly started feeling normal.\\n\\nOutside school, life still carried that warm Jaipur atmosphere I had grown attached to. Frequent power cuts would throw the entire neighborhood into darkness, creating a strange mix of chaos and beauty at the same time. Those evenings felt alive in a way modern life rarely does now. I never properly learned how to fly kites myself, but I loved standing beside the older neighborhood boys while they controlled them in the sky. My job was usually holding the chakri while watching the battles happening far above the rooftops.\\n\\nOne of my most prized possessions was a huge pink water bottle shaped almost like a tank. That thing was practically indestructible. I desperately wanted one of the newer steel bottles everyone else carried, but my parents refused until the old one broke. Eventually, childhood logic took over and I decided to solve the problem personally by trying to destroy it myself.\\n\\nThat year also planted one of my earliest serious questions about faith. I remember my parents organizing a yagya after some strange-looking pandit insisted it was necessary. He demanded a large amount of money even though almost everything was arranged and handled by my own family while he mostly sat in one place reciting phrases I could not even understand properly. Somewhere during that experience, my tiny brain started questioning things for the first time. If God truly wanted people to work hard, do good karma, and live honestly, then why did devotion sometimes feel so dependent on expensive rituals, endless effort, and fear? It was probably the first moment in my life where blind belief stopped feeling automatic.\\n\\nLooking back now, 2013 feels loud, dramatic, playful, and strangely important. It was the year I realized I loved attention, loved performing, loved making people react, and perhaps most importantly, loved asking questions even when adults did not always have answers.',
+        hasContent  : true,
+        private     : false,
+     
+     },
 
-    {
-      year      : 2014,
-      title     : 'Year Six.',
-      body      : '',
-      hasContent: false,
-      private   : false,
-    },
+{
+  year      : 2014,
+  title     : 'The Boy Who Looked at Stars.',
+  body      : '2014 marked the beginning of my Kendriya Vidyalaya journey, a journey that would continue for years afterward. My first school there was Kendriya Vidyalaya Number 1 Jaipur, and even today my memories of those early KV years feel strangely blurred together. Sometimes I still get confused trying to remember which events belonged to which school or which year. It almost feels like my brain switched off again after the vivid memories of Star Kids.\\n\\nThe school itself felt enormous compared to everything I had experienced before. Yet I never really missed Star Kids. Kendriya Vidyalaya brought new opportunities, and I wanted to try everything it offered. This was the first time I started learning instruments properly. I learned harmonium, congo, ragas, school songs, and performances that slowly became part of my everyday life. Fancy dress competitions and playful chaos had now transformed into EVS projects, mathematics posters, assemblies, discipline, and structured activities. Childhood was slowly becoming more organized.\\n\\nMy uniform had changed too. Gone were the bib-like jumpsuits from preschool days. Now it was grey shorts, a red-white-blue checkered shirt, a KV logo belt, and polished black shoes that somehow made me feel older than I actually was. Every morning I waited for the school van to arrive, carrying me toward this giant new world that felt far more serious than the tiny comforting universe of Star Kids.\\n\\nAcademically, mathematics still felt unbelievably easy to me, almost like a game rather than a subject. But gradually my favorite subject shifted toward EVS because for the first time studies actually felt connected to the real world. Science, society, politics, nature — everything started making sense in a way I had never noticed before. It no longer felt like memorizing random things from textbooks. It felt useful. Real.\\n\\nThe teachers, however, were extremely strict. I could no longer behave like the endlessly chaotic child I had been earlier. Discipline became unavoidable. I sat on the front bench constantly because teachers were already annoyed enough by my nonstop energy. Still, even within those rules, I found ways to stay creative. I performed in choir groups, played congo during functions, and continued participating in anything involving music or performance.\\n\\nSome of my strangest childhood habits also belonged to this year. For reasons even I cannot explain properly today, I absolutely loved eating chalk and licking the iron mesh on windows because of its metallic taste. Deeply unhygienic? Completely. But childhood logic rarely follows health guidelines.\\n\\nAt home, life still carried a comforting rhythm. I often sat in the kitchen while my mother cooked food, proudly reciting English poems and textbook stories to her as if I were performing inside some grand auditorium instead of a small kitchen. Cartoons still ruled my free time, and evenings remained simple in the best possible way.\\n\\nBut perhaps the most important memory from 2014 was my obsession with stars. Whenever I got time, I simply stared at the night sky wondering if one day I would somehow reach there myself. Later, I would learn how impossibly far stars actually are, millions of light years away from us. Yet even after understanding that distance, a strange part of me still believes I will reach them someday. Maybe not physically, maybe not scientifically, but somehow, in some form, I still will.',
+  
+  hasContent: true,
+  private   : false,
+},
+
 
     {
       year      : 2015,
