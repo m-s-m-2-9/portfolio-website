@@ -1,77 +1,67 @@
-/* ═══════════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════
    admin-control/pages/projects.js
-   ───────────────────────────────────────────────────────────────────
-   WHAT THIS FILE DOES:
-   Controls the PROJECTS page.
-   Three tabs: Completed · Currently Working On · Abandoned
+   ───────────────────────────────────────────────────────────
+   Controls the PROJECTS page (page 11).
+
+   NEW DESIGN: Single flat list (no tabs).
+   Each project has a status label on the right.
+   Clicking any project opens a popup with the full description.
+
+   STATUS OPTIONS (copy-paste exactly):
+     'completed' → green badge
+     'ongoing'   → gold badge
+     'abandoned' → red badge
 
    ⚠️  NATIONALS RULE:
-   Nationals must ALWAYS be the LAST item in whatever tab it
-   appears in. Never add items after the Nationals entry.
-   Add new items BEFORE the Nationals entry.
-
-   HOW TO ADD A PROJECT:
-   Add a new object to the relevant array.
-   Add it BEFORE the Nationals entry.
-
-   STATUS OPTIONS:
-   'completed' → green badge
-   'ongoing'   → gold badge
-   'abandoned' → red badge
-═══════════════════════════════════════════════════════════════════ */
+   Nationals must ALWAYS be the LAST object in the array.
+   Add new projects ABOVE the Nationals entry.
+═══════════════════════════════════════════════════════════ */
 
 window.ADMIN_PROJECTS = {
 
-  sectionLabel: '04 — Projects',
+  sectionLabel: '11 — Projects',
   heading     : 'Things I\'ve built.\nThings I\'m building.',
 
-  /* ── Completed Projects ─────────────────────────────────────────── */
-  completed: [
+  /* ── Flat projects list ───────────────────────────────── */
+  projects: [
 
     {
-      title : 'E-commerce Prototype',
-      meta  : 'Web · 2026',
-      status: 'completed',
-      label : 'Completed',
+      title      : 'E-commerce Prototype',
+      meta       : 'Web · 2024',
+      status     : 'completed',
+      label      : 'Completed',
+      /* This text appears in the popup when user clicks the project.
+         Write as much or as little as you want.
+         Use \n for line breaks. */
+      description: 'Replace this with a real description of the E-commerce Prototype.\n\nWhat did you build? What tech did you use? What did you learn?\n\nThis is your space to tell the story of the project — its challenges, what worked, and what you would do differently.',
     },
 
     {
-      title : 'Until The Bullet Woke Me',
-      meta  : 'Novel · 2026',
-      status: 'Abandoned',
-      label : 'Abandoned',
+      title      : 'Until The Bullet Woke Me',
+      meta       : 'Creative Writing · 2024',
+      status     : 'completed',
+      label      : 'Completed',
+      description: 'Replace this with a description of "Until The Bullet Woke Me".\n\nWhat is it? A story, a script, a poem? What was the theme? What inspired it? Where was it published or shared?',
     },
-
-    /* ── Add new COMPLETED projects above this line ── */
-
-  ],
-
-  /* ── Currently Working On ───────────────────────────────────────── */
-  working: [
 
     {
-      title : 'MSM Personal Website',
-      meta  : 'Website · 2026 – Present',
-      status: 'ongoing',
-      label : 'Currently Working On',
+      title      : 'MSM Personal Website',
+      meta       : 'Web · 2025 – Present',
+      status     : 'ongoing',
+      label      : 'Currently Working On',
+      description: 'This website you\'re currently on.\n\nBuilt from scratch with vanilla HTML, CSS, and JavaScript. No frameworks, no templates. Features a cinematic intro, a custom content management system, a sidebar navigation system, 5 built-in games, photo albums, and a full thoughts section.\n\nEvery pixel was placed deliberately.',
     },
 
-    /* ── Add new WORKING projects above this line ── */
-  ],
+    /* ── Add new projects ABOVE this Nationals entry ───── */
 
-  /* ── Abandoned ──────────────────────────────────────────────────── */
-  abandoned: [
-
+    /* ⚠️  NATIONALS — ALWAYS LAST. DO NOT MOVE. */
     {
-      title : 'Replace — Abandoned Project',
-      meta  : 'Type · Year',
-      status: 'abandoned',
-      label : 'Abandoned',
+      title      : 'Nationals',
+      meta       : 'Competition · 2024',
+      status     : 'completed',
+      label      : 'Completed',
+      description: 'Replace this with your full Nationals story.\n\nWhat competition was it? What did you do? How did you prepare? What happened on the day? What did you win or achieve?\n\nThis is always the last entry in the list.',
     },
-
-    /* ── Add new ABANDONED projects above this line ── */
-
-   
 
   ],
 
