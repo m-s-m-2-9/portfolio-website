@@ -101,66 +101,90 @@ window.ADMIN_LISTS = {
 
   /* ── Books ──────────────────────────────────────────────────────── */
   books: [
-    {
-      title : 'It Starts With Us',
-      meta  : 'Colleen Hoover - It Ends With Us · Year',
-      status: 'reading',
-      label : 'Reading',
-    },
-
+{
+title : 'It Starts With Us',
+meta  : 'Colleen Hoover · 2022',
+status: 'seen',
+label : 'read',
+},
 
 {
-      title : 'It Starts With Us',
-      meta  : 'Colleen Hoover - It Ends With Us · Year',
-      status: 'reading',
-      label : 'Reading',
-    },
+title : 'It Ends With Us',
+meta  : 'Colleen Hoover · 2016',
+status: 'seen',
+label : 'read',
+},
 
+{
+title : 'Twisted Love',
+meta  : 'Ana Huang · 2021',
+status: 'ongoing',
+label : 'currently watching',
+},
 
+{
+title : 'Ikigai',
+meta  : 'Héctor García and Francesc Miralles · 2016',
+status: 'seen',
+label : 'read / seen',
+},
 
-     {
-      title : 'It Starts With Us',
-      meta  : 'Colleen Hoover - It Ends With Us · Year',
-      status: 'reading',
-      label : 'Reading',
-    },
+{
+title : 'To Kill a Mockingbird',
+meta  : 'Harper Lee · 1960',
+status: 'seen',
+label : 'read / seen',
+},
 
+{
+title : 'Rich Dad Poor Dad',
+meta  : 'Robert T. Kiyosaki · 1997',
+status: 'seen',
+label : 'read / seen',
+},
 
+{
+title : 'The Psychology of Money',
+meta  : 'Morgan Housel · 2020',
+status: 'ongoing',
+label : 'currently watching',
+},
 
+{
+title : 'A Man Called Ove',
+meta  : 'Fredrik Backman · 2012',
+status: 'seen',
+label : 'read',
+},
 
-     {
-      title : 'It Starts With Us',
-      meta  : 'Colleen Hoover - It Ends With Us · Year',
-      status: 'reading',
-      label : 'Reading',
-    },
+{
+title : 'The Subtle Art of Not Giving a F*ck',
+meta  : 'Mark Manson · 2016',
+status: 'seen',
+label : 'read',
+},
 
+{
+title : 'Everything Is F*cked',
+meta  : 'Mark Manson · 2019',
+status: 'want',
+label : 'want to watch/read/visit',
+},
 
+{
+title : 'Without Merit',
+meta  : 'Colleen Hoover · 2017',
+status: 'want',
+label : 'read',
+},
 
-
-     {
-      title : 'It Starts With Us',
-      meta  : 'Colleen Hoover - It Ends With Us · Year',
-      status: 'reading',
-      label : 'Reading',
-    },
-
-
-
-
-
-     {
-      title : 'It Starts With Us',
-      meta  : 'Colleen Hoover - It Ends With Us · Year',
-      status: 'reading',
-      label : 'Reading',
-    },
-
-
-
-     
-  ],
-
+{
+title : 'Man Kya Hai',
+meta  : 'J. Krishnamurti · 2015',
+status: 'seen',
+label : 'read',
+},
+]
   /* ── Places ─────────────────────────────────────────────────────── */
   places: [
     {
