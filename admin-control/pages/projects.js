@@ -27,7 +27,7 @@ window.ADMIN_PROJECTS = {
 
     {
       title      : 'E-commerce Prototype',
-      meta       : 'Web · 2024',
+      meta       : 'Web · 2026',
       status     : 'completed',
       label      : 'Completed',
       /* This text appears in the popup when user clicks the project.
@@ -38,7 +38,7 @@ window.ADMIN_PROJECTS = {
 
     {
       title      : 'Until The Bullet Woke Me',
-      meta       : 'Creative Writing · 2024',
+      meta       : 'Novel Writing · 2025',
       status     : 'completed',
       label      : 'Completed',
       description: 'Replace this with a description of "Until The Bullet Woke Me".\n\nWhat is it? A story, a script, a poem? What was the theme? What inspired it? Where was it published or shared?',
@@ -52,16 +52,6 @@ window.ADMIN_PROJECTS = {
       description: 'This website you\'re currently on.\n\nBuilt from scratch with vanilla HTML, CSS, and JavaScript. No frameworks, no templates. Features a cinematic intro, a custom content management system, a sidebar navigation system, 5 built-in games, photo albums, and a full thoughts section.\n\nEvery pixel was placed deliberately.',
     },
 
-    /* ── Add new projects ABOVE this Nationals entry ───── */
-
-    /* ⚠️  NATIONALS — ALWAYS LAST. DO NOT MOVE. */
-    {
-      title      : 'Nationals',
-      meta       : 'Competition · 2024',
-      status     : 'completed',
-      label      : 'Completed',
-      description: 'Replace this with your full Nationals story.\n\nWhat competition was it? What did you do? How did you prepare? What happened on the day? What did you win or achieve?\n\nThis is always the last entry in the list.',
-    },
 
   ],
 
