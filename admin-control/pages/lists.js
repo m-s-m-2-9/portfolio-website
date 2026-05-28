@@ -39,6 +39,64 @@ window.ADMIN_LISTS = {
       label : 'Want to watch',
     },
     ──────────────── */
+
+     {
+      title : 'Squid Game',
+      meta  : 'Survival Thriller · 2021–2025',
+      status: 'seen',
+      label : 'Watched',
+    },
+
+
+
+     {
+      title : 'Asur',
+      meta  : 'Survival Thriller · 2021–2025',
+      status: 'seen',
+      label : 'Watched',
+    },
+
+
+     {
+      title : 'Money Heist',
+      meta  : 'Survival Thriller · 2021–2025',
+      status: 'seen',
+      label : 'Watched',
+    },
+
+
+     {
+      title : 'Stranger Things',
+      meta  : 'Survival Thriller · 2021–2025',
+      status: 'seen',
+      label : 'Watched',
+    },
+
+
+     {
+      title : 'House',
+      meta  : 'Survival Thriller · 2021–2025',
+      status: 'seen',
+      label : 'Watched',
+    },
+
+
+     {
+      title : 'Suits',
+      meta  : 'Survival Thriller · 2021–2025',
+      status: 'seen',
+      label : 'Watched',
+    },
+
+ {
+      title : 'The Rookie',
+      meta  : 'Survival Thriller · 2021–2025',
+      status: 'seen',
+      label : 'Watched',
+    },
+
+
+     
   ],
 
   /* ── Books ──────────────────────────────────────────────────────── */
