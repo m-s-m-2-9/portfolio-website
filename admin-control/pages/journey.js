@@ -247,9 +247,11 @@ Instagram remains part of my identity, but more as a controlled personal presenc
 
 My mindset is focused on growth, discipline, and independence. I want to operate in a system where learning, earning, and building happen together — not separately.
 
-2027 is not about dreaming anymore. It is about building, testing, failing, learning, and slowly stepping into a real professional identity.
-  `
-},
+2027 is not about dreaming anymore. It is about building, testing, failing, learning, and slowly stepping into a real professional identity.`,
+
+       hasContent: true,
+      private   : false,
+    },
 
 
 
