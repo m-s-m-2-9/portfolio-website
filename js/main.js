@@ -1,12 +1,24 @@
 /* ═══════════════════════════════════════════════════════════
    main.js — Core site logic
 ═══════════════════════════════════════════════════════════ */
- 
+
+/* ── MSM_DATA bridge ────────────────────────────────────────
+   D is a shorthand for window.MSM_DATA which is built by
+   admin-control/index.js from all your admin-control files.
+   Every place that was hardcoded now reads from D first,
+   falls back to defaults if D is missing.
+   NEVER edit values here — edit in admin-control/ instead.
+──────────────────────────────────────────────────────────── */
+const D = window.MSM_DATA || {};
+
+/* CHANGE: CONFIG now reads from admin-control/other/settings.js
+   (emailjs keys) and admin-control/other/passwords.js (master).
+   Edit those files, not this block. */
 const CONFIG = {
-  MASTER_PASSWORD:    "manomay2026",
-  EMAILJS_PUBLIC_KEY: "YOUR_PUBLIC_KEY",
-  EMAILJS_SERVICE_ID: "YOUR_SERVICE_ID",
-  EMAILJS_TEMPLATE_ID:"YOUR_TEMPLATE_ID",
+  MASTER_PASSWORD:    (D.passwords && D.passwords.master)    || 'manomay2026',
+  EMAILJS_PUBLIC_KEY: (D.emailjs  && D.emailjs.publicKey)   || 'YOUR_PUBLIC_KEY',
+  EMAILJS_SERVICE_ID: (D.emailjs  && D.emailjs.serviceId)   || 'YOUR_SERVICE_ID',
+  EMAILJS_TEMPLATE_ID:(D.emailjs  && D.emailjs.templateId)  || 'YOUR_TEMPLATE_ID',
 };
  
 emailjs.init(CONFIG.EMAILJS_PUBLIC_KEY);
@@ -29,9 +41,9 @@ window.addEventListener("load", () => {
   const bar = document.getElementById("loading-bar");
   const pct = document.getElementById("loading-pct");
  
- if (loadingScreen) {
-  loadingScreen.classList.add("ready");
-}
+  if (loadingScreen) {
+    loadingScreen.classList.add("ready");
+  }
  
   let progress = 0;
  
@@ -49,12 +61,12 @@ window.addEventListener("load", () => {
     }
  
     if (bar) {
-  bar.style.width = progress + "%";
-}
+      bar.style.width = progress + "%";
+    }
 
-if (pct) {
-  pct.textContent = Math.floor(progress) + "%";
-}
+    if (pct) {
+      pct.textContent = Math.floor(progress) + "%";
+    }
   }, 160);
 });
  
@@ -181,7 +193,6 @@ const overlay   = document.getElementById('transition-overlay');
  
 function navigateTo(pageId) {
   if (pageId === currentPage) return;
-  // Push state for mobile hardware back-button support
   history.pushState({ page: pageId, prev: currentPage }, '', '#' + pageId);
   doTransition(pageId);
 }
@@ -195,14 +206,14 @@ function doTransition(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active', 'exit-up'));
     const next = document.getElementById('page-' + pageId);
     if (next) {
-  next.classList.add('active');
-  next.scrollTop = 0;
+      next.classList.add('active');
+      next.scrollTop = 0;
 
-  // Lazy render page content
-  if (window.MSM && window.MSM.renderPage) {
-    window.MSM.renderPage(pageId);
-  }
-}
+      // Lazy render page content from admin-control files via data.js
+      if (window.MSM && window.MSM.renderPage) {
+        window.MSM.renderPage(pageId);
+      }
+    }
     currentPage = pageId;
     updateNavActive(pageId);
  
@@ -230,29 +241,18 @@ function updateNavActive(pageId) {
  
 /* ═══════════════════════════════════════════════════════════
    MOBILE HISTORY API — Hardware / Gesture Back Button Support
-   ─────────────────────────────────────────────────────────
-   On Android and iOS gesture-back, the popstate event fires.
-   Priority order:
-     1. Close any open modal/overlay (belief, photo, game, gate)
-     2. Navigate to the previous main page
-     3. Fall back to Home
 ═══════════════════════════════════════════════════════════ */
- 
-// Stamp the initial state so we always have something to pop back to
 history.replaceState({ page: 'home', prev: null }, '', '#home');
  
 window.addEventListener('popstate', (e) => {
  
-  // ── 1. Belief / Thoughts sub-section ──
   const beliefView = document.getElementById('belief-post-view');
   if (beliefView && beliefView.classList.contains('active')) {
     closeBelief();
-    // Re-push so the next back press goes to the previous main page
     history.pushState({ page: currentPage, prev: null }, '', '#' + currentPage);
     return;
   }
  
-  // ── 2. Photo viewer ──
   const photoViewer = document.getElementById('photo-viewer');
   if (photoViewer && photoViewer.classList.contains('open')) {
     closeViewer();
@@ -260,7 +260,6 @@ window.addEventListener('popstate', (e) => {
     return;
   }
  
-  // ── 3. Game modal ──
   const gameModal = document.getElementById('game-modal');
   if (gameModal && gameModal.classList.contains('open')) {
     closeGame();
@@ -268,7 +267,6 @@ window.addEventListener('popstate', (e) => {
     return;
   }
  
-  // ── 4. Password gate ──
   const gate = document.getElementById('password-gate');
   if (gate && gate.classList.contains('visible')) {
     closeGate();
@@ -276,7 +274,6 @@ window.addEventListener('popstate', (e) => {
     return;
   }
  
-  // ── 5. Music panel ──
   const mp = document.getElementById('music-panel');
   if (mp && mp.classList.contains('open')) {
     closeMusicPanel();
@@ -284,14 +281,12 @@ window.addEventListener('popstate', (e) => {
     return;
   }
  
-  // ── 6. Main page navigation ──
   if (e.state && e.state.page) {
     const target = e.state.page;
     if (target !== currentPage) {
       doTransition(target);
     }
   } else {
-    // No recorded state — return home
     doTransition('home');
   }
 });
@@ -328,12 +323,23 @@ setTimeout(() => triggerPageReveals('home'), 1500);
 ═══════════════════════════════════════════════════════════ */
 let gateTargetPage = null;
  
-function unlockSection(inputId, contentId) {
+/* CHANGE: Added pwKey parameter.
+   Now checks the per-section password from admin-control/other/passwords.js first.
+   If no per-section password is set, falls back to the master password.
+   Edit passwords in: admin-control/other/passwords.js
+   Example: unlockSection('about-pw', 'secret-about-content', 'about')
+            → checks D.passwords.about, then falls back to D.passwords.master */
+function unlockSection(inputId, contentId, pwKey) {
   const input   = document.getElementById(inputId);
   const content = document.getElementById(contentId);
   if (!input || !content) return;
- 
-  if (input.value === CONFIG.MASTER_PASSWORD) {
+
+  /* Per-section password takes priority over master password */
+  const _D = window.MSM_DATA || {};
+  const perSectionPw = pwKey && _D.passwords && _D.passwords[pwKey];
+  const correctPw    = perSectionPw || CONFIG.MASTER_PASSWORD;
+
+  if (input.value === correctPw) {
     content.classList.add('unlocked');
     content.style.display = 'block';
     const form = input.closest('.inline-password-form');
@@ -389,30 +395,60 @@ function toggleMobileNav() {
   document.getElementById('mobile-nav').classList.toggle('open', mobileNavOpen);
   document.getElementById('hamburger').classList.toggle('open', mobileNavOpen);
 }
- 
+
 /* ═══════════════════════════════════════════════════════════
    BIRTHDAY TIMER
 ═══════════════════════════════════════════════════════════ */
+
+/* CHANGE: Helper that reads birthday config from admin-control/pages/clock.js
+   Edit your birthday in: admin-control/pages/clock.js
+   birthdayDate format: 'Month DD' e.g. 'August 29'
+   birthYear: e.g. 2008
+   wishText: the banner text shown on your birthday */
+function _getBdayConfig() {
+  const bday = (window.MSM_DATA && window.MSM_DATA.birthday) || {};
+  const MONTHS = {
+    january:0, february:1, march:2,    april:3,
+    may:4,     june:5,     july:6,     august:7,
+    september:8, october:9, november:10, december:11
+  };
+  const dateStr = (bday.birthdayDate || 'August 29').toLowerCase();
+  const parts   = dateStr.split(/\s+/);
+  const month   = MONTHS[parts[0]] !== undefined ? MONTHS[parts[0]] : 7;
+  const day     = parseInt(parts[1]) || 29;
+  return {
+    month    : month,
+    day      : day,
+    birthYear: bday.birthYear || 2008,
+    wishText : bday.wishText  || 'WISH MANOMAY SHAILENDRA MISRA',
+  };
+}
+
+/* CHANGE: updateBirthdayTimer now uses _getBdayConfig() so all birthday
+   settings are controlled from admin-control/pages/clock.js.
+   The structure and timer logic are completely unchanged. */
 function updateBirthdayTimer() {
-  const now = new Date();
- 
+  const now      = new Date();
+  const bdayCfg  = _getBdayConfig();   /* reads from admin-control/pages/clock.js */
+  const { month, day, birthYear, wishText } = bdayCfg;
+
   // ╔══════════════════════════════════════════════════════════════╗
   // ║  BIRTHDAY TESTING TOGGLE                                     ║
-  // ║  To simulate August 29th immediately for testing:            ║
+  // ║  To simulate birthday mode for testing:                      ║
   // ║  1. Comment out the `const checkDate = now;` line below.     ║
   // ║  2. Uncomment the OVERRIDE line directly beneath it.         ║
   // ║  Remember to revert before deploying to production.          ║
   // ╠══════════════════════════════════════════════════════════════╣
   const checkDate = now;
   // OVERRIDE ↓ Uncomment to test birthday state instantly:
-  //const checkDate = new Date(now.getFullYear(), 7, 29, 13, 0, 0);
+  //const checkDate = new Date(now.getFullYear(), month, day, 13, 0, 0);
   // ╚══════════════════════════════════════════════════════════════╝
- 
-  const isBirthday = checkDate.getMonth() === 7 && checkDate.getDate() === 29;
- 
-  let nextBirthday = new Date(now.getFullYear(), 7, 29, 13, 0, 0);
-  if (now > nextBirthday) nextBirthday = new Date(now.getFullYear() + 1, 7, 29, 13, 0, 0);
- 
+
+  const isBirthday = checkDate.getMonth() === month && checkDate.getDate() === day;
+
+  let nextBirthday = new Date(now.getFullYear(), month, day, 13, 0, 0);
+  if (now > nextBirthday) nextBirthday = new Date(now.getFullYear() + 1, month, day, 13, 0, 0);
+
   const diff    = nextBirthday - now;
   const days    = Math.floor(diff / (1000 * 60 * 60 * 24));
   const hours   = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -420,29 +456,28 @@ function updateBirthdayTimer() {
   const seconds = Math.floor((diff % (1000 * 60)) / 1000);
   const ms      = diff % 1000;
   const pad     = (n, len = 2) => String(n).padStart(len, '0');
- 
+
   document.getElementById('bd-days').textContent  = pad(days, 3);
   document.getElementById('bd-hours').textContent = pad(hours);
   document.getElementById('bd-mins').textContent  = pad(minutes);
   document.getElementById('bd-secs').textContent  = pad(seconds);
   document.getElementById('bd-ms').textContent    = pad(ms, 3) + ' ms';
- 
-  const born = new Date(2008, 7, 29);
+
+  /* Age calculation uses birthYear from admin-control/pages/clock.js */
+  const born = new Date(birthYear, month, day);
   let age = now.getFullYear() - born.getFullYear();
   if (now < new Date(now.getFullYear(), born.getMonth(), born.getDate())) age--;
   const ageEl = document.getElementById('current-age');
   if (ageEl) ageEl.textContent = age + ' years old';
- 
-  // ── Birthday banner injection ──────────────────────────────────
-  // Inserts "WISH MANOMAY SHAILENDRA MISRA" below the milliseconds
-  // display only on August 29th. Clicking routes to the Contact page.
+
+  /* Birthday banner — wishText from admin-control/pages/clock.js */
   const existingBanner = document.getElementById('birthday-wish-banner');
   if (isBirthday) {
     if (!existingBanner) {
       const banner       = document.createElement('div');
       banner.id          = 'birthday-wish-banner';
       banner.className   = 'birthday-wish-text';
-      banner.textContent = 'WISH MANOMAY SHAILENDRA MISRA';
+      banner.textContent = wishText;   /* ← from admin-control/pages/clock.js */
       banner.title       = 'Send a message';
       banner.addEventListener('click', () => navigateTo('contact'));
       const msEl = document.getElementById('bd-ms');
@@ -450,7 +485,6 @@ function updateBirthdayTimer() {
         msEl.parentNode.insertAdjacentElement('afterend', banner);
       }
     }
-    // Activate full-page birthday aesthetic
     document.body.classList.add('birthday-mode');
   } else {
     if (existingBanner) existingBanner.remove();
@@ -464,38 +498,60 @@ updateBirthdayTimer();
 /* ═══════════════════════════════════════════════════════════
    YEAR JOURNEY TIMELINE
 ═══════════════════════════════════════════════════════════ */
-const yearData = {
-  2008: { title: "The Beginning", body: "The story begins in the humid, electric atmosphere of Maharashtra, my entry into the world was marked by a setting defined by contrast—where the old soul of India meets the relentless ambition of its financial heart. From the very first day, my life was positioned at the intersection of diverse cultures and high expectations. Even though these early months are a blur of sensory memories, they established the -Nomadic- blueprint of my life. I was born into a family that valued education and presence, setting the stage for a boy who would eventually grow to command rooms and lead institutions." },
-  2009: { title: "Year One", body: "Before the constant moves and the changing cities, 2009 was a year of profound, silent growth. This was the period where my internal world began to synthesize the environment around me. Living in the wake of the vibrant energy of Mumbai and Lucknow, I was a child developing an early sense of observation—the -Old Soul- beginning to peak through. While most children at this age are simply reacting to stimuli, I was absorbing the rhythms of a household that valued structure and discipline. This year was the silent foundation; it was the quiet before the journey of moving across India began." },
-  2010: { title: "Growing Up", body: "In 2010, the nomadic cycle that would define my childhood truly began with a significant move to Jaipur, the Pink City. This was my first major geographical shift, triggered by my father's transfer, and it marked the beginning of my deep connection with the regal aesthetics of Rajasthan. Joining Star Kids Pre-school in the playgroup section was my first introduction to a social ecosystem outside of my family. It was here that I first learned the art of real presence." },
-  2011: { title: "Discovery", body: "2011 was the year I proved that the -Standard Path- was never meant for me. Entering Junior KG, I quickly realized that I was processing information and navigating social hierarchies at a different velocity than those around me. My teachers at the time recognized a rare combination of discipline, high IQ, and a raw, intrinsic motivation to excel that was far beyond my years. This led to a double promotion—an academic leap that saw me move from LKG to UKG in a mere six months." },
-  2012: { title: "Early Years", body: "By 2012, I had solidified my position as the -Gold Standard- of my peer group. Completing my half-promotion into UKG, I secured the 1st Rank for outstanding academic and behavioral performance. However, the true significance of this year was my father being honored with the -Best Father Award- by the entire school community. This was a moment of immense pride, reinforcing the idea that my name was attached to impact and excellence." },
-  2013: { title: "Shifting",       body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
-  2014: { title: "New Ground",     body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
-  2015: { title: "The Turn",       body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
-  2016: { title: "Momentum",       body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
-  2017: { title: "Building",       body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
-  2018: { title: "Defining",       body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
-  2019: { title: "Expanding",      body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
-  2020: { title: "The Pause",      body: "The world stopped. Pandemic year. But something changed internally too. xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
-  2021: { title: "Rebuilding",     body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
-  2022: { title: "Acceleration",   body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
-  2023: { title: "Clarity",        body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
-  2024: { title: "Intention",      body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
-  2025: { title: "Transformation", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
-  2026: { title: "Present",        body: "Now. Right here. This website exists. That means something. xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
-};
- 
+
+/* CHANGE: yearData now reads from admin-control/pages/journey.js via MSM_DATA.
+   Edit your timeline entries in: admin-control/pages/journey.js → years array
+   The hardcoded object below is a FALLBACK used only if MSM_DATA is unavailable. */
+const yearData = (() => {
+  const jrnYears = window.MSM_DATA && window.MSM_DATA.journey && window.MSM_DATA.journey.years;
+  if (jrnYears && jrnYears.length) {
+    const obj = {};
+    jrnYears.forEach(e => { obj[e.year] = { title: e.title || '', body: e.body || '' }; });
+    return obj;
+  }
+  /* Fallback — used if admin-control files are not loaded */
+  return {
+    2008: { title: "The Beginning", body: "The story begins in the humid, electric atmosphere of Maharashtra, my entry into the world was marked by a setting defined by contrast—where the old soul of India meets the relentless ambition of its financial heart. From the very first day, my life was positioned at the intersection of diverse cultures and high expectations. Even though these early months are a blur of sensory memories, they established the -Nomadic- blueprint of my life. I was born into a family that valued education and presence, setting the stage for a boy who would eventually grow to command rooms and lead institutions." },
+    2009: { title: "Year One", body: "Before the constant moves and the changing cities, 2009 was a year of profound, silent growth. This was the period where my internal world began to synthesize the environment around me. Living in the wake of the vibrant energy of Mumbai and Lucknow, I was a child developing an early sense of observation—the -Old Soul- beginning to peak through. While most children at this age are simply reacting to stimuli, I was absorbing the rhythms of a household that valued structure and discipline. This year was the silent foundation; it was the quiet before the journey of moving across India began." },
+    2010: { title: "Growing Up", body: "In 2010, the nomadic cycle that would define my childhood truly began with a significant move to Jaipur, the Pink City. This was my first major geographical shift, triggered by my father's transfer, and it marked the beginning of my deep connection with the regal aesthetics of Rajasthan. Joining Star Kids Pre-school in the playgroup section was my first introduction to a social ecosystem outside of my family. It was here that I first learned the art of real presence." },
+    2011: { title: "Discovery", body: "2011 was the year I proved that the -Standard Path- was never meant for me. Entering Junior KG, I quickly realized that I was processing information and navigating social hierarchies at a different velocity than those around me. My teachers at the time recognized a rare combination of discipline, high IQ, and a raw, intrinsic motivation to excel that was far beyond my years. This led to a double promotion—an academic leap that saw me move from LKG to UKG in a mere six months." },
+    2012: { title: "Early Years", body: "By 2012, I had solidified my position as the -Gold Standard- of my peer group. Completing my half-promotion into UKG, I secured the 1st Rank for outstanding academic and behavioral performance. However, the true significance of this year was my father being honored with the -Best Father Award- by the entire school community. This was a moment of immense pride, reinforcing the idea that my name was attached to impact and excellence." },
+    2013: { title: "Shifting",       body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
+    2014: { title: "New Ground",     body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
+    2015: { title: "The Turn",       body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
+    2016: { title: "Momentum",       body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
+    2017: { title: "Building",       body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
+    2018: { title: "Defining",       body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
+    2019: { title: "Expanding",      body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
+    2020: { title: "The Pause",      body: "The world stopped. Pandemic year. But something changed internally too. xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
+    2021: { title: "Rebuilding",     body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
+    2022: { title: "Acceleration",   body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
+    2023: { title: "Clarity",        body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
+    2024: { title: "Intention",      body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
+    2025: { title: "Transformation", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
+    2026: { title: "Present",        body: "Now. Right here. This website exists. That means something. xyz xyz xyz xyz xyz xyz xyz xyz xyz. — REPLACE" },
+  };
+})();
+
+/* CHANGE: buildTimeline now reads year list from admin-control/pages/journey.js.
+   Adding a new year in journey.js automatically adds a dot to the timeline.
+   Falls back to 2008–2026 if MSM_DATA is unavailable. */
 (function buildTimeline() {
   const track = document.getElementById('years-track');
   if (!track) return;
-  for (let year = 2008; year <= 2026; year++) {
+
+  const jrnYears = window.MSM_DATA && window.MSM_DATA.journey && window.MSM_DATA.journey.years;
+  const yearList = (jrnYears && jrnYears.length)
+    ? jrnYears.map(e => e.year)
+    : Array.from({ length: 2026 - 2008 + 1 }, (_, i) => 2008 + i); /* fallback: 2008–2026 */
+
+  yearList.forEach(year => {
     const node = document.createElement('div');
     node.className = 'year-node';
     node.innerHTML = `<div class="year-dot"></div><div class="year-label">${year}</div>`;
     node.onclick   = () => showYear(year, node);
     track.appendChild(node);
-  }
+  });
 })();
  
 function showYear(year, nodeEl) {
@@ -513,44 +569,66 @@ function showYear(year, nodeEl) {
 /* ═══════════════════════════════════════════════════════════
    THOUGHTS / BELIEFS
 ═══════════════════════════════════════════════════════════ */
-const beliefPosts = {
-  politics: [
-    { date: "April 2026",   title: "xyz Politics post title — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE with your actual thoughts on politics." },
-    { date: "March 2026",   title: "xyz Politics post title — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
-    { date: "January 2026", title: "xyz Politics post title — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
-  ],
-  god: [
-    { date: "March 2026",    title: "xyz Faith post title — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
-    { date: "February 2026", title: "xyz Faith post title — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
-  ],
-  science: [
-    { date: "April 2026",    title: "xyz Science post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
-    { date: "February 2026", title: "xyz Science post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
-  ],
-  life: [
-    { date: "April 2026",    title: "xyz Life post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
-    { date: "March 2026",    title: "xyz Life post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
-    { date: "February 2026", title: "xyz Life post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
-    { date: "January 2026",  title: "xyz Life post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
-  ],
-  society: [
-    { date: "March 2026",    title: "xyz Society post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
-    { date: "February 2026", title: "xyz Society post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
-    { date: "January 2026",  title: "xyz Society post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
-  ],
-  tech: [
-    { date: "April 2026", title: "xyz Tech post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
-    { date: "March 2026", title: "xyz Tech post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
-  ],
-};
+
+/* CHANGE: beliefPosts now reads from admin-control/pages/thoughts.js via MSM_DATA.
+   Edit your thoughts in: admin-control/pages/thoughts.js → categories array
+   The hardcoded object below is a FALLBACK used only if MSM_DATA is unavailable. */
+const beliefPosts = (() => {
+  const thCats = window.MSM_DATA && window.MSM_DATA.thoughts && window.MSM_DATA.thoughts.categories;
+  if (thCats && thCats.length) {
+    const obj = {};
+    thCats.forEach(cat => { obj[cat.id] = cat.posts || []; });
+    return obj;
+  }
+  /* Fallback — used if admin-control files are not loaded */
+  return {
+    politics: [
+      { date: "April 2026",   title: "xyz Politics post title — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE with your actual thoughts on politics." },
+      { date: "March 2026",   title: "xyz Politics post title — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
+      { date: "January 2026", title: "xyz Politics post title — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
+    ],
+    god: [
+      { date: "March 2026",    title: "xyz Faith post title — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
+      { date: "February 2026", title: "xyz Faith post title — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
+    ],
+    science: [
+      { date: "April 2026",    title: "xyz Science post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
+      { date: "February 2026", title: "xyz Science post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
+    ],
+    life: [
+      { date: "April 2026",    title: "xyz Life post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
+      { date: "March 2026",    title: "xyz Life post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
+      { date: "February 2026", title: "xyz Life post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
+      { date: "January 2026",  title: "xyz Life post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
+    ],
+    society: [
+      { date: "March 2026",    title: "xyz Society post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
+      { date: "February 2026", title: "xyz Society post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
+      { date: "January 2026",  title: "xyz Society post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
+    ],
+    tech: [
+      { date: "April 2026", title: "xyz Tech post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
+      { date: "March 2026", title: "xyz Tech post — REPLACE", body: "xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz xyz. REPLACE." },
+    ],
+  };
+})();
  
+/* CHANGE: openBelief now shows the full category title from admin-control/pages/thoughts.js
+   e.g. 'God & Faith' instead of just 'God', 'Life & Philosophy' instead of 'Life'.
+   Edit category titles in: admin-control/pages/thoughts.js → categories[].title */
 function openBelief(category) {
   const posts = beliefPosts[category] || [];
   document.getElementById('beliefs-overview').style.display = 'none';
   const view  = document.getElementById('belief-post-view');
   const label = document.getElementById('belief-view-label');
   const list  = document.getElementById('belief-posts-list');
-  label.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+
+  /* Use full title from MSM_DATA if available, else capitalise the id */
+  const _D   = window.MSM_DATA || {};
+  const cats = (_D.thoughts && _D.thoughts.categories) || [];
+  const cat  = cats.find(c => c.id === category);
+  label.textContent = cat ? cat.title : category.charAt(0).toUpperCase() + category.slice(1);
+
   list.innerHTML = posts.map(p => `
     <div class="belief-post">
       <div class="belief-post-date">${p.date}</div>
@@ -604,19 +682,53 @@ function switchListTab(panel, tabEl) {
 /* ═══════════════════════════════════════════════════════════
    PHOTO VIEWER
 ═══════════════════════════════════════════════════════════ */
-const albumData = {
-  album1:  { photos: [{ src:'', title:'xyz Photo Title — REPLACE', desc:'xyz description — REPLACE' }, { src:'', title:'xyz Photo Title — REPLACE', desc:'xyz description — REPLACE' }] },
-  album2:  { photos: [{ src:'', title:'xyz Photo Title — REPLACE', desc:'xyz description — REPLACE' }] },
-  album3:  { photos: [{ src:'', title:'xyz Photo Title — REPLACE', desc:'xyz description — REPLACE' }] },
-  secret1: { photos: [{ src:'', title:'xyz Private Photo — REPLACE', desc:'xyz description — REPLACE' }] },
-  secret2: { photos: [{ src:'', title:'xyz Private Photo — REPLACE', desc:'xyz description — REPLACE' }] },
-};
+
+/* CHANGE: albumData now reads from admin-control/other/images.js via MSM_DATA.
+   Add photos to albums in: admin-control/other/images.js → publicAlbums / privateAlbums
+   The hardcoded object below is a FALLBACK used only if MSM_DATA is unavailable. */
+const albumData = (() => {
+  const pub  = (window.MSM_DATA && window.MSM_DATA.publicAlbums)  || [];
+  const priv = (window.MSM_DATA && window.MSM_DATA.privateAlbums) || [];
+  const all  = pub.concat(priv);
+  if (all.length) {
+    const obj = {};
+    all.forEach(album => { obj[album.id] = { photos: album.photos || [] }; });
+    return obj;
+  }
+  /* Fallback — used if admin-control files are not loaded */
+  return {
+    album1:  { photos: [{ src:'', title:'xyz Photo Title — REPLACE', desc:'xyz description — REPLACE' }, { src:'', title:'xyz Photo Title — REPLACE', desc:'xyz description — REPLACE' }] },
+    album2:  { photos: [{ src:'', title:'xyz Photo Title — REPLACE', desc:'xyz description — REPLACE' }] },
+    album3:  { photos: [{ src:'', title:'xyz Photo Title — REPLACE', desc:'xyz description — REPLACE' }] },
+    secret1: { photos: [{ src:'', title:'xyz Private Photo — REPLACE', desc:'xyz description — REPLACE' }] },
+    secret2: { photos: [{ src:'', title:'xyz Private Photo — REPLACE', desc:'xyz description — REPLACE' }] },
+  };
+})();
  
 let currentAlbum      = null;
 let currentPhotoIndex = 0;
  
+/* CHANGE: openAlbum now works with new album IDs from admin-control/other/images.js.
+   When no photos are in an album yet, shows a placeholder message instead of crashing. */
 function openAlbum(albumId) {
-  currentAlbum      = albumData[albumId] || { photos: [] };
+  const album = albumData[albumId];
+
+  if (!album || !album.photos || album.photos.length === 0) {
+    /* Album exists but has no photos yet — show viewer with placeholder */
+    currentAlbum      = { photos: [] };
+    currentPhotoIndex = 0;
+    const viewer = document.getElementById('photo-viewer');
+    if (viewer) {
+      document.getElementById('viewer-title').textContent = albumId.charAt(0).toUpperCase() + albumId.slice(1);
+      document.getElementById('viewer-desc').textContent  = 'No photos yet — add them in admin-control/other/images.js';
+      const img = document.getElementById('viewer-img');
+      if (img) img.style.display = 'none';
+      viewer.classList.add('open');
+    }
+    return;
+  }
+
+  currentAlbum      = album;
   currentPhotoIndex = 0;
   showPhoto(0);
   document.getElementById('photo-viewer').classList.add('open');
@@ -628,6 +740,7 @@ function showPhoto(index) {
   currentPhotoIndex = (index + photos.length) % photos.length;
   const photo = photos[currentPhotoIndex];
   const img   = document.getElementById('viewer-img');
+  img.style.display = '';
   img.src = photo.src || `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><rect fill='%23222'/><text x='50%25' y='50%25' fill='%23555' text-anchor='middle' dy='.3em' font-family='sans-serif' font-size='16'>Photo placeholder — add real image src</text></svg>`;
   img.alt = photo.title;
   document.getElementById('viewer-title').textContent = photo.title;
@@ -675,12 +788,8 @@ function renderGame(gameId) {
  
 /* ─────────────────────────────────────────────────────────
    FIX 1A: SNAKE — touch swipe support for mobile
-   Swipe maps to direction. First swipe starts game.
-   Touch listeners on canvas with preventDefault so
-   page doesn't scroll while swiping to play.
 ───────────────────────────────────────────────────────── */
 function renderSnake(container) {
-  /* Detect touch device for instruction text */
   const isMobile = window.matchMedia('(pointer: coarse)').matches;
   const inputHint = isMobile ? 'Swipe to move' : 'Arrow keys or WASD';
  
@@ -752,7 +861,6 @@ function renderSnake(container) {
     draw();
   }
  
-  /* ── Keyboard controls (desktop) ── */
   const DIRS = {
     ArrowUp:{x:0,y:-1}, ArrowDown:{x:0,y:1}, ArrowLeft:{x:-1,y:0}, ArrowRight:{x:1,y:0},
     w:{x:0,y:-1}, s:{x:0,y:1}, a:{x:-1,y:0}, d:{x:1,y:0},
@@ -772,15 +880,14 @@ function renderSnake(container) {
     }
   });
  
-  /* ── Touch swipe controls (mobile) — FIX 1A ── */
   if (isMobile) {
     let touchStartX = 0, touchStartY = 0;
-    const SWIPE_THRESHOLD = 20; /* minimum px to count as a swipe */
+    const SWIPE_THRESHOLD = 20;
  
     canvas.addEventListener('touchstart', (e) => {
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
-      e.preventDefault(); /* stop page scroll while on canvas */
+      e.preventDefault();
     }, { passive: false });
  
     canvas.addEventListener('touchend', (e) => {
@@ -788,7 +895,6 @@ function renderSnake(container) {
       const dy = e.changedTouches[0].clientY - touchStartY;
       const absDx = Math.abs(dx), absDy = Math.abs(dy);
  
-      /* Must exceed threshold to register as intentional swipe */
       if (Math.max(absDx, absDy) < SWIPE_THRESHOLD) return;
  
       if (gameOver) { startGame(); return; }
@@ -796,14 +902,11 @@ function renderSnake(container) {
  
       let newDir;
       if (absDx > absDy) {
-        /* Horizontal swipe */
         newDir = dx > 0 ? { x: 1, y: 0 } : { x: -1, y: 0 };
       } else {
-        /* Vertical swipe */
         newDir = dy > 0 ? { x: 0, y: 1 } : { x: 0, y: -1 };
       }
  
-      /* Prevent reversing directly into self */
       if (dir.x !== -newDir.x || dir.y !== -newDir.y) {
         dir = newDir;
       }
@@ -861,8 +964,6 @@ function renderMemory(container) {
  
 /* ─────────────────────────────────────────────────────────
    FIX 1B: 2048 — touch swipe support for mobile
-   Swipe on the grid maps to move direction.
-   touch-action:none on grid prevents scroll interference.
 ───────────────────────────────────────────────────────── */
 function render2048(container) {
   const isMobile = window.matchMedia('(pointer: coarse)').matches;
@@ -913,23 +1014,21 @@ function render2048(container) {
  
   addRandom(); addRandom(); drawGrid();
  
-  /* ── Keyboard controls (desktop) ── */
   document.addEventListener('keydown', function keys2048(e) {
     if (!document.getElementById('game-modal').classList.contains('open')) { document.removeEventListener('keydown', keys2048); return; }
     const map = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down' };
     if (map[e.key]) { e.preventDefault(); move(map[e.key]); }
   });
  
-  /* ── Touch swipe controls (mobile) — FIX 1B ── */
   if (isMobile) {
     const gridEl = document.getElementById('g2048-grid');
     let touchStartX = 0, touchStartY = 0;
-    const SWIPE_THRESHOLD = 24; /* min px for valid swipe */
+    const SWIPE_THRESHOLD = 24;
  
     gridEl.addEventListener('touchstart', (e) => {
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
-      e.preventDefault(); /* prevent scroll while interacting with grid */
+      e.preventDefault();
     }, { passive: false });
  
     gridEl.addEventListener('touchend', (e) => {
@@ -1249,57 +1348,39 @@ function nameclickHandler() {
  
 /* ═══════════════════════════════════════════════════════════
    WEB AUDIO API — Mechanical Sound System
-   ─────────────────────────────────────────────────────────
-   Synthesises two sounds entirely via the Web Audio API.
-   No external audio files are used.
- 
-   TICK  — hover: ultra-short transient, ~4 kHz click
-   CLACK — click: slightly deeper, ~1.8 kHz body with
-           a sharper initial attack and small tail
- 
-   Scope: all interactive elements EXCEPT game canvases.
-   A toggle button is injected into the nav bar.
 ═══════════════════════════════════════════════════════════ */
  
 let _audioCtx         = null;
-let _soundEnabled     = localStorage.getItem('msm-sound') !== 'off'; // default ON
-let _hoverCooldownMap = new WeakMap(); // per-element hover guard
+let _soundEnabled     = localStorage.getItem('msm-sound') !== 'off';
+let _hoverCooldownMap = new WeakMap();
  
 function _getAudioCtx() {
   if (!_audioCtx) {
     _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   }
-  // Resume if suspended (browser autoplay policy)
   if (_audioCtx.state === 'suspended') _audioCtx.resume();
   return _audioCtx;
 }
  
-/* ── Synthesise a hover tick ── */
 function _playTick() {
   if (!_soundEnabled) return;
   try {
     const ctx  = _getAudioCtx();
     const now  = ctx.currentTime;
- 
-    // Short band-pass filtered noise burst — "tick"
     const buf  = ctx.createBuffer(1, ctx.sampleRate * 0.018, ctx.sampleRate);
     const data = buf.getChannelData(0);
     for (let i = 0; i < data.length; i++) {
       data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 6);
     }
- 
     const src    = ctx.createBufferSource();
     src.buffer   = buf;
- 
     const bp     = ctx.createBiquadFilter();
     bp.type      = 'bandpass';
     bp.frequency.value = 4200;
     bp.Q.value         = 2.4;
- 
     const gain   = ctx.createGain();
     gain.gain.setValueAtTime(0.14, now);
     gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.018);
- 
     src.connect(bp);
     bp.connect(gain);
     gain.connect(ctx.destination);
@@ -1308,24 +1389,18 @@ function _playTick() {
   } catch (_) {}
 }
  
-/* ── Synthesise a click clack ── */
 function _playClack() {
   if (!_soundEnabled) return;
   try {
     const ctx  = _getAudioCtx();
     const now  = ctx.currentTime;
- 
-    // Body: short sine-ish tone with fast decay
     const osc        = ctx.createOscillator();
     osc.type         = 'triangle';
     osc.frequency.setValueAtTime(1800, now);
     osc.frequency.exponentialRampToValueAtTime(400, now + 0.04);
- 
     const oscGain = ctx.createGain();
     oscGain.gain.setValueAtTime(0.22, now);
     oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.055);
- 
-    // Attack transient: short noise burst
     const buf  = ctx.createBuffer(1, ctx.sampleRate * 0.01, ctx.sampleRate);
     const data = buf.getChannelData(0);
     for (let i = 0; i < data.length; i++) {
@@ -1333,26 +1408,20 @@ function _playClack() {
     }
     const nSrc  = ctx.createBufferSource();
     nSrc.buffer = buf;
- 
     const hp    = ctx.createBiquadFilter();
     hp.type     = 'highpass';
     hp.frequency.value = 2000;
- 
     const nGain = ctx.createGain();
     nGain.gain.setValueAtTime(0.3, now);
     nGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.01);
- 
-    // Master limiter-style gain
     const master = ctx.createGain();
     master.gain.value = 0.7;
- 
     osc.connect(oscGain);
     oscGain.connect(master);
     nSrc.connect(hp);
     hp.connect(nGain);
     nGain.connect(master);
     master.connect(ctx.destination);
- 
     osc.start(now);
     osc.stop(now + 0.06);
     nSrc.start(now);
@@ -1360,31 +1429,23 @@ function _playClack() {
   } catch (_) {}
 }
  
-/* ── Attach sounds to a single element ── */
 function _attachSounds(el) {
-  // Skip game canvases
   if (el.tagName === 'CANVAS') return;
-  // Skip if already bound
   if (el.dataset.soundBound) return;
   el.dataset.soundBound = 'yes';
- 
   el.addEventListener('mouseenter', () => {
-    // Per-element cooldown: no repeat while cursor remains
     if (_hoverCooldownMap.get(el)) return;
     _hoverCooldownMap.set(el, true);
     _playTick();
   }, { passive: true });
- 
   el.addEventListener('mouseleave', () => {
     _hoverCooldownMap.set(el, false);
   }, { passive: true });
- 
   el.addEventListener('mousedown', () => {
     _playClack();
   }, { passive: true });
 }
  
-/* ── Bind to all existing interactive elements ── */
 function _bindSoundsToAll() {
   const sel = [
     'a', 'button', 'input[type="button"]', 'input[type="submit"]',
@@ -1394,11 +1455,9 @@ function _bindSoundsToAll() {
     '.music-toggle', '#hamburger', '#music-toggle',
     '.sound-toggle-btn'
   ].join(', ');
- 
   document.querySelectorAll(sel).forEach(_attachSounds);
 }
  
-/* ── MutationObserver: bind sounds to dynamically added elements ── */
 const _soundObserver = new MutationObserver((mutations) => {
   mutations.forEach(m => {
     m.addedNodes.forEach(node => {
@@ -1413,9 +1472,7 @@ const _soundObserver = new MutationObserver((mutations) => {
 });
 _soundObserver.observe(document.body, { childList: true, subtree: true });
  
-/* ── Sound Toggle Button — injected into nav bar ── */
 (function injectSoundToggle() {
-  // Inject CSS for the button inline so it fully matches the site theme
   const style = document.createElement('style');
   style.textContent = `
     .sound-toggle-btn {
@@ -1445,18 +1502,15 @@ _soundObserver.observe(document.body, { childList: true, subtree: true });
     .sound-toggle-btn.sound-off:hover {
       opacity: 0.8;
     }
-    /* Push-button SVG icon inside */
     .sound-toggle-btn svg {
       width: 16px;
       height: 16px;
       display: block;
       transition: transform 0.18s ease;
     }
-    /* Depress animation on click */
     .sound-toggle-btn:active svg {
       transform: translateY(1px) scale(0.93);
     }
-    /* ON state: accent tint on the button cap */
     .sound-toggle-btn.sound-on .btn-cap {
       fill: var(--accent, #c8a96e);
       transition: fill 0.25s ease;
@@ -1478,21 +1532,16 @@ _soundObserver.observe(document.body, { childList: true, subtree: true });
   `;
   document.head.appendChild(style);
  
-  // Build the button
   const btn = document.createElement('button');
   btn.className    = 'sound-toggle-btn ' + (_soundEnabled ? 'sound-on' : 'sound-off');
   btn.title        = 'Toggle mechanical sounds';
   btn.setAttribute('aria-label', 'Toggle mechanical sounds');
-  btn.dataset.soundBound = 'yes'; // prevent double-bind
+  btn.dataset.soundBound = 'yes';
  
-  // Side-view push-button SVG icon
   btn.innerHTML = `
     <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <!-- Button body / housing (side profile) -->
       <rect class="btn-body" x="2" y="7" width="12" height="7" rx="1.5"/>
-      <!-- Button cap (the pressable dome seen from the side) -->
       <rect class="btn-cap" x="3.5" y="3.5" width="9" height="4.5" rx="2"/>
-      <!-- Small ring detail on cap top -->
       <ellipse class="btn-ring" cx="8" cy="3.6" rx="3.2" ry="0.9"/>
     </svg>
   `;
@@ -1502,17 +1551,14 @@ _soundObserver.observe(document.body, { childList: true, subtree: true });
     localStorage.setItem('msm-sound', _soundEnabled ? 'on' : 'off');
     btn.classList.toggle('sound-on', _soundEnabled);
     btn.classList.toggle('sound-off', !_soundEnabled);
-    // Play a confirmation tick when enabling
     if (_soundEnabled) setTimeout(_playTick, 60);
   });
  
-  // Insert into nav: find the music-toggle button and insert before it
   function _placeToggle() {
     const musicToggle = document.getElementById('music-toggle');
     if (musicToggle && musicToggle.parentNode) {
       musicToggle.parentNode.insertBefore(btn, musicToggle);
     } else {
-      // Fallback: append to nav
       const nav = document.getElementById('nav');
       if (nav) nav.appendChild(btn);
     }
@@ -1525,14 +1571,11 @@ _soundObserver.observe(document.body, { childList: true, subtree: true });
   }
 })();
  
-/* ── Initialise sound bindings after DOM is ready ── */
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', _bindSoundsToAll);
 } else {
   _bindSoundsToAll();
 }
-// Re-bind after page transitions settle (for dynamically shown pages)
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(_bindSoundsToAll, 2500);
 });
- 
