@@ -31,7 +31,7 @@ window.ADMIN_JOURNEY = {
 
     {
       year      : 2008,
-      title     : 'Born.',
+      title     : 'The Beginning.',
       body      : `I arrived in Mumbai before I even understood what a beginning meant. While most babies announced themselves to the world with tears and panic, I apparently decided to do the exact opposite. They say I smiled. Laughed, even. A strange little creature entering the world as if life was already some private joke only he understood. Ever since then, the nickname “Manu” stayed stitched to me like an old family tradition, surviving years, cities, and growing up.
 
 I do not remember the house I lived in back then. I do not remember the walls, the streets, or the sound of that neighborhood. My memories begin much later, as if my mind took time to switch on properly. The year exists more through stories than recollection, through fragments told by others instead of scenes I can replay myself. Yet somewhere in Mumbai, in a room I no longer remember, the first page of my story quietly began.`,
@@ -41,17 +41,23 @@ I do not remember the house I lived in back then. I do not remember the walls, t
 
     {
       year      : 2009,
-      title     : 'Year One.',
-      body      : `Replace this with what happened this year — or leave it blank.`,
-      hasContent: false,
+      title     : 'The Boy Made of Cardboard Worlds.',
+      body      : `
+Mumbai was still home, though I remember it less as a place and more as a faded atmosphere that existed before memory fully learned how to hold shape. These years survive through stories told at family gatherings, through laughter in between conversations, through old boxes that probably still carry photographs no one has properly unpacked in years.
+
+Apparently, I was not the quiet kind of child. I was sharp, curious, and just mischievous enough to keep everyone alert. The sort of kid who could turn ordinary afternoons into chaos without even trying. Yet there was something strangely simple about me too. While other children were surrounded by flashy toys, I found entire worlds inside empty cardboard boxes and used matchboxes. A small box could become a car, a building, a spaceship, or some mysterious machine only my imagination understood.
+
+Even though I was born in 2008, there was something oddly old-school about the way I grew up. Before algorithms, before constant screens, before childhood became filtered through tablets and notifications, there were just random objects, imagination, and long hours of making stories out of nothing. I danced whenever music played, without caring who was watching. Somewhere in those tiny rented rooms and crowded Mumbai spaces, a loud little child was unknowingly building the first version of himself.
+`,
+      hasContent: true,
       private   : false,
     },
 
     {
       year      : 2010,
-      title     : 'Year Two.',
-      body      : '',
-      hasContent: false,
+      title     : 'Blurred Years & Packed Suitcases.',
+      body      : 'By 2010, life still felt like an unfinished sketch. The memories remain blurry, almost inaccessible, like trying to remember a dream after waking up too quickly. I cannot recall the streets of Mumbai clearly, nor the exact homes we lived in. What remains instead is a strange emotional texture — movement, packed belongings, old phones filled with forgotten pictures, cartons shifting from one city to another without ever being fully opened. My childhood did not revolve around expensive things. It revolved around curiosity. Empty boxes became treasures. Matchboxes became toys. Ordinary household objects became entire universes inside my head. Looking back now, it feels strangely beautiful. There was no pressure to be aesthetic, productive, or perfect. Childhood was simply lived. I have seen very few photographs from those years, and the funny part is that most of them apparently feature baby-me existing without a single concern in the world, proudly unaware of concepts like embarrassment or future dignity. Somewhere, hidden in old storage boxes or sleeping inside broken phones nobody charges anymore, those moments probably still exist. Tiny frozen fragments of a boy who knew nothing about the future waiting for him. The world around me was changing quickly, but my own little universe was still innocent, loud, playful, and wonderfully unaware. Those years may be difficult to remember clearly, yet they remain important because they built the foundations of everything that came later.',
+      hasContent: true,
       private   : false,
     },
 
