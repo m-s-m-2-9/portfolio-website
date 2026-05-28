@@ -890,6 +890,72 @@
     }
   };
 
+
+
+/* ══════════════════════════════════════════════════════════
+   TRAITS / SKILLS PAGE
+   Reads from: admin-control/pages/traits.js
+══════════════════════════════════════════════════════════ */
+function renderSkills() {
+  var tr = D.traits || {};
+
+  /* Hero quote */
+  var quoteEl = qs('.skills-hero-quote');
+  if (quoteEl && tr.heroQuote) quoteEl.textContent = tr.heroQuote;
+
+  /* Marquee strip */
+  var track = el('skills-marquee-track');
+  var items = tr.marqueeItems || [];
+  if (track && items.length) {
+    /* Double the items for seamless infinite loop */
+    var html = items.concat(items).map(function (item) {
+      return '<span class="marquee-item">' + escapeHTML(item) +
+             '<span class="marquee-dot">·</span></span>';
+    }).join('');
+    track.innerHTML = html;
+  }
+
+  /* Skills grid with progress bars */
+  var grid   = el('skills-grid');
+  var skills = tr.skills || [];
+  if (grid && skills.length) {
+    grid.innerHTML = skills.map(function (skill) {
+      return [
+        '<div class="skill-item" style="--skill-pct:' + (skill.percent || 0) + '%">',
+          '<div class="skill-item-name">' + escapeHTML(skill.name || '') + '</div>',
+          '<div class="skill-bar"><div class="skill-bar-fill"></div></div>',
+        '</div>'
+      ].join('');
+    }).join('');
+  }
+
+  /* Hobbies section */
+  var hobbiesGrids = doc.querySelectorAll('#page-skills .skills-grid');
+  var hobbiesGrid  = hobbiesGrids.length > 1 ? hobbiesGrids[1] : null;
+  var hobbies = tr.hobbies || [];
+  if (hobbiesGrid && hobbies.length) {
+    hobbiesGrid.innerHTML = hobbies.map(function (hobby) {
+      return '<div class="skill-item"><div class="skill-item-name">' +
+             hobby + '</div></div>';
+    }).join('');
+  }
+}
+
+
+   /* ══════════════════════════════════════════════════════════
+   CONTACT PAGE
+   Reads from: admin-control/pages/contact.js
+══════════════════════════════════════════════════════════ */
+function renderContact() {
+  var co = D.contact || {};
+
+  /* Intro paragraph */
+  var introEl = qs('.contact-intro');
+  if (introEl && co.introText) {
+    introEl.innerHTML = escapeHTML(co.introText).replace(/\n/g, '<br>');
+  }
+}
+   
   /* ══════════════════════════════════════════════════════════════════
      INIT — runs on DOMContentLoaded
      Homepage content always renders immediately.
