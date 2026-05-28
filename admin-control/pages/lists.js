@@ -51,7 +51,7 @@ window.ADMIN_LISTS = {
 
      {
       title : 'Asur',
-      meta  : 'Survival Thriller · 2021–2025',
+      meta  : 'Psychological Crime Thriller · 2020–2023',
       status: 'seen',
       label : 'Watched',
     },
@@ -59,7 +59,7 @@ window.ADMIN_LISTS = {
 
      {
       title : 'Money Heist',
-      meta  : 'Survival Thriller · 2021–2025',
+      meta  : 'Crime Drama, Heist Thriller, and Suspense  · 2017–2021',
       status: 'seen',
       label : 'Watched',
     },
@@ -67,15 +67,15 @@ window.ADMIN_LISTS = {
 
      {
       title : 'Stranger Things',
-      meta  : 'Survival Thriller · 2021–2025',
+      meta  : 'Science-Fiction, Horror, and Supernatural Drama · 2016–2025',
       status: 'seen',
       label : 'Watched',
     },
 
 
      {
-      title : 'House',
-      meta  : 'Survival Thriller · 2021–2025',
+      title : 'House M.D',
+      meta  : 'Medical Drama, Mystery · 2004–2012',
       status: 'seen',
       label : 'Watched',
     },
@@ -83,14 +83,14 @@ window.ADMIN_LISTS = {
 
      {
       title : 'Suits',
-      meta  : 'Survival Thriller · 2021–2025',
+      meta  : 'Legal Drama, Comedy-Drama · 2011–2019',
       status: 'seen',
       label : 'Watched',
     },
 
  {
       title : 'The Rookie',
-      meta  : 'Survival Thriller · 2021–2025',
+      meta  : 'Police Procedural, Crime Drama, Action · 2018–Present',
       status: 'seen',
       label : 'Watched',
     },
@@ -102,12 +102,63 @@ window.ADMIN_LISTS = {
   /* ── Books ──────────────────────────────────────────────────────── */
   books: [
     {
-      title : 'Replace — Book Title',
-      meta  : 'Author · Year',
+      title : 'It Starts With Us',
+      meta  : 'Colleen Hoover - It Ends With Us · Year',
       status: 'reading',
       label : 'Reading',
     },
-    /* ── Add more ── */
+
+
+{
+      title : 'It Starts With Us',
+      meta  : 'Colleen Hoover - It Ends With Us · Year',
+      status: 'reading',
+      label : 'Reading',
+    },
+
+
+
+     {
+      title : 'It Starts With Us',
+      meta  : 'Colleen Hoover - It Ends With Us · Year',
+      status: 'reading',
+      label : 'Reading',
+    },
+
+
+
+
+     {
+      title : 'It Starts With Us',
+      meta  : 'Colleen Hoover - It Ends With Us · Year',
+      status: 'reading',
+      label : 'Reading',
+    },
+
+
+
+
+     {
+      title : 'It Starts With Us',
+      meta  : 'Colleen Hoover - It Ends With Us · Year',
+      status: 'reading',
+      label : 'Reading',
+    },
+
+
+
+
+
+     {
+      title : 'It Starts With Us',
+      meta  : 'Colleen Hoover - It Ends With Us · Year',
+      status: 'reading',
+      label : 'Reading',
+    },
+
+
+
+     
   ],
 
   /* ── Places ─────────────────────────────────────────────────────── */
