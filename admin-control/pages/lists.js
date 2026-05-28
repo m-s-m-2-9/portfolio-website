@@ -300,18 +300,184 @@ label : 'Read',
       status: 'want',
       label : 'Bucket list',
     },
-    /* ── Add more ── */
+
+
+
+{
+      title : 'Pennsylvania, United States of America ',
+      meta  : 'North America · Someday',
+      status: 'want',
+      label : 'Bucket list',
+    },
+
+
+
+     {
+      title : 'London, United Kingdom ',
+      meta  : 'Europe · Someday',
+      status: 'want',
+      label : 'Bucket list',
+    },
+
+
+
+
+     {
+      title : 'Jaipur, India',
+      meta  : 'Asia · Pink Cty',
+      status: 'seen',
+      label : 'Visited',
+    },
+
+
+
+
+
+     {
+      title : 'Kochi (Cochin), India',
+      meta  : 'Asia · Fort Kochi',
+      status: 'want',
+      label : 'Bucket list',
+    },
+
+     
   ],
 
   /* ── Movies ─────────────────────────────────────────────────────── */
   movies: [
-    {
-      title : 'Replace — Movie Title',
-      meta  : 'Director · Year',
-      status: 'seen',
-      label : 'Watched',
-    },
-    /* ── Add more ── */
-  ],
+  {
+    title : 'Dhurandhar',
+    meta  : 'Aditya Dhar · 2025',
+    status: 'seen',
+    label : 'Watched',
+  },
+
+  {
+    title : 'Beast',
+    meta  : 'Nelson Dilipkumar · 2022',
+    status: 'seen',
+    label : 'Watched',
+  },
+
+  {
+    title : 'Anand',
+    meta  : 'Hrishikesh Mukherjee · 1971',
+    status: 'seen',
+    label : 'Watched',
+  },
+
+  {
+    title : 'Laila Majnu',
+    meta  : 'Sajid Ali · 2018',
+    status: 'want',
+    label : 'Want To Watch',
+  },
+
+  {
+    title : 'F1',
+    meta  : 'Joseph Kosinski · 2025',
+    status: 'want',
+    label : 'Want To Watch',
+  },
+
+  {
+    title : 'Master',
+    meta  : 'Lokesh Kanagaraj · 2021',
+    status: 'seen',
+    label : 'Watched',
+  },
+
+  {
+    title : 'Tumbbad',
+    meta  : 'Rahi Anil Barve · 2018',
+    status: 'seen',
+    label : 'Watched',
+  },
+
+  {
+    title : 'It',
+    meta  : 'Andy Muschietti · 2017',
+    status: 'want',
+    label : 'Want To Watch',
+  },
+
+  {
+    title : 'My Fault',
+    meta  : 'Domingo González · 2023',
+    status: 'seen',
+    label : 'Watched',
+  },
+
+  {
+    title : 'Lokah Chapter 1: Chandra',
+    meta  : 'Dominic Arun · 2025',
+    status: 'want',
+    label : 'Want To Watch',
+  },
+
+  {
+    title : 'Kora Kagaz',
+    meta  : 'Anil Ganguly · 1974',
+    status: 'seen',
+    label : 'Watched',
+  },
+
+  {
+    title : 'Zindagi Na Milegi Dobara',
+    meta  : 'Zoya Akhtar · 2011',
+    status: 'seen',
+    label : 'Watched',
+  },
+
+  {
+    title : 'Rockstar',
+    meta  : 'Imtiaz Ali · 2011',
+    status: 'seen',
+    label : 'Watched',
+  },
+
+  {
+    title : 'Ek Se Badhkar Ek',
+    meta  : 'Brij · 1976',
+    status: 'seen',
+    label : 'Watched',
+  },
+
+  {
+    title : 'Gol Maal',
+    meta  : 'Hrishikesh Mukherjee · 1979',
+    status: 'seen',
+    label : 'Watched',
+  },
+
+  {
+    title : 'Housefull',
+    meta  : 'Sajid Khan · 2010',
+    status: 'seen',
+    label : 'Watched',
+  },
+
+  {
+    title : 'Jodi No.1',
+    meta  : 'David Dhawan · 2001',
+    status: 'seen',
+    label : 'Watched',
+  },
+
+  {
+    title : 'Interstellar',
+    meta  : 'Christopher Nolan · 2014',
+    status: 'seen',
+    label : 'Watched',
+  },
+
+  {
+    title : 'Project Hail Mary',
+    meta  : 'Phil Lord and Christopher Miller · 2026',
+    status: 'want',
+    label : 'Want To Watch',
+  },
+],
+  
 
 };
