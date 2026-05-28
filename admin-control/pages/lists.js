@@ -184,7 +184,7 @@ meta  : 'J. Krishnamurti · 2015',
 status: 'seen',
 label : 'read',
 },
-]
+],
   /* ── Places ─────────────────────────────────────────────────────── */
   places: [
     {
