@@ -439,9 +439,9 @@ function updateBirthdayTimer() {
   // ║  2. Uncomment the OVERRIDE line directly beneath it.         ║
   // ║  Remember to revert before deploying to production.          ║
   // ╠══════════════════════════════════════════════════════════════╣
-  //const checkDate = now;
+  const checkDate = now;
   // OVERRIDE ↓ Uncomment to test birthday state instantly:
-  const checkDate = new Date(now.getFullYear(), month, day, 13, 0, 0);
+  //const checkDate = new Date(now.getFullYear(), month, day, 13, 0, 0);
   // ╚══════════════════════════════════════════════════════════════╝
 
   const isBirthday = checkDate.getMonth() === month && checkDate.getDate() === day;
