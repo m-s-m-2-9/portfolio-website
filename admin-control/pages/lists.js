@@ -184,6 +184,113 @@ meta  : 'J. Krishnamurti · 2015',
 status: 'seen',
 label : 'Read',
 },
+
+
+{
+    title : 'The Long Game',
+    meta  : 'Elena Armas · 2023',
+    status: 'seen',
+    label : 'Read',
+  },
+
+  {
+    title : 'The Love Hypothesis',
+    meta  : 'Ali Hazelwood · 2021',
+    status: 'seen',
+    label : 'Read',
+  },
+
+  {
+    title : 'Love, Theoretically',
+    meta  : 'Ali Hazelwood · 2023',
+    status: 'seen',
+    label : 'Read',
+  },
+
+  {
+    title : 'The Girl on the Train',
+    meta  : 'Paula Hawkins · 2015',
+    status: 'want',
+    label : 'Want To Watch',
+  },
+
+  {
+    title : 'Until I Find You',
+    meta  : 'John Irving · 2005',
+    status: 'seen',
+    label : 'Read',
+  },
+
+  {
+    title : 'The Hundred-Year-Old Man Who Climbed Out the Window and Disappeared',
+    meta  : 'Jonas Jonasson · 2009',
+    status: 'seen',
+    label : 'Read',
+  },
+
+  {
+    title : 'The Keeper of Desolation',
+    meta  : 'Chandan Pandey · 2024',
+    status: 'seen',
+    label : 'Read',
+  },
+
+  {
+    title : 'Haunting Adeline',
+    meta  : 'H. D. Carlton · 2021',
+    status: 'seen',
+    label : 'Read',
+  },
+
+  {
+    title : 'All He\'ll Ever Be',
+    meta  : 'Winter Renshaw · 2020',
+    status: 'seen',
+    label : 'Read',
+  },
+
+  {
+    title : 'King of Wrath',
+    meta  : 'Ana Huang · 2022',
+    status: 'ongoing',
+    label : 'Currently Watching',
+  },
+
+  {
+    title : 'The Power of Your Subconscious Mind',
+    meta  : 'Joseph Murphy · 1963',
+    status: 'want',
+    label : 'Want To Watch',
+  },
+
+  {
+    title : 'Eat That Frog!',
+    meta  : 'Brian Tracy · 2001',
+    status: 'want',
+    label : 'Want To Watch',
+  },
+
+  {
+    title : 'Corporate Chanakya',
+    meta  : 'Radhakrishnan Pillai · 2010',
+    status: 'want',
+    label : 'Want To Watch',
+  },
+
+  {
+    title : 'Sapiens: A Brief History of Humankind',
+    meta  : 'Yuval Noah Harari · 2011',
+    status: 'want',
+    label : 'Want To Watch',
+  },
+
+  {
+    title : 'The Choice: Embrace the Possible',
+    meta  : 'Edith Eger · 2017',
+    status: 'seen',
+    label : 'Read',
+  },
+     
 ],
   /* ── Places ─────────────────────────────────────────────────────── */
   places: [
