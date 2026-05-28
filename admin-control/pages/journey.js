@@ -32,7 +32,9 @@ window.ADMIN_JOURNEY = {
     {
       year      : 2008,
       title     : 'Born.',
-      body      : `Manomay Shailendra Misra REPLACEEEEEEEEEEEEEE was born on 29 August 2008 in Andheri, Mumbai, Maharashtra. This is where it begins.`,
+      body      : `I arrived in Mumbai before I even understood what a beginning meant. While most babies announced themselves to the world with tears and panic, I apparently decided to do the exact opposite. They say I smiled. Laughed, even. A strange little creature entering the world as if life was already some private joke only he understood. Ever since then, the nickname “Manu” stayed stitched to me like an old family tradition, surviving years, cities, and growing up.
+
+I do not remember the house I lived in back then. I do not remember the walls, the streets, or the sound of that neighborhood. My memories begin much later, as if my mind took time to switch on properly. The year exists more through stories than recollection, through fragments told by others instead of scenes I can replay myself. Yet somewhere in Mumbai, in a room I no longer remember, the first page of my story quietly began.`,
       hasContent: true,
       private   : false,
     },
