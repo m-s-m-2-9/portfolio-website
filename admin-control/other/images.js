@@ -35,7 +35,7 @@ window.ADMIN_IMAGES = {
   publicAlbums: [
     {
       id    : 'nationals',
-      title : 'NATIONALS',
+      title : 'Nationals',
       desc  : 'My Nationals Journey',
       cover : '',      /* ← paste thumbnail path here when you have one */
       icon  : '🌆',   /* ← shown when no cover image */
