@@ -657,6 +657,7 @@ async function submitContactForm(e) {
   btn.disabled    = true;
   status.textContent = '';
 
+   // Version Update v1.0.1
   // Forcefully extract the values from your input boxes manually
   const templateParams = {
     from_name: form.querySelector('input[name="from_name"]').value,
