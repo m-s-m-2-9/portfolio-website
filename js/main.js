@@ -645,7 +645,7 @@ function closeBelief() {
 }
  
 /* ═══════════════════════════════════════════════════════════
-   CONTACT FORM (STRICT GMAIL, SPAM & LIVE SERVER FILTERS)
+   CONTACT FORM (STRICT LINGUISTIC & CHARACTER FILTER)
 ═══════════════════════════════════════════════════════════ */
 async function submitContactForm(e) {
   e.preventDefault();
@@ -653,9 +653,8 @@ async function submitContactForm(e) {
   const status = document.getElementById('form-status');
   const btn    = form.querySelector('button[type=submit]');
   
-  status.textContent = 'Checking mailbox status...';
+  status.textContent = '';
   status.className   = 'form-status';
-  btn.disabled    = true;
 
   const emailInput = form.querySelector('input[name="from_email"]').value.trim().toLowerCase();
   const templateParams = {
@@ -665,66 +664,73 @@ async function submitContactForm(e) {
     message: form.querySelector('textarea[name="message"]').value
   };
 
-  // 1. STRICT DOMAIN CHECK: Must end exactly with @gmail.com
+  // 1. STRICT DOMAIN CHECK
   if (!emailInput.endsWith('@gmail.com')) {
     status.textContent = '✗ Only official @gmail.com email addresses are allowed.';
     status.className   = 'form-status error';
     form.querySelector('input[name="from_email"]').focus();
-    btn.disabled = false;
     return;
   }
 
-  // 2. ANTI-KEYBOARD MASH FILTER: Blocks repeating spam characters (e.g., aaaaa@gmail.com)
-  const usernamePart = emailInput.split('@')[0]; // Fixed: Explicitly grabs the string before the @ symbol
-  const repeatingCharRegex = /(.)\1{4,}/; // Identifies any character repeating 5+ times consecutively
+  // 2. EXTRACT USERNAME STRING CORRECTLY (Crucial index fix!)
+  const usernameStr = emailInput.split('@')[0];
+
+  // 3. LENGTH FILTER (Gmail usernames must be between 6 and 30 characters)
+  if (usernameStr.length < 6 || usernameStr.length > 30) {
+    status.textContent = '✗ Invalid Gmail username structure. Length must be 6-30 characters.';
+    status.className   = 'form-status error';
+    form.querySelector('input[name="from_email"]').focus();
+    return;
+  }
+
+  // 4. EXCESSIVE NUMBER CHECK (Blocks strings containing too many trailing numbers)
+  const numberCount = (usernameStr.match(/\d/g) || []).length;
+  if (numberCount > 3) {
+    status.textContent = '✗ Suspicious email string. Excessive numbers detected.';
+    status.className   = 'form-status error';
+    form.querySelector('input[name="from_email"]').focus();
+    return;
+  }
+
+  // 5. GIBBERISH/KEYBOARD MASH CHECK (Checks vowels vs consonants ratio)
+  const vowelCount = (usernameStr.match(/[aeiou]/g) || []).length;
+  const consonantCount = (usernameStr.match(/[bcdfghjklmnpqrstvwxyz]/g) || []).length;
   
-  if (repeatingCharRegex.test(usernamePart) || usernamePart.length < 6) {
+  if (consonantCount > 5 && vowelCount <= 1) {
     status.textContent = '✗ Invalid Gmail username structure. Random strings are blocked.';
     status.className   = 'form-status error';
     form.querySelector('input[name="from_email"]').focus();
-    btn.disabled = false;
     return;
   }
 
+  // 6. REPEATING CHARACTERS CHECK
+  const repeatingCharRegex = /(.)\1{3,}/; 
+  if (repeatingCharRegex.test(usernameStr)) {
+    status.textContent = '✗ Invalid Gmail username structure. Random strings are blocked.';
+    status.className   = 'form-status error';
+    form.querySelector('input[name="from_email"]').focus();
+    return;
+  }
+
+  // 7. Process sending if all math/linguistic filters pass cleanly
+  btn.textContent = 'Sending...';
+  btn.disabled    = true;
+
   try {
-    // 3. LIVE GMAIL EXISTENCE SCANNER (100% Free, No Accounts, No Subscriptions)
-    const verifyResponse = await fetch(`https://pingutil.com{encodeURIComponent(emailInput)}`);
-    const verificationData = await verifyResponse.json();
-
-    // If the API explicitly confirms the inbox does not exist on Google servers, block it
-    if (verificationData.status === "success" && verificationData.data.deliverable === false) {
-      status.textContent = '✗ This Gmail account does not exist. Please use a real email.';
-      status.className   = 'form-status error';
-      form.querySelector('input[name="from_email"]').focus();
-      btn.disabled = false;
-      return;
-    }
-
-    // 4. Process sending if all strict filters pass
-    status.textContent = 'Sending...';
     await emailjs.send('service_pz72agg', 'template_ilxtv3c', templateParams);
     status.textContent = "✓ Message sent. I'll be in touch.";
     status.className   = 'form-status success';
     form.reset();
   } catch (err) {
-    // Security Fallback: If Eva API fails or is down, it skips validation and sends via EmailJS anyway
-    console.warn('Validation server bypass activated:', err);
-    try {
-      status.textContent = 'Sending...';
-      await emailjs.send('service_pz72agg', 'template_ilxtv3c', templateParams);
-      status.textContent = "✓ Message sent. I'll be in touch.";
-      status.className   = 'form-status success';
-      form.reset();
-    } catch (emailJsErr) {
-      status.textContent = '✗ Something went wrong. Try again.';
-      status.className   = 'form-status error';
-      console.error('EmailJS error:', emailJsErr);
-    }
+    status.textContent = '✗ Something went wrong. Try again.';
+    status.className   = 'form-status error';
+    console.error('EmailJS error:', err);
   }
   
   btn.textContent = 'Send →';
   btn.disabled    = false;
 }
+
 
 
  
