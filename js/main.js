@@ -645,7 +645,7 @@ function closeBelief() {
 }
  
 /* ═══════════════════════════════════════════════════════════
-   CONTACT FORM (STRICT LINGUISTIC & CHARACTER FILTER)
+   CONTACT FORM (STRICT BULLETPROOF FILTERS)
 ═══════════════════════════════════════════════════════════ */
 async function submitContactForm(e) {
   e.preventDefault();
@@ -672,18 +672,18 @@ async function submitContactForm(e) {
     return;
   }
 
-  // 2. EXTRACT USERNAME STRING CORRECTLY (Crucial index fix!)
+  // 2. EXTRACT USERNAME STRING CORRECTLY
   const usernameStr = emailInput.split('@')[0];
 
-  // 3. LENGTH FILTER (Gmail usernames must be between 6 and 30 characters)
+  // 3. LENGTH FILTER (Google enforces 6-30 characters for all genuine Gmail accounts)
   if (usernameStr.length < 6 || usernameStr.length > 30) {
-    status.textContent = '✗ Invalid Gmail username structure. Length must be 6-30 characters.';
+    status.textContent = '✗ Invalid Gmail structure. Length must be between 6-30 characters.';
     status.className   = 'form-status error';
     form.querySelector('input[name="from_email"]').focus();
     return;
   }
 
-  // 4. EXCESSIVE NUMBER CHECK (Blocks strings containing too many trailing numbers)
+  // 4. EXCESSIVE NUMBER FILTER (Blocks strings containing too many trailing random numbers)
   const numberCount = (usernameStr.match(/\d/g) || []).length;
   if (numberCount > 3) {
     status.textContent = '✗ Suspicious email string. Excessive numbers detected.';
@@ -692,10 +692,11 @@ async function submitContactForm(e) {
     return;
   }
 
-  // 5. GIBBERISH/KEYBOARD MASH CHECK (Checks vowels vs consonants ratio)
+  // 5. GIBBERISH/KEYBOARD MASH FILTER (Checks the ratio of vowels vs consonants)
   const vowelCount = (usernameStr.match(/[aeiou]/g) || []).length;
   const consonantCount = (usernameStr.match(/[bcdfghjklmnpqrstvwxyz]/g) || []).length;
   
+  // Real human usernames contain balanced vowels. Random keyboard mashes do not.
   if (consonantCount > 5 && vowelCount <= 1) {
     status.textContent = '✗ Invalid Gmail username structure. Random strings are blocked.';
     status.className   = 'form-status error';
@@ -703,7 +704,7 @@ async function submitContactForm(e) {
     return;
   }
 
-  // 6. REPEATING CHARACTERS CHECK
+  // 6. REPEATING CHARACTERS CHECK (Blocks strings like aaaaa@gmail.com)
   const repeatingCharRegex = /(.)\1{3,}/; 
   if (repeatingCharRegex.test(usernameStr)) {
     status.textContent = '✗ Invalid Gmail username structure. Random strings are blocked.';
@@ -712,7 +713,7 @@ async function submitContactForm(e) {
     return;
   }
 
-  // 7. Process sending if all math/linguistic filters pass cleanly
+  // 7. Process sending if all strict local filtering constraints pass cleanly
   btn.textContent = 'Sending...';
   btn.disabled    = true;
 
