@@ -18,12 +18,12 @@
 window.ADMIN_PASSWORDS = {
 
   /* ── Page Section Passwords ─────────────────────────────────────── */
-  about   : 'YOUR_ABOUT_PASSWORD',    /* ← locks "More · Private" on Identity  */
-  photos  : 'YOUR_PHOTOS_PASSWORD',   /* ← locks private photo albums          */
-  journey : 'YOUR_JOURNEY_PASSWORD',  /* ← locks private journey entries       */
-  lists   : 'YOUR_LISTS_PASSWORD',    /* ← locks full curations list           */
-  birthday: 'YOUR_BIRTHDAY_PASSWORD', /* ← locks birth details on Clock page   */
-  games   : 'YOUR_GAMES_PASSWORD',    /* ← locks private/family games          */
+  about   : 'trust',    /* ← locks "More · Private" on Identity  */
+  photos  : 'ourmoment',   /* ← locks private photo albums          */
+  journey : 'abiding',  /* ← locks private journey entries       */
+  lists   : 'suggestions',    /* ← locks full curations list           */
+  birthday: 'credentials', /* ← locks birth details on Clock page   */
+  games   : 'foryou',    /* ← locks private/family games          */
 
   /* ── Full-Page Gate Password ───────────────────────────────────── */
   /*
