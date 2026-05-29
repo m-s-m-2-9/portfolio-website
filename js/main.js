@@ -645,7 +645,7 @@ function closeBelief() {
 }
  
 /* ═══════════════════════════════════════════════════════════
-   CONTACT FORM (STRICT BULLETPROOF FILTERS)
+   CONTACT FORM (LOCAL CHECKS FIRST -> THEN LIVE API VERIFY)
 ═══════════════════════════════════════════════════════════ */
 async function submitContactForm(e) {
   e.preventDefault();
@@ -683,28 +683,7 @@ async function submitContactForm(e) {
     return;
   }
 
-  // 4. EXCESSIVE NUMBER FILTER (Blocks strings containing too many trailing random numbers)
-  const numberCount = (usernameStr.match(/\d/g) || []).length;
-  if (numberCount > 3) {
-    status.textContent = '✗ Suspicious email string. Excessive numbers detected.';
-    status.className   = 'form-status error';
-    form.querySelector('input[name="from_email"]').focus();
-    return;
-  }
-
-  // 5. GIBBERISH/KEYBOARD MASH FILTER (Checks the ratio of vowels vs consonants)
-  const vowelCount = (usernameStr.match(/[aeiou]/g) || []).length;
-  const consonantCount = (usernameStr.match(/[bcdfghjklmnpqrstvwxyz]/g) || []).length;
-  
-  // Real human usernames contain balanced vowels. Random keyboard mashes do not.
-  if (consonantCount > 5 && vowelCount <= 1) {
-    status.textContent = '✗ Invalid Gmail username structure. Random strings are blocked.';
-    status.className   = 'form-status error';
-    form.querySelector('input[name="from_email"]').focus();
-    return;
-  }
-
-  // 6. REPEATING CHARACTERS CHECK (Blocks strings like aaaaa@gmail.com)
+  // 4. REPEATING CHARACTERS CHECK (Blocks strings like aaaaa@gmail.com)
   const repeatingCharRegex = /(.)\1{3,}/; 
   if (repeatingCharRegex.test(usernameStr)) {
     status.textContent = '✗ Invalid Gmail username structure. Random strings are blocked.';
@@ -713,19 +692,51 @@ async function submitContactForm(e) {
     return;
   }
 
-  // 7. Process sending if all strict local filtering constraints pass cleanly
-  btn.textContent = 'Sending...';
+  // 5. BLOCK FORM AND INITIATE LIVE API DISPOSITION CHECK
+  btn.textContent = 'Checking mailbox status...';
   btn.disabled    = true;
+  status.textContent = 'Verifying email address...';
+
+  const MAILBOXLAYER_KEY = "0834d00a6f0dedb01f13034bab9e480f";
 
   try {
+    // Ping Mailboxlayer's cloud to run a live SMTP/MX server check
+    const verifyUrl = `https://apilayer.net{MAILBOXLAYER_KEY}&email=${encodeURIComponent(emailInput)}`;
+    const response = await fetch(verifyUrl);
+    const data = await response.json();
+
+    // 6. EVALUATE LIVE SERVER STATUS RESULTS
+    if (data.format_valid === false || data.smtp_check === false) {
+      status.textContent = '✗ This Gmail account does not exist. Please check for typos.';
+      status.className   = 'form-status error';
+      form.querySelector('input[name="from_email"]').focus();
+      btn.textContent = 'Send →';
+      btn.disabled = false;
+      return; // Absolute termination: Stop right here
+    }
+
+    // 7. TRANSACTION SUCCESSFUL: Proceed to send via EmailJS
+    status.textContent = 'Sending...';
     await emailjs.send('service_pz72agg', 'template_ilxtv3c', templateParams);
+    
     status.textContent = "✓ Message sent. I'll be in touch.";
     status.className   = 'form-status success';
     form.reset();
+
   } catch (err) {
-    status.textContent = '✗ Something went wrong. Try again.';
-    status.className   = 'form-status error';
-    console.error('EmailJS error:', err);
+    // Safety Net: Fallback triggers if your monthly API credits run dry or server is down
+    console.warn('Validation server fallback activated:', err);
+    try {
+      status.textContent = 'Sending...';
+      await emailjs.send('service_pz72agg', 'template_ilxtv3c', templateParams);
+      status.textContent = "✓ Message sent. I'll be in touch.";
+      status.className   = 'form-status success';
+      form.reset();
+    } catch (emailJsErr) {
+      status.textContent = '✗ Something went wrong. Try again.';
+      status.className   = 'form-status error';
+      console.error('EmailJS error:', emailJsErr);
+    }
   }
   
   btn.textContent = 'Send →';
