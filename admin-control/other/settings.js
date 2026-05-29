@@ -36,9 +36,9 @@ window.ADMIN_SETTINGS = {
     Paste all three below.
   */
   emailjs: {
-    publicKey  : 'YOUR_EMAILJS_PUBLIC_KEY',   /* ← from EmailJS account     */
-    serviceId  : 'YOUR_SERVICE_ID',           /* ← from EmailJS Services    */
-    templateId : 'YOUR_TEMPLATE_ID',          /* ← from EmailJS Templates   */
+    publicKey  : 'T0a9vyHOtW0qWGOlF',   /* ← from EmailJS account     */
+    serviceId  : 'service_pz72agg',           /* ← from EmailJS Services    */
+    templateId : 'template_ilxtv3c',          /* ← from EmailJS Templates   */
   },
 
   /* ── Aesthetic / Behaviour ─────────────────────────────────────── */
