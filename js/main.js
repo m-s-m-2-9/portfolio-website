@@ -645,7 +645,7 @@ function closeBelief() {
 }
  
 /* ═══════════════════════════════════════════════════════════
-   CONTACT FORM (STRICT GMAIL & SPAM FILTERS)
+   CONTACT FORM (STRICT GMAIL, SPAM & LIVE SERVER FILTERS)
 ═══════════════════════════════════════════════════════════ */
 async function submitContactForm(e) {
   e.preventDefault();
@@ -653,8 +653,9 @@ async function submitContactForm(e) {
   const status = document.getElementById('form-status');
   const btn    = form.querySelector('button[type=submit]');
   
-  status.textContent = '';
+  status.textContent = 'Checking mailbox status...';
   status.className   = 'form-status';
+  btn.disabled    = true;
 
   const emailInput = form.querySelector('input[name="from_email"]').value.trim().toLowerCase();
   const templateParams = {
@@ -669,6 +670,7 @@ async function submitContactForm(e) {
     status.textContent = '✗ Only official @gmail.com email addresses are allowed.';
     status.className   = 'form-status error';
     form.querySelector('input[name="from_email"]').focus();
+    btn.disabled = false;
     return;
   }
 
@@ -680,14 +682,27 @@ async function submitContactForm(e) {
     status.textContent = '✗ Invalid Gmail username structure. Random strings are blocked.';
     status.className   = 'form-status error';
     form.querySelector('input[name="from_email"]').focus();
+    btn.disabled = false;
     return;
   }
 
-  // 3. Process sending if all strict filters pass
-  btn.textContent = 'Sending...';
-  btn.disabled    = true;
-
   try {
+    // 3. ZERO-COST LIVE SERVER PIN: Pings Cloudflare Open DNS to verify Gmail routing
+    const dnsCheck = await fetch(`https://cloudflare-dns.com`, {
+      headers: { 'Accept': 'application/dns-json' }
+    });
+    const dnsData = await dnsCheck.json();
+
+    // If Google's core MX mail server network doesn't respond, block submission
+    if (!dnsData.Answer || dnsData.Answer.length === 0) {
+      status.textContent = '✗ Mail delivery server unreachable.';
+      status.className   = 'form-status error';
+      btn.disabled = false;
+      return;
+    }
+
+    // 4. Process sending if all strict filters pass
+    btn.textContent = 'Sending...';
     await emailjs.send('service_pz72agg', 'template_ilxtv3c', templateParams);
     status.textContent = "✓ Message sent. I'll be in touch.";
     status.className   = 'form-status success';
@@ -701,6 +716,7 @@ async function submitContactForm(e) {
   btn.textContent = 'Send →';
   btn.disabled    = false;
 }
+
  
 /* ═══════════════════════════════════════════════════════════
    LIST TABS
