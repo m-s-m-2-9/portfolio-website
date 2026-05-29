@@ -645,7 +645,7 @@ function closeBelief() {
 }
  
 /* ═══════════════════════════════════════════════════════════
-   CONTACT FORM (STRICT GMAIL, SPAM & LIVE SERVER FILTERS)
+   CONTACT FORM (STRICT GMAIL & SPAM FILTERS - FIXED)
 ═══════════════════════════════════════════════════════════ */
 async function submitContactForm(e) {
   e.preventDefault();
@@ -653,9 +653,8 @@ async function submitContactForm(e) {
   const status = document.getElementById('form-status');
   const btn    = form.querySelector('button[type=submit]');
   
-  status.textContent = 'Checking mailbox status...';
+  status.textContent = '';
   status.className   = 'form-status';
-  btn.disabled    = true;
 
   const emailInput = form.querySelector('input[name="from_email"]').value.trim().toLowerCase();
   const templateParams = {
@@ -670,39 +669,25 @@ async function submitContactForm(e) {
     status.textContent = '✗ Only official @gmail.com email addresses are allowed.';
     status.className   = 'form-status error';
     form.querySelector('input[name="from_email"]').focus();
-    btn.disabled = false;
     return;
   }
 
   // 2. ANTI-KEYBOARD MASH FILTER: Blocks repeating spam characters (e.g., aaaaa@gmail.com)
-  const usernamePart = emailInput.split('@')[0];
+  const usernamePart = emailInput.split('@')[0]; // Fixed: Explicitly grabs the string before the @ symbol
   const repeatingCharRegex = /(.)\1{4,}/; // Identifies any character repeating 5+ times consecutively
   
   if (repeatingCharRegex.test(usernamePart) || usernamePart.length < 6) {
     status.textContent = '✗ Invalid Gmail username structure. Random strings are blocked.';
     status.className   = 'form-status error';
     form.querySelector('input[name="from_email"]').focus();
-    btn.disabled = false;
     return;
   }
 
+  // 3. Process sending if all strict filters pass
+  btn.textContent = 'Sending...';
+  btn.disabled    = true;
+
   try {
-    // 3. ZERO-COST LIVE SERVER PIN: Pings Cloudflare Open DNS to verify Gmail routing
-    const dnsCheck = await fetch(`https://cloudflare-dns.com`, {
-      headers: { 'Accept': 'application/dns-json' }
-    });
-    const dnsData = await dnsCheck.json();
-
-    // If Google's core MX mail server network doesn't respond, block submission
-    if (!dnsData.Answer || dnsData.Answer.length === 0) {
-      status.textContent = '✗ Mail delivery server unreachable.';
-      status.className   = 'form-status error';
-      btn.disabled = false;
-      return;
-    }
-
-    // 4. Process sending if all strict filters pass
-    btn.textContent = 'Sending...';
     await emailjs.send('service_pz72agg', 'template_ilxtv3c', templateParams);
     status.textContent = "✓ Message sent. I'll be in touch.";
     status.className   = 'form-status success';
