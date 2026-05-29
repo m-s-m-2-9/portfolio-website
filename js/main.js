@@ -693,7 +693,7 @@ async function submitContactForm(e) {
   }
 
   // 5. BLOCK FORM AND RUN DISIFY LIVE REJECTION ENGINE
-  btn.textContent = 'Checking mailbox status...';
+  btn.textContent = 'Checking email address...';
   btn.disabled    = true;
   status.textContent = 'Verifying email address...';
 
