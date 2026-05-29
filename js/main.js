@@ -645,7 +645,7 @@ function closeBelief() {
 }
  
 /* ═══════════════════════════════════════════════════════════
-   CONTACT FORM (RECAPTCHA WITH ERROR-PROOF INITIALIZATION)
+   CONTACT FORM (SAFE FAILOVER LOGIC)
 ═══════════════════════════════════════════════════════════ */
 async function submitContactForm(e) {
   e.preventDefault();
@@ -658,39 +658,7 @@ async function submitContactForm(e) {
 
   const emailInput = form.querySelector('input[name="from_email"]').value.trim().toLowerCase();
 
-  // 1. SAFE SCRIPT VERIFICATION: Prevents terminal crashes if Google script hasn't loaded yet
-  if (typeof grecaptcha === 'undefined') {
-    status.textContent = '✗ Security widget is still loading. Please wait a moment and try again.';
-    status.className   = 'form-status error';
-    return;
-  }
-
-  // 2. Token Check: Verifies the visitor clicked the secure reCAPTCHA box
-  let captchaResponse;
-  try {
-    captchaResponse = grecaptcha.getResponse();
-  } catch (error) {
-    console.error("reCAPTCHA state collection failure:", error);
-    status.textContent = '✗ Security verification failed. Please refresh the page.';
-    status.className   = 'form-status error';
-    return;
-  }
-
-  if (!captchaResponse || captchaResponse.length === 0) {
-    status.textContent = '✗ Please verify that you are a human by clicking the checkbox.';
-    status.className   = 'form-status error';
-    return;
-  }
-
-  const templateParams = {
-    from_name: form.querySelector('input[name="from_name"]').value,
-    from_email: emailInput,
-    subject: form.querySelector('input[name="subject"]').value,
-    message: form.querySelector('textarea[name="message"]').value,
-    'g-recaptcha-response': captchaResponse 
-  };
-
-  // 3. STRICT DOMAIN CHECK
+  // 1. DOMAIN CHECK
   if (!emailInput.endsWith('@gmail.com')) {
     status.textContent = '✗ Only official @gmail.com email addresses are allowed.';
     status.className   = 'form-status error';
@@ -698,19 +666,19 @@ async function submitContactForm(e) {
     return;
   }
 
-  // 4. EXTRACT USERNAME STRING CORRECTLY
+  // 2. EXTRACT USERNAME STRING CORRECTLY
   const usernameStr = emailInput.split('@')[0];
 
-  // 5. LENGTH FILTER (5-40 characters)
-  if (usernameStr.length < 5 || usernameStr.length > 40) {
-    status.textContent = '✗ Invalid Gmail structure. Length must be between 5-40 characters.';
+  // 3. LENGTH FILTER
+  if (usernameStr.length < 6 || usernameStr.length > 30) {
+    status.textContent = '✗ Invalid Gmail structure. Length must be between 6-30 characters.';
     status.className   = 'form-status error';
     form.querySelector('input[name="from_email"]').focus();
     return;
   }
 
-  // 6. REPEATING CHARACTERS CHECK
-  const repeatingCharRegex = /(.)\1{3,}/; 
+  // 4. REPEATING CHARACTERS CHECK
+  const repeatingCharRegex = /(.)\1{2,}/; 
   if (repeatingCharRegex.test(usernameStr)) {
     status.textContent = '✗ Invalid Gmail username structure. Random strings are blocked.';
     status.className   = 'form-status error';
@@ -718,7 +686,34 @@ async function submitContactForm(e) {
     return;
   }
 
-  // 7. Process transmission if all verification layers pass cleanly
+  // 5. SAFE RECAPTCHA CHECK (Will never crash or freeze your button)
+  let captchaResponse = "";
+  if (typeof grecaptcha !== 'undefined' && typeof grecaptcha.getResponse === 'function') {
+    try {
+      captchaResponse = grecaptcha.getResponse();
+      if (!captchaResponse || captchaResponse.length === 0) {
+        status.textContent = "✗ Please check the 'I'm not a robot' box.";
+        status.className   = 'form-status error';
+        return;
+      }
+    } catch (err) {
+      console.warn("reCAPTCHA failed to read state. Bypassing check...", err);
+    }
+  }
+
+  const templateParams = {
+    from_name: form.querySelector('input[name="from_name"]').value,
+    from_email: emailInput,
+    subject: form.querySelector('input[name="subject"]').value,
+    message: form.querySelector('textarea[name="message"]').value
+  };
+
+  // If reCAPTCHA was successfully filled out, add it to the params
+  if (captchaResponse) {
+    templateParams['g-recaptcha-response'] = captchaResponse;
+  }
+
+  // 6. Send via EmailJS
   btn.textContent = 'Sending...';
   btn.disabled    = true;
 
@@ -727,7 +722,9 @@ async function submitContactForm(e) {
     status.textContent = "✓ Message sent. I'll be in touch.";
     status.className   = 'form-status success';
     form.reset();
-    grecaptcha.reset(); 
+    if (typeof grecaptcha !== 'undefined' && typeof grecaptcha.reset === 'function') {
+      grecaptcha.reset();
+    }
   } catch (err) {
     status.textContent = '✗ Something went wrong. Try again.';
     status.className   = 'form-status error';
@@ -737,6 +734,7 @@ async function submitContactForm(e) {
   btn.textContent = 'Send →';
   btn.disabled    = false;
 }
+
 
 
 
