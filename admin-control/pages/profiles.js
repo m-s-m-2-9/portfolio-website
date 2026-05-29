@@ -21,26 +21,40 @@ window.ADMIN_PROFILES = {
   links: [
     {
       id    : 'linkedin',
-      icon  : '💼',
+      icon  : '<svg xmlns="http://w3.org" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>',
       label : 'LinkedIn',
       handle: '@manomay-shailendra-misra',            /* ← optional: @yourhandle shown below label */
-      url   : 'www.linkedin.com/in/manomay-shailendra-misra-406a87394',           /* ← paste your LinkedIn URL here            */
+      url   : 'https://linkedin.com',           /* ← paste your LinkedIn URL here            */
     },
     {
       id    : 'instagram',
-      icon  : '📸',
+      icon  : '<svg xmlns="http://w3.org" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>',
       label : 'Instagram',
-      handle: '@m-s-m-2-9',
-      url   : 'www.linkedin.com/in/manomay-shailendra-misra-406a87394',           /* ← paste your Instagram URL here           */
+      handle: '@m_s_m-2-9',
+      url   : 'https://www.instagram.com/m_s_m_2_9/',           /* ← paste your Instagram URL here           */
+    },
+    {
+      id    : 'whatsapp',
+      icon  : '<svg xmlns="http://w3.org" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>',
+      label : 'WhatsApp',
+      handle: 'Offline / Paused',
+      url   : 'javascript:void(0);',
+    },
+    {
+      id    : 'copy-url',
+      icon  : '<svg xmlns="http://w3.org" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>',
+      label : 'Share Portfolio',
+      handle: 'Click to Copy Link',
+      url   : 'javascript:navigator.clipboard.writeText("https://github.io").then(() => { alert("Portfolio link copied to clipboard!"); });',
     },
     {
       id    : 'resume',
-      icon  : '📄',
+      icon  : '<svg xmlns="http://w3.org" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>',
       label : 'Resume',
       handle: 'Download PDF',
-      url   : 'manomay-cv.pdf',
+      url   : 'assets/pdf/resume.pdf',
     },
-    /* ── Add more profiles here ── GITHUB,X,FACEBOOK,WHATSAPP
+    /* ── Add more profiles here ── GITHUB,X,FACEBOOK
     {
       id    : 'github',
       icon  : '👾',
