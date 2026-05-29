@@ -29,24 +29,28 @@ window.ADMIN_NAV = {
     { label: 'Projects', page: 'projects' },
     { label: 'Profile',  page: 'profiles' },
     { label: 'CV',       page: 'resume'   },
+    { label: 'Contact',  page: 'contact'  },
   ],
 
   /* ── Mobile Navigation (inside hamburger menu on mobile) ──────── */
   mobileLinks: [
     { label: 'Home',     page: 'home'     },
     { label: 'Identity', page: 'about'    },
-    { label: 'Photos',   page: 'photos'   },
-    { label: 'CV',       page: 'resume'   },
-    { label: 'Profiles', page: 'profiles' },
-    { label: 'Journey',  page: 'journey'  },
-    { label: 'Clock',    page: 'birthday' },
-    { label: 'Thoughts', page: 'thoughts' },
-    { label: 'Contact',  page: 'contact'  },
-    { label: 'Lists',    page: 'lists'    },
-    { label: 'Traits',   page: 'skills'   },
-    { label: 'Games',    page: 'games'    },
     { label: 'Social',   page: 'social'   },
-    { label: 'Projects', page: 'projects' },
+    { label: 'Projects', page: 'projects' }, 
+    { label: 'Profiles', page: 'profiles' },
+    { label: 'CV',       page: 'resume'   },  
+    { label: 'Contact',  page: 'contact'  },
+    
+    { label: 'Photos',   page: 'photos'   },
+    { label: 'Traits',   page: 'skills'   },
+    { label: 'Journey',  page: 'journey'  },
+    { label: 'Clock',    page: 'birthday' }, 
+    { label: 'Lists',    page: 'lists'    },
+    { label: 'Thoughts', page: 'thoughts' },
+    { label: 'Games',    page: 'games'    },
+    
+    
   ],
 
   /* ── Sidebar Panel (desktop only, opened by hamburger) ──────────
@@ -54,12 +58,13 @@ window.ADMIN_NAV = {
      Do not change order here without also changing it there.
   ─────────────────────────────────────────────────────────────────*/
   sidebarLinks: [
-    { label: 'Photos',   page: 'photos',   num: '01' },
-    { label: 'Journey',  page: 'journey',  num: '02' },
-    { label: 'Clock',    page: 'birthday', num: '03' },
-    { label: 'Lists',    page: 'lists',    num: '04' },
-    { label: 'Thoughts', page: 'thoughts', num: '05' },
-    { label: 'Games',    page: 'games',    num: '06' },
+    { label: 'Traits',   page: 'skills', num:   '07' },
+    { label: 'Photos',   page: 'photos',   num: '08' },
+    { label: 'Journey',  page: 'journey',  num: '09' },
+    { label: 'Clock',    page: 'birthday', num: '10' },
+    { label: 'Lists',    page: 'lists',    num: '11' },
+    { label: 'Thoughts', page: 'thoughts', num: '12' },
+    { label: 'Games',    page: 'games',    num: '13' },
   ],
 
 };
