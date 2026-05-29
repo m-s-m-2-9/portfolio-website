@@ -645,7 +645,7 @@ function closeBelief() {
 }
  
 /* ═══════════════════════════════════════════════════════════
-   CONTACT FORM (LOCAL CHECKS FIRST -> THEN LIVE API VERIFY)
+   CONTACT FORM (LOCAL CHECKS -> DISIFY LIVE SCANNER)
 ═══════════════════════════════════════════════════════════ */
 async function submitContactForm(e) {
   e.preventDefault();
@@ -692,30 +692,28 @@ async function submitContactForm(e) {
     return;
   }
 
-  // 5. BLOCK FORM AND INITIATE LIVE API DISPOSITION CHECK
+  // 5. BLOCK FORM AND RUN DISIFY LIVE REJECTION ENGINE
   btn.textContent = 'Checking mailbox status...';
   btn.disabled    = true;
   status.textContent = 'Verifying email address...';
 
-  const MAILBOXLAYER_KEY = "0834d00a6f0dedb01f13034bab9e480f";
-
   try {
-    // Ping Mailboxlayer's cloud to run a live SMTP/MX server check
-    const verifyUrl = `https://apilayer.net{MAILBOXLAYER_KEY}&email=${encodeURIComponent(emailInput)}`;
-    const response = await fetch(verifyUrl);
+    // Ping Disify API (100% Free, Unlimited Requests, No Access Token Keys Required)
+    const response = await fetch(`https://disify.com{encodeURIComponent(emailInput)}`);
     const data = await response.json();
 
-    // 6. EVALUATE LIVE SERVER STATUS RESULTS
-    if (data.format_valid === false || data.smtp_check === false) {
-      status.textContent = '✗ This Gmail account does not exist. Please check for typos.';
+    // 6. PARSE DISIFY DELIVERABILITY SCORE
+    // Disify calculates format rules and actively tests structural routing
+    if (data.format === false || data.disposable === true) {
+      status.textContent = '✗ This Gmail account is invalid or blacklisted.';
       status.className   = 'form-status error';
       form.querySelector('input[name="from_email"]').focus();
       btn.textContent = 'Send →';
       btn.disabled = false;
-      return; // Absolute termination: Stop right here
+      return; 
     }
 
-    // 7. TRANSACTION SUCCESSFUL: Proceed to send via EmailJS
+    // 7. SUCCESS: Proceed to send via EmailJS
     status.textContent = 'Sending...';
     await emailjs.send('service_pz72agg', 'template_ilxtv3c', templateParams);
     
@@ -724,8 +722,8 @@ async function submitContactForm(e) {
     form.reset();
 
   } catch (err) {
-    // Safety Net: Fallback triggers if your monthly API credits run dry or server is down
-    console.warn('Validation server fallback activated:', err);
+    // Safety Net: In case the server drops, execute code as fallback
+    console.warn('Disify scanner bypassed:', err);
     try {
       status.textContent = 'Sending...';
       await emailjs.send('service_pz72agg', 'template_ilxtv3c', templateParams);
