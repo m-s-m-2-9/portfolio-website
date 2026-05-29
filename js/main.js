@@ -645,19 +645,31 @@ function closeBelief() {
 }
  
 /* ═══════════════════════════════════════════════════════════
-   CONTACT FORM
+   CONTACT FORM (EXPLICIT DATA MAPPING)
 ═══════════════════════════════════════════════════════════ */
 async function submitContactForm(e) {
   e.preventDefault();
   const form   = document.getElementById('contact-form');
   const status = document.getElementById('form-status');
   const btn    = form.querySelector('button[type=submit]');
+  
   btn.textContent = 'Sending...';
   btn.disabled    = true;
   status.textContent = '';
+
+  // Forcefully extract the values from your input boxes manually
+  const templateParams = {
+    from_name: form.querySelector('input[name="from_name"]').value,
+    from_email: form.querySelector('input[name="from_email"]').value,
+    subject: form.querySelector('input[name="subject"]').value,
+    message: form.querySelector('textarea[name="message"]').value
+  };
+
   try {
-    await emailjs.sendForm(CONFIG.EMAILJS_SERVICE_ID, CONFIG.EMAILJS_TEMPLATE_ID, form);
-    status.textContent = '✓ Message sent. I\'ll be in touch.';
+    // Switched from sendForm to send to safely inject the manual variables
+    await emailjs.send(CONFIG.EMAILJS_SERVICE_ID, CONFIG.EMAILJS_TEMPLATE_ID, templateParams);
+    
+    status.textContent = "✓ Message sent. I'll be in touch.";
     status.className   = 'form-status success';
     form.reset();
   } catch (err) {
@@ -665,6 +677,7 @@ async function submitContactForm(e) {
     status.className   = 'form-status error';
     console.error('EmailJS error:', err);
   }
+  
   btn.textContent = 'Send →';
   btn.disabled    = false;
 }
