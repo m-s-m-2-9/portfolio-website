@@ -645,7 +645,7 @@ function closeBelief() {
 }
  
 /* ═══════════════════════════════════════════════════════════
-   CONTACT FORM (LOCAL CHECKS -> DISIFY LIVE SCANNER)
+   CONTACT FORM (LOCAL CHECKS & RECAPTCHA BOT PROTECTION)
 ═══════════════════════════════════════════════════════════ */
 async function submitContactForm(e) {
   e.preventDefault();
@@ -657,14 +657,24 @@ async function submitContactForm(e) {
   status.className   = 'form-status';
 
   const emailInput = form.querySelector('input[name="from_email"]').value.trim().toLowerCase();
+
+  // 1. Forceful Token Check: Verifies the visitor clicked the secure reCAPTCHA box
+  const captchaResponse = grecaptcha.getResponse();
+  if (captchaResponse.length === 0) {
+    status.textContent = '✗ Please verify that you are a human by clicking the checkbox.';
+    status.className   = 'form-status error';
+    return;
+  }
+
   const templateParams = {
     from_name: form.querySelector('input[name="from_name"]').value,
     from_email: emailInput,
     subject: form.querySelector('input[name="subject"]').value,
-    message: form.querySelector('textarea[name="message"]').value
+    message: form.querySelector('textarea[name="message"]').value,
+    'g-recaptcha-response': captchaResponse // Forwards authentication parameters straight to EmailJS
   };
 
-  // 1. STRICT DOMAIN CHECK
+  // 2. STRICT DOMAIN CHECK
   if (!emailInput.endsWith('@gmail.com')) {
     status.textContent = '✗ Only official @gmail.com email addresses are allowed.';
     status.className   = 'form-status error';
@@ -672,10 +682,10 @@ async function submitContactForm(e) {
     return;
   }
 
-  // 2. EXTRACT USERNAME STRING CORRECTLY
+  // 3. EXTRACT USERNAME STRING CORRECTLY
   const usernameStr = emailInput.split('@')[0];
 
-  // 3. LENGTH FILTER (Google enforces 6-30 characters for all genuine Gmail accounts)
+  // 4. LENGTH FILTER (Google enforces 6-30 characters for all genuine Gmail accounts)
   if (usernameStr.length < 6 || usernameStr.length > 30) {
     status.textContent = '✗ Invalid Gmail structure. Length must be between 6-30 characters.';
     status.className   = 'form-status error';
@@ -683,7 +693,7 @@ async function submitContactForm(e) {
     return;
   }
 
-  // 4. REPEATING CHARACTERS CHECK (Blocks strings like aaaaa@gmail.com)
+  // 5. REPEATING CHARACTERS CHECK (Blocks strings like aaaaa@gmail.com)
   const repeatingCharRegex = /(.)\1{3,}/; 
   if (repeatingCharRegex.test(usernameStr)) {
     status.textContent = '✗ Invalid Gmail username structure. Random strings are blocked.';
@@ -692,55 +702,25 @@ async function submitContactForm(e) {
     return;
   }
 
-  // 5. BLOCK FORM AND RUN DISIFY LIVE REJECTION ENGINE
-  btn.textContent = 'Checking email address...';
+  // 6. Process transmission if all validation and bot filters pass cleanly
+  btn.textContent = 'Sending...';
   btn.disabled    = true;
-  status.textContent = 'Verifying email address...';
 
   try {
-    // Ping Disify API (100% Free, Unlimited Requests, No Access Token Keys Required)
-    const response = await fetch(`https://disify.com{encodeURIComponent(emailInput)}`);
-    const data = await response.json();
-
-    // 6. PARSE DISIFY DELIVERABILITY SCORE
-    // Disify calculates format rules and actively tests structural routing
-    if (data.format === false || data.disposable === true) {
-      status.textContent = '✗ This Gmail account is invalid or blacklisted.';
-      status.className   = 'form-status error';
-      form.querySelector('input[name="from_email"]').focus();
-      btn.textContent = 'Send →';
-      btn.disabled = false;
-      return; 
-    }
-
-    // 7. SUCCESS: Proceed to send via EmailJS
-    status.textContent = 'Sending...';
     await emailjs.send('service_pz72agg', 'template_ilxtv3c', templateParams);
-    
     status.textContent = "✓ Message sent. I'll be in touch.";
     status.className   = 'form-status success';
     form.reset();
-
+    grecaptcha.reset(); // Safely clear the captcha widget state after successful send
   } catch (err) {
-    // Safety Net: In case the server drops, execute code as fallback
-    console.warn('Disify scanner bypassed:', err);
-    try {
-      status.textContent = 'Sending...';
-      await emailjs.send('service_pz72agg', 'template_ilxtv3c', templateParams);
-      status.textContent = "✓ Message sent. I'll be in touch.";
-      status.className   = 'form-status success';
-      form.reset();
-    } catch (emailJsErr) {
-      status.textContent = '✗ Something went wrong. Try again.';
-      status.className   = 'form-status error';
-      console.error('EmailJS error:', emailJsErr);
-    }
+    status.textContent = '✗ Something went wrong. Try again.';
+    status.className   = 'form-status error';
+    console.error('EmailJS error:', err);
   }
   
   btn.textContent = 'Send →';
   btn.disabled    = false;
 }
-
 
 
  
