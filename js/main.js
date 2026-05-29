@@ -657,7 +657,6 @@ async function submitContactForm(e) {
   btn.disabled    = true;
   status.textContent = '';
 
-   // Version Update v1.0.1
   // Forcefully extract the values from your input boxes manually
   const templateParams = {
     from_name: form.querySelector('input[name="from_name"]').value,
@@ -667,8 +666,8 @@ async function submitContactForm(e) {
   };
 
   try {
-    // Switched from sendForm to send to safely inject the manual variables
-    await emailjs.send(CONFIG.EMAILJS_SERVICE_ID, CONFIG.EMAILJS_TEMPLATE_ID, templateParams);
+    // HARDCODED FIX: Directly using your verified IDs here bypasses the broken admin panel config
+    await emailjs.send('service_pz72agg', 'template_ilxtv3c', templateParams);
     
     status.textContent = "✓ Message sent. I'll be in touch.";
     status.className   = 'form-status success';
