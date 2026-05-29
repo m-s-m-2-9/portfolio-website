@@ -645,7 +645,7 @@ function closeBelief() {
 }
  
 /* ═══════════════════════════════════════════════════════════
-   CONTACT FORM (EXPLICIT DATA MAPPING)
+   CONTACT FORM (WITH ROBUST EMAIL VALIDATION)
 ═══════════════════════════════════════════════════════════ */
 async function submitContactForm(e) {
   e.preventDefault();
@@ -653,20 +653,33 @@ async function submitContactForm(e) {
   const status = document.getElementById('form-status');
   const btn    = form.querySelector('button[type=submit]');
   
-  btn.textContent = 'Sending...';
-  btn.disabled    = true;
   status.textContent = '';
+  status.className   = 'form-status';
 
-  // Forcefully extract the values from your input boxes manually
+  // 1. Forcefully extract the values from your input boxes
+  const emailInput = form.querySelector('input[name="from_email"]').value.trim();
   const templateParams = {
     from_name: form.querySelector('input[name="from_name"]').value,
-    from_email: form.querySelector('input[name="from_email"]').value,
+    from_email: emailInput,
     subject: form.querySelector('input[name="subject"]').value,
     message: form.querySelector('textarea[name="message"]').value
   };
 
+  // 2. Strict Email Verification Rule (Blocks "abc", "test@", "name@com", etc.)
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  
+  if (!emailRegex.test(emailInput)) {
+    status.textContent = '✗ Please enter a valid, complete email address.';
+    status.className   = 'form-status error';
+    form.querySelector('input[name="from_email"]').focus();
+    return; // Stops the function completely so EmailJS is never triggered!
+  }
+
+  // 3. Process Sending if Email passes verification
+  btn.textContent = 'Sending...';
+  btn.disabled    = true;
+
   try {
-    // HARDCODED FIX: Directly using your verified IDs here bypasses the broken admin panel config
     await emailjs.send('service_pz72agg', 'template_ilxtv3c', templateParams);
     
     status.textContent = "✓ Message sent. I'll be in touch.";
