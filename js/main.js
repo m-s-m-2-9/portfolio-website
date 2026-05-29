@@ -645,7 +645,7 @@ function closeBelief() {
 }
  
 /* ═══════════════════════════════════════════════════════════
-   CONTACT FORM (WITH ROBUST EMAIL VALIDATION)
+   CONTACT FORM (STRICT GMAIL & SPAM FILTERS)
 ═══════════════════════════════════════════════════════════ */
 async function submitContactForm(e) {
   e.preventDefault();
@@ -656,8 +656,7 @@ async function submitContactForm(e) {
   status.textContent = '';
   status.className   = 'form-status';
 
-  // 1. Forcefully extract the values from your input boxes
-  const emailInput = form.querySelector('input[name="from_email"]').value.trim();
+  const emailInput = form.querySelector('input[name="from_email"]').value.trim().toLowerCase();
   const templateParams = {
     from_name: form.querySelector('input[name="from_name"]').value,
     from_email: emailInput,
@@ -665,23 +664,31 @@ async function submitContactForm(e) {
     message: form.querySelector('textarea[name="message"]').value
   };
 
-  // 2. Strict Email Verification Rule (Blocks "abc", "test@", "name@com", etc.)
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  
-  if (!emailRegex.test(emailInput)) {
-    status.textContent = '✗ Please enter a valid, complete email address.';
+  // 1. STRICT DOMAIN CHECK: Must end exactly with @gmail.com
+  if (!emailInput.endsWith('@gmail.com')) {
+    status.textContent = '✗ Only official @gmail.com email addresses are allowed.';
     status.className   = 'form-status error';
     form.querySelector('input[name="from_email"]').focus();
-    return; // Stops the function completely so EmailJS is never triggered!
+    return;
   }
 
-  // 3. Process Sending if Email passes verification
+  // 2. ANTI-KEYBOARD MASH FILTER: Blocks repeating spam characters (e.g., aaaaa@gmail.com)
+  const usernamePart = emailInput.split('@')[0];
+  const repeatingCharRegex = /(.)\1{4,}/; // Identifies any character repeating 5+ times consecutively
+  
+  if (repeatingCharRegex.test(usernamePart) || usernamePart.length < 6) {
+    status.textContent = '✗ Invalid Gmail username structure. Random strings are blocked.';
+    status.className   = 'form-status error';
+    form.querySelector('input[name="from_email"]').focus();
+    return;
+  }
+
+  // 3. Process sending if all strict filters pass
   btn.textContent = 'Sending...';
   btn.disabled    = true;
 
   try {
     await emailjs.send('service_pz72agg', 'template_ilxtv3c', templateParams);
-    
     status.textContent = "✓ Message sent. I'll be in touch.";
     status.className   = 'form-status success';
     form.reset();
