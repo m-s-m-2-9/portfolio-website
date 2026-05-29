@@ -645,7 +645,7 @@ function closeBelief() {
 }
  
 /* ═══════════════════════════════════════════════════════════
-   CONTACT FORM (SAFE FAILOVER LOGIC)
+   CONTACT FORM (STRICT LOCAL SIMPLICITY FILTER)
 ═══════════════════════════════════════════════════════════ */
 async function submitContactForm(e) {
   e.preventDefault();
@@ -657,50 +657,6 @@ async function submitContactForm(e) {
   status.className   = 'form-status';
 
   const emailInput = form.querySelector('input[name="from_email"]').value.trim().toLowerCase();
-
-  // 1. DOMAIN CHECK
-  if (!emailInput.endsWith('@gmail.com')) {
-    status.textContent = '✗ Only official @gmail.com email addresses are allowed.';
-    status.className   = 'form-status error';
-    form.querySelector('input[name="from_email"]').focus();
-    return;
-  }
-
-  // 2. EXTRACT USERNAME STRING CORRECTLY
-  const usernameStr = emailInput.split('@')[0];
-
-  // 3. LENGTH FILTER
-  if (usernameStr.length < 6 || usernameStr.length > 30) {
-    status.textContent = '✗ Invalid Gmail structure. Length must be between 6-30 characters.';
-    status.className   = 'form-status error';
-    form.querySelector('input[name="from_email"]').focus();
-    return;
-  }
-
-  // 4. REPEATING CHARACTERS CHECK
-  const repeatingCharRegex = /(.)\1{2,}/; 
-  if (repeatingCharRegex.test(usernameStr)) {
-    status.textContent = '✗ Invalid Gmail username structure. Random strings are blocked.';
-    status.className   = 'form-status error';
-    form.querySelector('input[name="from_email"]').focus();
-    return;
-  }
-
-  // 5. SAFE RECAPTCHA CHECK (Will never crash or freeze your button)
-  let captchaResponse = "";
-  if (typeof grecaptcha !== 'undefined' && typeof grecaptcha.getResponse === 'function') {
-    try {
-      captchaResponse = grecaptcha.getResponse();
-      if (!captchaResponse || captchaResponse.length === 0) {
-        status.textContent = "✗ Please check the 'I'm not a robot' box.";
-        status.className   = 'form-status error';
-        return;
-      }
-    } catch (err) {
-      console.warn("reCAPTCHA failed to read state. Bypassing check...", err);
-    }
-  }
-
   const templateParams = {
     from_name: form.querySelector('input[name="from_name"]').value,
     from_email: emailInput,
@@ -708,12 +664,44 @@ async function submitContactForm(e) {
     message: form.querySelector('textarea[name="message"]').value
   };
 
-  // If reCAPTCHA was successfully filled out, add it to the params
-  if (captchaResponse) {
-    templateParams['g-recaptcha-response'] = captchaResponse;
+  // 1. DOMAIN FILTER: Forces standard @gmail.com formatting structure
+  if (!emailInput.endsWith('@gmail.com')) {
+    status.textContent = '✗ Only official @gmail.com email addresses are allowed.';
+    status.className   = 'form-status error';
+    form.querySelector('input[name="from_email"]').focus();
+    return;
   }
 
-  // 6. Send via EmailJS
+  // Extract username string part before the '@' symbol
+  const usernameStr = emailInput.split('@')[0];
+
+  // 2. RED FLAG: Blocks short gibberish strings under 6 characters (e.g., abcde)
+  if (usernameStr.length < 6) {
+    status.textContent = '✗ Invalid Gmail username structure. Too short.';
+    status.className   = 'form-status error';
+    form.querySelector('input[name="from_email"]').focus();
+    return;
+  }
+
+  // 3. RED FLAG: Blocks keyboard mashes with more than 10 total numbers
+  const numberCount = (usernameStr.match(/\d/g) || []).length;
+  if (numberCount > 10) {
+    status.textContent = '✗ Suspicious email string. Excessive numbers detected.';
+    status.className   = 'form-status error';
+    form.querySelector('input[name="from_email"]').focus();
+    return;
+  }
+
+  // 4. RED FLAG: Blocks repetitive character spams (e.g., aaaaaaaaaa)
+  const repeatingCharRegex = /(.)\1{3,}/; // Flags any single letter repeating 4+ times consecutively
+  if (repeatingCharRegex.test(usernameStr)) {
+    status.textContent = '✗ Invalid Gmail username structure. Random strings are blocked.';
+    status.className   = 'form-status error';
+    form.querySelector('input[name="from_email"]').focus();
+    return;
+  }
+
+  // 5. TRANSMIT FORM DIRECTLY VIA EMAILJS
   btn.textContent = 'Sending...';
   btn.disabled    = true;
 
@@ -722,18 +710,16 @@ async function submitContactForm(e) {
     status.textContent = "✓ Message sent. I'll be in touch.";
     status.className   = 'form-status success';
     form.reset();
-    if (typeof grecaptcha !== 'undefined' && typeof grecaptcha.reset === 'function') {
-      grecaptcha.reset();
-    }
   } catch (err) {
     status.textContent = '✗ Something went wrong. Try again.';
     status.className   = 'form-status error';
-    console.error('EmailJS error:', err);
+    console.error('EmailJS execution drop error:', err);
   }
   
   btn.textContent = 'Send →';
   btn.disabled    = false;
 }
+
 
 
 
