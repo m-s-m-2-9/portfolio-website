@@ -645,7 +645,7 @@ function closeBelief() {
 }
  
 /* ═══════════════════════════════════════════════════════════
-   CONTACT FORM (STRICT GMAIL & SPAM FILTERS - FIXED)
+   CONTACT FORM (STRICT GMAIL, SPAM & LIVE SERVER FILTERS)
 ═══════════════════════════════════════════════════════════ */
 async function submitContactForm(e) {
   e.preventDefault();
@@ -653,8 +653,9 @@ async function submitContactForm(e) {
   const status = document.getElementById('form-status');
   const btn    = form.querySelector('button[type=submit]');
   
-  status.textContent = '';
+  status.textContent = 'Checking mailbox status...';
   status.className   = 'form-status';
+  btn.disabled    = true;
 
   const emailInput = form.querySelector('input[name="from_email"]').value.trim().toLowerCase();
   const templateParams = {
@@ -669,6 +670,7 @@ async function submitContactForm(e) {
     status.textContent = '✗ Only official @gmail.com email addresses are allowed.';
     status.className   = 'form-status error';
     form.querySelector('input[name="from_email"]').focus();
+    btn.disabled = false;
     return;
   }
 
@@ -680,27 +682,50 @@ async function submitContactForm(e) {
     status.textContent = '✗ Invalid Gmail username structure. Random strings are blocked.';
     status.className   = 'form-status error';
     form.querySelector('input[name="from_email"]').focus();
+    btn.disabled = false;
     return;
   }
 
-  // 3. Process sending if all strict filters pass
-  btn.textContent = 'Sending...';
-  btn.disabled    = true;
-
   try {
+    // 3. LIVE GMAIL EXISTENCE SCANNER (100% Free, No Accounts, No Subscriptions)
+    const verifyResponse = await fetch(`https://pingutil.com{encodeURIComponent(emailInput)}`);
+    const verificationData = await verifyResponse.json();
+
+    // If the API explicitly confirms the inbox does not exist on Google servers, block it
+    if (verificationData.status === "success" && verificationData.data.deliverable === false) {
+      status.textContent = '✗ This Gmail account does not exist. Please use a real email.';
+      status.className   = 'form-status error';
+      form.querySelector('input[name="from_email"]').focus();
+      btn.disabled = false;
+      return;
+    }
+
+    // 4. Process sending if all strict filters pass
+    status.textContent = 'Sending...';
     await emailjs.send('service_pz72agg', 'template_ilxtv3c', templateParams);
     status.textContent = "✓ Message sent. I'll be in touch.";
     status.className   = 'form-status success';
     form.reset();
   } catch (err) {
-    status.textContent = '✗ Something went wrong. Try again.';
-    status.className   = 'form-status error';
-    console.error('EmailJS error:', err);
+    // Security Fallback: If Eva API fails or is down, it skips validation and sends via EmailJS anyway
+    console.warn('Validation server bypass activated:', err);
+    try {
+      status.textContent = 'Sending...';
+      await emailjs.send('service_pz72agg', 'template_ilxtv3c', templateParams);
+      status.textContent = "✓ Message sent. I'll be in touch.";
+      status.className   = 'form-status success';
+      form.reset();
+    } catch (emailJsErr) {
+      status.textContent = '✗ Something went wrong. Try again.';
+      status.className   = 'form-status error';
+      console.error('EmailJS error:', emailJsErr);
+    }
   }
   
   btn.textContent = 'Send →';
   btn.disabled    = false;
 }
+
 
  
 /* ═══════════════════════════════════════════════════════════
