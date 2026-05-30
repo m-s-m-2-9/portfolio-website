@@ -1694,3 +1694,33 @@ function closeProject() {
 function _closeProjectOnEsc(e) {
   if (e.key === 'Escape') closeProject();
 }
+
+
+/* ═══════════════════════════════════════════════════════════
+   CUSTOM GRID INTERCEPT INTERFACES
+═══════════════════════════════════════════════════════════ */
+document.addEventListener('click', (event) => {
+  const profileLink = event.target.closest('a');
+  if (!profileLink) return;
+
+  const destination = profileLink.getAttribute('href');
+
+  // 1. Intercept Share Interaction
+  if (destination === '#copy' || destination.includes('#copy')) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    navigator.clipboard.writeText('https://github.io').then(() => {
+      alert('Portfolio link copied cleanly to your clipboard!');
+    });
+  }
+
+  // 2. Intercept Deactivated WhatsApp Modal State
+  if (destination === '#whatsapp-status' || destination.includes('#whatsapp-status')) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    alert('\n[CONNECTION PAUSED]\n\nWhatsApp messaging channel is currently deactivated.\nThis secure portal will initialize at a later date.');
+  }
+}, true); // The "true" parameter tells the browser to intercept this event BEFORE your theme scripts can catch it!
+
