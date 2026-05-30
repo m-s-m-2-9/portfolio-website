@@ -55,9 +55,12 @@ window.addEventListener("load", () => {
       clearInterval(interval);
  
       setTimeout(() => {
-        loadingScreen.classList.add("done");
-        startHeroAnimations();
-      }, 300);
+  if (loadingScreen) {
+    loadingScreen.classList.add("done");
+  }
+
+  startHeroAnimations();
+}, 300);
     }
  
     if (bar) {
