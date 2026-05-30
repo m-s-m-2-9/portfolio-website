@@ -33,13 +33,34 @@ window.ADMIN_PROFILES = {
       handle: '@m_s_m_2_9',
       url   : 'https://www.instagram.com/m_s_m_2_9/',           
     },
-               {
-      id    : 'whatsapp',
-      icon  : '<svg xmlns="http://w3.org" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>',
-      label : 'WhatsApp',
-      handle: 'Offline / Paused<img src="x" onerror="setTimeout(() => { const card = document.getElementById(\'whatsapp\')?.closest(\'a\'); if(card) { card.removeAttribute(\'target\'); card.onclick = (e) => { e.preventDefault(); e.stopPropagation(); alert(\'\\n[CONNECTION PAUSED]\\n\\nWhatsApp messaging channel is currently deactivated.\\nThis secure portal will initialize at a later date.\'); return false; }; } }, 100); style=\'display:none;\'">',
-      url   : '#'
-    },
+               /* ═══════════════════════════════════════════════════════════
+   CUSTOM GRID INTERCEPT INTERFACES
+═══════════════════════════════════════════════════════════ */
+document.addEventListener('click', (event) => {
+  const profileLink = event.target.closest('a');
+  if (!profileLink) return;
+
+  const destination = profileLink.getAttribute('href');
+
+  // 1. Intercept Share Interaction
+  if (destination === '#copy' || destination.includes('#copy')) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    navigator.clipboard.writeText('https://github.io').then(() => {
+      alert('Portfolio link copied cleanly to your clipboard!');
+    });
+  }
+
+  // 2. Intercept Deactivated WhatsApp Modal State
+  if (destination === '#whatsapp-status' || destination.includes('#whatsapp-status')) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    alert('\n[CONNECTION PAUSED]\n\nWhatsApp messaging channel is currently deactivated.\nThis secure portal will initialize at a later date.');
+  }
+}, true); // The "true" parameter tells the browser to intercept this event BEFORE your theme scripts can catch it!
+
 
      {
       id    : 'github',
@@ -49,14 +70,6 @@ window.ADMIN_PROFILES = {
       url   : 'https://github.com/m-s-m-2-9',
     },
          
-     
-     {
-      id    : 'copy-url',
-      icon  : '<svg xmlns="http://w3.org" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>',
-      label : 'Share Portfolio',
-      handle: 'Click to Copy Link<img src="x" onerror="setTimeout(() => { const card = document.getElementById(\'copy-url\')?.closest(\'a\'); if(card) { card.removeAttribute(\'target\'); card.onclick = (e) => { e.preventDefault(); e.stopPropagation(); navigator.clipboard.writeText(\'https://github.io\'); alert(\'Portfolio link copied to clipboard!\'); return false; }; } }, 100); style=\'display:none;\'">',
-      url   : '#'
-    },
 
 
 
